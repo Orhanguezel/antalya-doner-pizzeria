@@ -1,12 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Warenkorb.css';
 
-const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
+const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
   const [orderType, setOrderType] = useState('pickup'); // Default olarak 'pickup' seçili
   const [errorMessage, setErrorMessage] = useState('');
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    surname: '',
+    address: '',
+    phone: '',
+    region: '',
+    paymentMethod: ''
+  });
+
+  // Açılış-kapanış saatleri ve sipariş saatlerini belirleyelim
+  const openingHours = "Mo. - Fr.: 11:00 bis 22:00, Sonntag: 16:00 bis 22:00, Feiertagen: 16:00 bis 22:00";
+  const deliveryHours = "Mo. - Fr.: 11:30 bis 21:30, Sonntag: 16:30 bis 21:30, Feiertagen: 16:30 bis 21:30";
+  const currentTime = new Date();
+  const orderTime = currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+  // Cumartesi günleri kontrolü
+  const isSaturday = currentTime.getDay() === 6;
+
+  // Sayfa yüklendiğinde cumartesi kontrolü
+  useEffect(() => {
+    if (isSaturday) {
+      setErrorMessage('Samstag ist Ruhetag.');
+    }
+  }, [isSaturday]);
 
   const calculateTotal = () => {
-    return cart.reduce((acc, item) => acc + item.totalPrice, 0).toFixed(2);
+    let total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+    if (orderType === 'delivery') {
+      total += 2; // Taşıma ücreti
+    }
+    return total.toFixed(2);
   };
 
   const handleOrderTypeChange = (type) => {
@@ -14,19 +42,45 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
     setErrorMessage('');
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerInfo({ ...customerInfo, [name]: value });
+  };
+
   const handleCheckout = () => {
+    // Not: Sipariş saati engellemesi şu an devre dışı bırakıldı
+    // if (isSaturday) {
+    //   setErrorMessage('Samstag ist Ruhetag. Bestellungen können nicht aufgegeben werden.');
+    //   return;
+    // }
+
     const total = parseFloat(calculateTotal());
     if (orderType === 'delivery' && total < 15) {
-      setErrorMessage('Eve servis için minimum sipariş tutarı 15 € olmalıdır.');
+      setErrorMessage('Für die Lieferung muss der Mindestbestellwert 15 € betragen.');
+      return;
+    }
+    if (orderType === 'delivery' && (!customerInfo.name || !customerInfo.surname || !customerInfo.address || !customerInfo.phone || !customerInfo.region || !customerInfo.paymentMethod)) {
+      setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
+      return;
+    }
+    if ((orderType === 'dinein' || orderType === 'pickup') && (!customerInfo.name || !customerInfo.surname)) {
+      setErrorMessage('Bitte füllen Sie Ihren Namen und Nachnamen aus.');
+      return;
+    }
+    if (orderType === 'pickup' && !customerInfo.phone) {
+      setErrorMessage('Bitte füllen Sie Ihre Telefonnummer aus.');
       return;
     }
     // Sipariş tamamlama işlemleri burada gerçekleştirilecek
-    console.log('Sipariş tamamlandı:', { orderType, cart, total });
+    console.log('Bestellung abgeschlossen:', { orderType, cart, total, customerInfo });
+    clearCart(); // Sepeti temizle
+    localStorage.removeItem('cart'); // localStorage'dan sepeti kaldır
+    setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.'); // Siparişin tamamlandığını kullanıcıya bildir
   };
 
   return (
     <div className="cart">
-      <h2>Sipariş Listesi</h2>
+      <h2>Bestellliste</h2>
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
@@ -36,7 +90,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
             )}
             {item.extras.length > 0 ? (
               <>
-                <p>Ekstralar:</p>
+                <p>Extras:</p>
                 <ul>
                   {item.extras.map((extra, index) => (
                     <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
@@ -51,7 +105,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
               <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
               <span>{item.quantity}</span>
               <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>+</button>
-              <button onClick={() => removeCartItem(item)}>Sil</button>
+              <button onClick={() => removeCartItem(item)}>Löschen</button>
             </div>
           </li>
         ))}
@@ -59,7 +113,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
       <h3>Gesamtbetrag: {calculateTotal()} €</h3>
 
       <div className="order-type">
-        <h3>Sipariş Türü</h3>
+        <h3>Bestellart</h3>
         <label>
           <input
             type="radio"
@@ -67,7 +121,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
             checked={orderType === 'pickup'}
             onChange={() => handleOrderTypeChange('pickup')}
           />
-          Restaurandan Paket Alma
+          Abholung im Restaurant
         </label>
         <label>
           <input
@@ -76,7 +130,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
             checked={orderType === 'dinein'}
             onChange={() => handleOrderTypeChange('dinein')}
           />
-          Restoranda Masaya
+          Im Restaurant essen
         </label>
         <label>
           <input
@@ -85,12 +139,73 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem }) => {
             checked={orderType === 'delivery'}
             onChange={() => handleOrderTypeChange('delivery')}
           />
-          Eve Servis
+          Lieferung
         </label>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
 
-      <button className="checkout-button" onClick={handleCheckout}>Siparişi Tamamla</button>
+      <div className="customer-info">
+        <h3>Kundendaten</h3>
+        <label>
+          Name:
+          <input type="text" name="name" value={customerInfo.name} onChange={handleInputChange} />
+        </label>
+        <label>
+          Nachname:
+          <input type="text" name="surname" value={customerInfo.surname} onChange={handleInputChange} />
+        </label>
+        {(orderType === 'delivery' || orderType === 'pickup') && (
+          <label>
+            Telefon:
+            <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
+          </label>
+        )}
+        {orderType === 'delivery' && (
+          <>
+            <label>
+              Adresse:
+              <input type="text" name="address" value={customerInfo.address} onChange={handleInputChange} />
+            </label>
+            <label>
+              Region:
+              <select name="region" value={customerInfo.region} onChange={handleInputChange} required>
+                <option value="">Bitte wählen...</option>
+                <option value="Aldenhoven">Aldenhoven</option>
+                <option value="Niedermerz">Niedermerz</option>
+                <option value="Durboslar">Durboslar</option>
+                <option value="Schleiden">Schleiden</option>
+                <option value="Engelsdorf">Engelsdorf</option>
+                <option value="Freialdenhoven">Freialdenhoven</option>
+                <option value="Pützdorf">Pützdorf</option>
+                <option value="Merzenhausen">Merzenhausen</option>
+                <option value="Bourheim">Bourheim</option>
+                <option value="Koslar">Koslar</option>
+                <option value="Siesdorf">Siesdorf</option>
+              </select>
+            </label>
+            <label>
+              Zahlungsmethode:
+              <select name="paymentMethod" value={customerInfo.paymentMethod} onChange={handleInputChange} required>
+                <option value="">Bitte wählen...</option>
+                <option value="Kreditkarte">Kreditkarte</option>
+                <option value="Barzahlung">Barzahlung</option>
+              </select>
+            </label>
+            <p className="delivery-fee">Die Liefergebühr ist für alle Regionen gleich und beträgt 2 €.</p>
+          </>
+        )}
+      </div>
+
+      <button className="checkout-button" onClick={handleCheckout}>Bestellung abschließen</button>
+
+      <div className="store-info">
+        <h3><strong>Öffnungszeiten:</strong></h3>
+        <p>{openingHours}</p>
+        <h3><strong>Lieferzeiten:</strong></h3>
+        <p>{deliveryHours}</p>
+        <h3>Bestellzeit</h3>
+        <p>{orderTime}</p>
+      </div>
     </div>
   );
 };
