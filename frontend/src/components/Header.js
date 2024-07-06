@@ -1,20 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './Header.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function Header() {
+const Header = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <header>
       <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/kontakt">Kontakt</Link></li>
-          <li><Link to="/menu">Menu</Link></li>
-          <li><Link to="/warenkorb">Warenkorb</Link></li>
-        </ul>
+        <Link to="/">Home</Link>
+        <Link to="/menu">Menu</Link>
+        <Link to="/warenkorb">Warenkorb</Link>
+        <Link to="/kontakt">Kontakt</Link>
+        {user ? (
+          <>
+            <span>{user.username}</span>
+            <button onClick={handleLogout}>Logout</button>
+            {user.role === 'admin' && <Link to="/admin">Admin Panel</Link>}
+          </>
+        ) : (
+          <>
+            <Link to="/register">Register</Link>
+            <Link to="/login">Login</Link>
+          </>
+        )}
       </nav>
     </header>
   );
-}
+};
 
 export default Header;

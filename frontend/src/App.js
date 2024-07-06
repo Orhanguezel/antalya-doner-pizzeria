@@ -6,6 +6,10 @@ import Home from './pages/Home';
 import Kontakt from './pages/Kontakt';
 import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AdminPanel from './pages/AdminPanel';
+import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -70,18 +74,23 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/kontakt" element={<Kontakt />} />
-          <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
-          <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
-        </Routes>
-      </main>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/kontakt" element={<Kontakt />} />
+            <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
+            <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/admin" element={<AdminPanel />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 };
 
