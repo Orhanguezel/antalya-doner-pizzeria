@@ -1,0 +1,18 @@
+.hero {
+    background-image: url('../assets/bg/dukkan.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    color: white;
+    text-align: center;
+    padding-top: 150px;
+  }
+  
+  .hero h1 {
+    font-size: 50px;
+  }
+  
+  .hero p {
+    font-size: 24px;
+  }
+  
