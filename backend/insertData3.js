@@ -8,31 +8,46 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 
 const categories = [
   {
-    name: 'getränke',
-    description: 'Unsere Auswahl an Getränken, um Ihren Durst zu stillen.',
+    name: 'sparmenu',
+    description: 'Unsere Sparmenus bieten eine großartige Kombination aus Geschmack und Preis.',
     subcategories: [
       {
-        name: 'Alkoholfreie Getränke',
-        description: 'Erfrischende alkoholfreie Getränke.',
-        images: ['../assets/menu/21.jpg', '../assets/menu/22.jpg'],
+        name: 'sparmenus',
+        description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
+        images: ['../assets/menu/25.jpg', '../assets/menu/26.jpg'],
         items: [
           {
-            nr: '301',
-            type: 'drink',
-            name: 'Coca Cola',
+            nr: '142',
+            type: 'food',
+            name: 'Menü 1',
             zusatztoffe: [],
             allergene: [],
-            description: '0,5L Flasche',
-            prices: { default: 2.5 }
+            description: 'Döner Teller komplett + Softgetränk 0,33 L',
+            prices: { default: 12.5 },
+            image: '../assets/menu/45.jpg',
+            extras: {} // Boş extras alanı
           },
           {
-            nr: '302',
-            type: 'drink',
-            name: 'Fanta',
+            nr: '143',
+            type: 'food',
+            name: 'Menü 2',
             zusatztoffe: [],
             allergene: [],
-            description: '0,5L Flasche',
-            prices: { default: 2.5 }
+            description: 'Döner überbacken + Pommes & Salat + Softgetränk 0,33 L',
+            prices: { default: 12.5 },
+            image: '../assets/menu/46.jpg',
+            extras: {} // Boş extras alanı
+          },
+          {
+            nr: '144',
+            type: 'food',
+            name: 'Menü 3',
+            zusatztoffe: [],
+            allergene: [],
+            description: 'Currywurst + Pommes + Softgetränk 0,33 L',
+            prices: { default: 9.5 },
+            image: '../assets/menu/47.jpg',
+            extras: {} // Boş extras alanı
           }
         ]
       }

@@ -8,46 +8,31 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 
 const categories = [
   {
-    name: 'sparmenu',
-    description: 'Unsere Sparmenus bieten eine großartige Kombination aus Geschmack und Preis.',
+    name: 'desserts',
+    description: 'Unsere süßen Verführungen für den perfekten Abschluss.',
     subcategories: [
       {
-        name: 'sparmenus',
-        description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
-        images: ['../assets/menu/25.jpg', '../assets/menu/26.jpg'],
+        name: 'Desserts',
+        description: 'Leckere Desserts für Naschkatzen.',
+        images: ['../assets/menu/31.jpg', '../assets/menu/32.jpg'],
         items: [
           {
-            nr: '142',
-            type: 'food',
-            name: 'Menü 1',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Döner Teller komplett + Softgetränk 0,33 L',
-            prices: { default: 12.5 },
-            image: '../assets/menu/45.jpg',
-            extras: { additional_items: [], premium_items: [] }
+            nr: '401',
+            type: 'dessert',
+            name: 'Tiramisu',
+            zusatztoffe: [4],
+            allergene: ['a', 'g'],
+            description: 'Hausgemachtes Tiramisu',
+            prices: { default: 4.5 }
           },
           {
-            nr: '143',
-            type: 'food',
-            name: 'Menü 2',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Döner überbacken + Pommes & Salat + Softgetränk 0,33 L',
-            prices: { default: 12.5 },
-            image: '../assets/menu/46.jpg',
-            extras: { additional_items: [], premium_items: [] }
-          },
-          {
-            nr: '144',
-            type: 'food',
-            name: 'Menü 3',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Currywurst + Pommes + Softgetränk 0,33 L',
-            prices: { default: 9.5 },
-            image: '../assets/menu/47.jpg',
-            extras: { additional_items: [], premium_items: [] }
+            nr: '402',
+            type: 'dessert',
+            name: 'Cheesecake',
+            zusatztoffe: [4],
+            allergene: ['a', 'g'],
+            description: 'Frischkäsekuchen',
+            prices: { default: 3.5 }
           }
         ]
       }

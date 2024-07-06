@@ -8,68 +8,39 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 
 const categories = [
   {
-    name: 'hauptgerichte',
-    description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
+    name: 'pizza',
+    description: 'Alle Pizzen mit Goudakäse und Oregano. Alle Pizzen auf Wunsch mit Knoblauch und scharf + 0.30€.',
     subcategories: [
       {
-        name: 'Döner Spezialitäten',
-        description: 'Drehspieß nach Döner Art aus Kalbfleisch.',
-        images: ['../assets/menu/1.jpg', '../assets/menu/2.jpg'],
+        name: 'Pizza',
+        description: 'Verschiedene Pizza-Sorten',
+        images: ['../assets/menu/8.jpg', '../assets/menu/10.jpg'],
         items: [
           {
-            nr: '1',
+            nr: '26',
             type: 'food',
-            name: 'Döner im Fladenbrot',
-            zusatztoffe: [2, 3, 4],
-            allergene: ['a', 'g', 'f', 'l', 'b'],
-            description: 'mit Salat und Tzatziki',
-            prices: { klein: 6.5, groß: 9.5 },
-            extras: { Hirtenkäse: 0.7 }
+            name: 'Margheritta',
+            zusatztoffe: [1],
+            allergene: ['a', 'g'],
+            description: '',
+            prices: { klein: 6.5, groß: 7.5 },
+            extras: {
+              mitKnoblauchundScharf: 0.3,
+              GoudaKäse: 2.0
+            }
           },
           {
-            nr: '2',
+            nr: '27',
             type: 'food',
-            name: 'Döner Dürüm',
-            zusatztoffe: [2, 3, 4],
-            allergene: ['a', 'g', 'f', 'l', 'b'],
-            description: 'mit Salat und Tzatziki',
-            prices: { default: 7.5 },
-            extras: { Hirtenkäse: 0.7 }
-          },
-          {
-            nr: '3',
-            type: 'food',
-            name: 'Nuggets Döner',
-            zusatztoffe: [2, 3, 4],
-            allergene: ['a', 'g', 'f', 'l', 'b'],
-            description: 'mit Salat und Spezial Sauce',
-            prices: { default: 6.5 },
-            extras: { Hirtenkäse: 0.7 }
-          }
-        ]
-      },
-      {
-        name: 'Döner Überbacken',
-        description: 'Alle Döner Überbacken Gerichte werden mit Pommes & Salat serviert.',
-        images: ['../assets/menu/3.jpg', '../assets/menu/4.jpg'],
-        items: [
-          {
-            nr: '11',
-            type: 'food',
-            name: 'Döner überbacken',
-            zusatztoffe: [2, 3, 4],
-            allergene: ['f'],
-            description: 'mit Sahnesauce und Gouda',
-            prices: { default: 10.0 }
-          },
-          {
-            nr: '12',
-            type: 'food',
-            name: 'Döner überbacken',
-            zusatztoffe: [2, 3, 4],
-            allergene: ['f'],
-            description: 'mit Rahm, Gouda und Tomatensauce',
-            prices: { default: 11.5 }
+            name: 'Salami',
+            zusatztoffe: [1, 2, 3],
+            allergene: ['a', 'g', 'i', 'j'],
+            description: 'mit Salami',
+            prices: { klein: 7.5, groß: 9.0 },
+            extras: {
+              mitKnoblauchundScharf: 0.3,
+              GoudaKäse: 2.0
+            }
           }
         ]
       }
