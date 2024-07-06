@@ -1,30 +1,45 @@
-.menu {
-    padding: 20px;
+/* Menu.css */
+.category-button {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
   }
   
-  .category {
-    margin-bottom: 40px;
+  .category-button.active {
+    background-color: #4caf50;
+    color: white;
   }
   
-  .subcategory {
-    margin-bottom: 20px;
-  }
-  
-  .items {
+  .items-container {
     display: flex;
     flex-wrap: wrap;
+    gap: 20px;
   }
   
-  .item {
+  .card {
     border: 1px solid #ddd;
     padding: 10px;
-    margin: 10px;
-    width: calc(33.333% - 20px);
-    box-sizing: border-box;
+    width: 200px;
+    text-align: center;
   }
   
-  img {
-    max-width: 100%;
-    height: auto;
+  .card img {
+    width: 100%;
+  }
+  
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    outline: none;
+  }
+  
+  .subcategory-images img {
+    width: 50%;
+    margin: 5px;
   }
   
