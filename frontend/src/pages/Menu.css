@@ -15,31 +15,85 @@
     flex-wrap: wrap;
     gap: 20px;
   }
-  
+
+
   .card {
+    position: relative;
+    padding: 20px;
     border: 1px solid #ddd;
-    padding: 10px;
-    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
     text-align: center;
+    transition: transform 0.2s;
   }
   
-  .card img {
-    width: 100%;
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .info-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ccc; /* Gri renk */
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .add-button {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28a745; /* Belirgin yeşil renk */
+    color: white;
+    border: none;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .add-button:hover, .info-button:hover {
+    opacity: 0.8;
   }
   
   .modal {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
     background: white;
     padding: 20px;
     border-radius: 10px;
-    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
   }
   
   .subcategory-images img {
-    width: 50%;
     margin: 5px;
   }
   
+  .items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+
