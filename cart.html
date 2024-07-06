@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warenkorb - ANTALYA Döner & Pizzeria</title>
+    <meta name="description" content="Überprüfen Sie die Artikel in Ihrem Warenkorb und fahren Sie mit der Bestellung fort bei ANTALYA Döner & Pizzeria. Beste Pizzen und Döner-Gerichte in Aldenhoven.">
+    <meta name="keywords" content="Warenkorb, Bestellung, Döner, Pizzeria, Fast Food, ANTALYA Döner & Pizzeria, Aldenhoven">
+    <meta name="author" content="ANTALYA Döner & Pizzeria">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Warenkorb - ANTALYA Döner & Pizzeria">
+    <meta property="og:description" content="Überprüfen Sie die Artikel in Ihrem Warenkorb und fahren Sie mit der Bestellung fort bei ANTALYA Döner & Pizzeria. Beste Pizzen und Döner-Gerichte in Aldenhoven.">
+    <meta property="og:image" content="img/logo/1.png">
+    <meta property="og:url" content="http://www.antalya-doner-pizzeria.de/cart.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Warenkorb - ANTALYA Döner & Pizzeria">
+    <meta name="twitter:description" content="Überprüfen Sie die Artikel in Ihrem Warenkorb und fahren Sie mit der Bestellung fort bei ANTALYA Döner & Pizzeria. Beste Pizzen und Döner-Gerichte in Aldenhoven.">
+    <meta name="twitter:image" content="img/logo/1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="cart-page">
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"><img src="img/logo/1.png" alt="ANTALYA Döner & Pizzeria Logo"></a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#hero" class="nav-link" data-title="Startseite"><i class="fas fa-home"></i><span class="nav-text">Startseite</span></a>
+            <a href="speizekarte.html" class="nav-link" data-title="Menu"><i class="fas fa-utensils"></i><span class="nav-text">Menü</span></a>
+            <a href="index.html#services" class="nav-link" data-title="Service"><i class="fas fa-concierge-bell"></i><span class="nav-text">Service</span></a>
+            <a href="index.html#Kontakt" class="nav-link" data-title="Kontakt"><i class="fas fa-phone"></i><span class="nav-text">Kontakt</span></a>
+            <a href="#" class="nav-link cart-link" data-title="Warenkorb">
+                <i class="fas fa-shopping-cart"></i><span class="nav-text">Warenkorb</span>
+                <span id="cart-count" class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+    <div class="container cart-container">
+        <h1>Warenkorb</h1>
+        <div id="cart-container">
+            <!-- Produkte im Warenkorb werden hier aufgelistet -->
+        </div>
+        <div class="order-button-row">
+            <button id="place-order" class="place-order">Bestellung aufgeben</button>
+        </div>
+        <div id="order-form-container" style="display: none;">
+            <h2>Ihre Daten</h2>
+            <form id="order-form">
+                <label for="delivery-option">Lieferoption:</label>
+                <select id="delivery-option" name="delivery-option" required>
+                    <option value="">Bitte wählen...</option>
+                    <option value="restaurant">Im Restaurant servieren</option>
+                    <option value="delivery">Nach Hause liefern</option>
+                </select>
+
+                <div id="personal-info">
+                    <label for="first-name">Vorname:</label>
+                    <input type="text" id="first-name" name="first-name" required>
+                    <label for="last-name">Nachname:</label>
+                    <input type="text" id="last-name" name="last-name" required>
+                    <label for="phone">Telefonnummer:</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div id="address-info" style="display: none;">
+                    <label for="region">Region:</label>
+                    <select id="region" name="region" required>
+                        <option value="">Bitte wählen...</option>
+                        <option value="Aldenhoven">Aldenhoven</option>
+                        <option value="Niedermerz">Niedermerz</option>
+                        <option value="Durboslar">Durboslar</option>
+                        <option value="Schleiden">Schleiden</option>
+                        <option value="Engelsdorf">Engelsdorf</option>
+                        <option value="Freialdenhoven">Freialdenhoven</option>
+                        <option value="Pützdorf">Pützdorf</option>
+                        <option value="Merzenhausen">Merzenhausen</option>
+                        <option value="Bourheim">Bourheim</option>
+                        <option value="Koslar">Koslar</option>
+                        <option value="Siesdorf">Siesdorf</option>
+                    </select>
+                    <label for="street">Straße:</label>
+                    <input type="text" id="street" name="street" required>
+                    <label for="house-number">Hausnummer:</label>
+                    <input type="text" id="house-number" name="house-number" required>
+                    <label for="email">E-Mail:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <label for="special-request">Besondere Wünsche:</label>
+                <textarea id="special-request" name="special-request" rows="4" placeholder="Ihre besonderen Wünsche hier eingeben..."></textarea>
+
+                <p>Die Liefergebühr wird bei Bedarf zusätzlich berechnet.</p>
+                <button type="submit" class="place-order">Bestellung abschließen</button>
+            </form>
+            <div id="delivery-fee" style="margin-top: 20px;"></div>
+        </div>
+        <div class="note">
+            <hr>
+            <p class="contact-p">
+                Vorübergehend können keine Online-Bestellungen entgegengenommen werden. Vielen Dank für Ihr Verständnis.
+            </p>
+            <hr>
+            <p class="contact-p">
+                Die Liefergebühr ist für alle Regionen gleich und beträgt 2 €.
+            
+            </p>
+            <hr>
+            <p class="contact-p">
+                Leider können wir Bestellungen unter 15 € nicht nach Hause liefern
+            </p>
+            <hr>
+            <p class="contact-p">
+                <strong>Öffnungszeiten:</strong> Mo. - Fr.: 11:00 bis 22:00, Sonntag: 16:00 bis 22:00, Feiertagen: 16:00 bis 22:00
+            </p>
+            <hr>
+            <p class="contact-p">
+                <strong>Lieferzeiten:</strong> Mo. - Fr.: 11:30 bis 21:30, Sonntag: 16:30 bis 21:30, Feiertagen: 16:30 bis 21:30
+            </p>
+        </div>
+    </div>
+
+    <script src="cart.js"></script>
+</body>
+</html>

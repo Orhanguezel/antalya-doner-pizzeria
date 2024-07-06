@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -9,6 +9,19 @@ import Warenkorb from './pages/Warenkorb';
 
 const App = () => {
   const [cart, setCart] = useState([]);
+
+  // Component mount olduğunda localStorage'dan cart bilgisini yükle
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Cart değiştiğinde localStorage'a kaydet
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   const onAddToCart = (newItem) => {
     const existingItemIndex = cart.findIndex(item => 
@@ -52,6 +65,10 @@ const App = () => {
     ));
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
     <Router>
       <Header />
@@ -60,7 +77,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/kontakt" element={<Kontakt />} />
           <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
-          <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} />} />
+          <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
         </Routes>
       </main>
       <Footer />
