@@ -76,7 +76,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Header />
+        <Header cart={cart} />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
