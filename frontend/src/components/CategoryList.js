@@ -36,31 +36,7 @@ const CategoryList = () => {
                   <div key={item._id}>
                     <p>{item.name}</p>
                     <p>{item.description}</p>
-                    <p>Price: {item.prices.default}</p>
-                    {item.extras && (
-                      <div>
-                        {item.extras.additional_items && item.extras.additional_items.length > 0 && (
-                          <div>
-                            <p>Additional Items:</p>
-                            <ul>
-                              {item.extras.additional_items.map((extraItem, index) => (
-                                <li key={index}>{extraItem} - {item.extras.additional_price} €</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        {item.extras.premium_items && item.extras.premium_items.length > 0 && (
-                          <div>
-                            <p>Premium Items:</p>
-                            <ul>
-                              {item.extras.premium_items.map((premiumItem, index) => (
-                                <li key={index}>{premiumItem} - {item.extras.premium_price} €</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <p>Price: {item.prices.default || item.prices.klein || item.prices.groß} €</p>
                   </div>
                 ))}
               </div>

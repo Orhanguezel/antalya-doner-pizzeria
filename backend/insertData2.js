@@ -8,39 +8,31 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 
 const categories = [
   {
-    name: 'pizza',
-    description: 'Alle Pizzen mit Goudakäse und Oregano. Alle Pizzen auf Wunsch mit Knoblauch und scharf + 0.30€.',
+    name: 'getränke',
+    description: 'Unsere Auswahl an Getränken, um Ihren Durst zu stillen.',
     subcategories: [
       {
-        name: 'Pizza',
-        description: 'Verschiedene Pizza-Sorten',
-        images: ['../assets/menu/8.jpg', '../assets/menu/10.jpg'],
+        name: 'Alkoholfreie Getränke',
+        description: 'Erfrischende alkoholfreie Getränke.',
+        images: ['../assets/menu/21.jpg', '../assets/menu/22.jpg'],
         items: [
           {
-            nr: '26',
-            type: 'food',
-            name: 'Margheritta',
-            zusatztoffe: [1],
-            allergene: ['a', 'g'],
-            description: '',
-            prices: { klein: 6.5, groß: 7.5 },
-            extras: {
-              mitKnoblauchundScharf: 0.3,
-              GoudaKäse: 2.0
-            }
+            nr: '301',
+            type: 'drink',
+            name: 'Coca Cola',
+            zusatztoffe: [],
+            allergene: [],
+            description: '0,5L Flasche',
+            prices: { default: 2.5 }
           },
           {
-            nr: '27',
-            type: 'food',
-            name: 'Salami',
-            zusatztoffe: [1, 2, 3],
-            allergene: ['a', 'g', 'i', 'j'],
-            description: 'mit Salami',
-            prices: { klein: 7.5, groß: 9.0 },
-            extras: {
-              mitKnoblauchundScharf: 0.3,
-              GoudaKäse: 2.0
-            }
+            nr: '302',
+            type: 'drink',
+            name: 'Fanta',
+            zusatztoffe: [],
+            allergene: [],
+            description: '0,5L Flasche',
+            prices: { default: 2.5 }
           }
         ]
       }

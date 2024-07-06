@@ -12,12 +12,11 @@ const itemSchema = new mongoose.Schema({
     großeSchale: { type: Number }
   },
   extras: {
-    additional_items: [{ name: String, price: Number }],
-    premium_items: [{ name: String, price: Number }]
+    type: Map,
+    of: Number
   },
   image: { type: String },
   categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
 });
 
 module.exports = mongoose.model('Item', itemSchema);
-

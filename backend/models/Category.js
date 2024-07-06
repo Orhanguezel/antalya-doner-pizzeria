@@ -8,18 +8,14 @@ const itemSchema = new mongoose.Schema({
   allergene: [String],
   description: String,
   prices: {
-    default: Number,
     klein: Number,
     groß: Number,
-    kleineSchale: Number,
-    großeSchale: Number,
+    default: Number,
   },
   image: String,
   extras: {
-    additional_items: [String],
-    additional_price: Number,
-    premium_items: [String],
-    premium_price: Number
+    type: Map,
+    of: Number
   }
 });
 

@@ -2,75 +2,67 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
 
-// Modal-Komponente auf das Root-Element einstellen
 Modal.setAppElement('#root');
 
 const Menu = () => {
-  // useState-Hooks zum Definieren der Zustände
-  const [categories, setCategories] = useState([]); // Zustand für Kategorien
-  const [activeCategory, setActiveCategory] = useState(''); // Zustand für die aktive Kategorie
-  const [selectedItem, setSelectedItem] = useState(null); // Zustand für das ausgewählte Element
-  const [selectedPrice, setSelectedPrice] = useState(null); // Zustand für den ausgewählten Preis
-  const [extras, setExtras] = useState([]); // Zustand für Extras
-  const [totalPrice, setTotalPrice] = useState(0); // Zustand für den Gesamtpreis
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [extras, setExtras] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  // useEffect-Hook zum Abrufen der Kategorien
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/categories'); // Kategorien von der API abrufen
+        const response = await fetch('http://localhost:5000/api/categories');
         if (!response.ok) {
-          throw new Error('Netzwerkantwort war nicht ok');
+          throw new Error('Network response was not ok');
         }
-        const data = await response.json(); // In JSON-Daten umwandeln
-        setCategories(data); // Kategorienzustand aktualisieren
+        const data = await response.json();
+        setCategories(data);
         if (data.length > 0) {
-          setActiveCategory(data[0]._id); // Erste Kategorie als Standard auswählen
+          setActiveCategory(data[0]._id);
         }
       } catch (error) {
-        console.error('Fehler beim Abrufen der Kategorien:', error); // Fehler im Konsolenprotokoll anzeigen
+        console.error('Error fetching categories:', error);
       }
     };
 
-    fetchCategories(); // Funktion aufrufen
+    fetchCategories();
   }, []);
 
-  // Funktion, die beim Auswählen eines Artikels ausgeführt wird
   const handleSelectItem = (item) => {
-    setSelectedItem(item); // Ausgewählten Artikel in den Zustand setzen
-    const defaultPriceKey = Object.keys(item.prices)[0]; // Standard-Preisschlüssel abrufen
-    setSelectedPrice({ key: defaultPriceKey, value: item.prices[defaultPriceKey] }); // Ausgewählten Preis aktualisieren
-    setExtras([]); // Extras zurücksetzen
-    setTotalPrice(item.prices[defaultPriceKey]); // Gesamtpreis mit dem Standardpreis starten
+    setSelectedItem(item);
+    const defaultPriceKey = Object.keys(item.prices)[0];
+    setSelectedPrice({ key: defaultPriceKey, value: item.prices[defaultPriceKey] });
+    setExtras([]);
+    setTotalPrice(item.prices[defaultPriceKey]);
   };
 
-  // Funktion, die beim Ändern eines Extras ausgeführt wird
   const handleExtraChange = (extraName, extraPrice, isChecked) => {
     const newExtras = [...extras];
     if (isChecked) {
-      newExtras.push({ name: extraName, price: extraPrice }); // Extra hinzufügen
+      newExtras.push({ name: extraName, price: extraPrice });
     } else {
       const index = newExtras.findIndex((extra) => extra.name === extraName);
-      newExtras.splice(index, 1); // Extra entfernen
+      newExtras.splice(index, 1);
     }
-    setExtras(newExtras); // Extras aktualisieren
+    setExtras(newExtras);
 
-    const newTotalPrice = newExtras.reduce((acc, curr) => acc + curr.price, selectedPrice.value); // Neuen Gesamtpreis berechnen
-    setTotalPrice(newTotalPrice); // Gesamtpreis aktualisieren
+    const newTotalPrice = newExtras.reduce((acc, curr) => acc + curr.price, selectedPrice.value);
+    setTotalPrice(newTotalPrice);
   };
 
-  // Funktion, die beim Ändern des Preises ausgeführt wird
   const handlePriceChange = (priceKey, priceValue) => {
-    setSelectedPrice({ key: priceKey, value: priceValue }); // Ausgewählten Preis aktualisieren
-    const newTotalPrice = extras.reduce((acc, curr) => acc + curr.price, priceValue); // Neuen Gesamtpreis berechnen
-    setTotalPrice(newTotalPrice); // Gesamtpreis aktualisieren
+    setSelectedPrice({ key: priceKey, value: priceValue });
+    const newTotalPrice = extras.reduce((acc, curr) => acc + curr.price, priceValue);
+    setTotalPrice(newTotalPrice);
   };
 
-  // Funktion, die beim Hinzufügen eines Artikels zum Warenkorb ausgeführt wird
   const handleAddToCart = () => {
-    // Hier wird der Artikel dem Warenkorb hinzugefügt
-    console.log('Zum Warenkorb hinzugefügt:', { ...selectedItem, selectedPrice, extras, totalPrice });
-    setSelectedItem(null); // Popup schließen
+    console.log('Sepete eklendi:', { ...selectedItem, selectedPrice, extras, totalPrice });
+    setSelectedItem(null);
   };
 
   return (
@@ -99,7 +91,7 @@ const Menu = () => {
                   {subcategory.images && (
                     <div className="subcategory-images">
                       {subcategory.images.map((image, index) => (
-                        <img key={index} src={image} alt={`Unterkategorie ${index}`} style={{ width: '50%' }} />
+                        <img key={index} src={image} alt={`Subcategory ${index}`} style={{ width: '50%' }} />
                       ))}
                     </div>
                   )}
@@ -111,8 +103,8 @@ const Menu = () => {
                           <img src={item.image} alt={item.name} style={{ width: '100%' }} />
                         )}
                         <p>{item.description}</p>
-                        <p>Preis: {Math.min(...Object.values(item.prices))} €</p> {/* Minimum Preis anzeigen */}
-                        <button onClick={() => handleSelectItem(item)}>+</button> {/* Artikel auswählen */}
+                        <p>Price: {Math.min(...Object.values(item.prices))} €</p>
+                        <button onClick={() => handleSelectItem(item)}>+</button>
                       </div>
                     ))}
                   </div>
@@ -143,7 +135,7 @@ const Menu = () => {
               ))}
             </div>
           ) : (
-            <p>Preis: {selectedPrice.value} €</p>
+            <p>Price: {selectedPrice.value} €</p>
           )}
           {selectedItem.extras && (
             <div>
@@ -160,9 +152,9 @@ const Menu = () => {
               ))}
             </div>
           )}
-          <h3>Gesamtpreis: {totalPrice} €</h3>
-          <button onClick={handleAddToCart}>Zum Warenkorb hinzufügen</button>
-          <button onClick={() => setSelectedItem(null)}>Schließen</button>
+          <h3>Total Price: {totalPrice} €</h3>
+          <button onClick={handleAddToCart}>Sepete Gönder</button>
+          <button onClick={() => setSelectedItem(null)}>Kapat</button>
         </Modal>
       )}
     </div>
