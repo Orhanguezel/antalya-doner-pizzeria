@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Kontakt from './pages/Kontakt';
 import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Auth from './pages/Auth'; // Bu satırı ekliyoruz
 import AdminPanel from './pages/AdminPanel';
 import { AuthProvider } from './context/AuthContext';
 
@@ -83,20 +82,14 @@ const App = () => {
             <Route path="/kontakt" element={<Kontakt />} />
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
-        <FooterWrapper />
+        <Footer />
       </Router>
     </AuthProvider>
   );
-};
-
-const FooterWrapper = () => {
-  const location = useLocation();
-  return location.pathname === '/' ? <Footer /> : null;
 };
 
 export default App;

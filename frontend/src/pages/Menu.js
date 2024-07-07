@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
-import { zusatztoffeMap, allergeneMap } from '../constants'; // Sabitleri içe aktar
+import { zusatztoffeMap, allergeneMap } from '../constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
-const Menu = ({ onAddToCart }) => {
+const Menu = ({ onAddToCart, cart = [] }) => {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -14,6 +17,7 @@ const Menu = ({ onAddToCart }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
+  const [showCartBar, setShowCartBar] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,6 +78,7 @@ const Menu = ({ onAddToCart }) => {
     };
     onAddToCart(newItem);
     setSelectedItem(null);
+    setShowCartBar(true);
   };
 
   const handleInfoClick = (item) => {
@@ -94,10 +99,18 @@ const Menu = ({ onAddToCart }) => {
     }
   };
 
+  const calculateCartTotal = () => {
+    return cart.reduce((acc, item) => acc + item.totalPrice, 0).toFixed(2);
+  };
+
   return (
-    <div>
-      <h1>Unser Menü</h1>
-      <div>
+    <div className="menu-page">
+      <div className="menu-header">
+        <img src="/path-to-logo.png" alt="Logo" className="logo" />
+        <h1 className="menu-title">Speisekarte</h1>
+        <p>Sie können jetzt online bestellen und bei Lieferung bezahlen. Kreditkarten werden akzeptiert.</p>
+      </div>
+      <div className="categories-container">
         {categories.map((category) => (
           <button
             key={category._id}
@@ -127,13 +140,13 @@ const Menu = ({ onAddToCart }) => {
                   <div className="items-container">
                     {subcategory.items.map((item) => (
                       <div className="card" key={item._id}>
-                        <h4>{item.nr}. {item.name}</h4>
-                        {(item.zusatztoffe && item.zusatztoffe.length > 0) || (item.allergene && item.allergene.length > 0) ? (
+                        <div className="card-header">
                           <button className="info-button" onClick={() => handleInfoClick(item)}>i</button>
-                        ) : null}
+                          <h4>{item.nr}. {item.name}</h4>
+                          <p>Preis: {Math.min(...Object.values(item.prices))} €</p>
+                          <button className="add-button" onClick={() => handleSelectItem(item)}>+</button>
+                        </div>
                         <p>{item.description}</p>
-                        <p>Preis: {Math.min(...Object.values(item.prices))} €</p>
-                        <button className="add-button" onClick={() => handleSelectItem(item)}>+</button>
                       </div>
                     ))}
                   </div>
@@ -217,6 +230,16 @@ const Menu = ({ onAddToCart }) => {
           )}
           <button onClick={() => setInfoItem(null)}>Schließen</button>
         </Modal>
+      )}
+      {showCartBar && cart && cart.length > 0 && (
+        <div className="cart-bar">
+          <div className="cart-icon-container">
+            <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" data-count={cart.length} />
+            <span>{cart.length} Artikel</span>
+          </div>
+          <Link to="/warenkorb" className="cart-button">Zum Warenkorb</Link>
+          <div className="cart-total">{calculateCartTotal()} €</div>
+        </div>
       )}
     </div>
   );

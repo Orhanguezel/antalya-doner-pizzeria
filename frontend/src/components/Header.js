@@ -1,71 +1,33 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faUtensils, faShoppingCart, faInfoCircle, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 
 const Header = ({ cart }) => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-
   return (
-    <header>
-      <nav>
-        <Link to="/" className="icon-only">
-          <i className="fas fa-home"></i>
+    <header className="header">
+      <div className="logo">
+        <img src="/path/to/logo.png" alt="Logo" />
+      </div>
+      <nav className="navbar">
+        <Link to="/">
+          <FontAwesomeIcon icon={faHome} /> <span className="nav-link-text">Home</span>
         </Link>
-        <Link to="/menu" className="icon-only">
-          <i className="fas fa-utensils"></i>
+        <Link to="/menu">
+          <FontAwesomeIcon icon={faUtensils} /> <span className="nav-link-text">Menu</span>
         </Link>
-        <Link to="/warenkorb" className="cart-icon icon-only">
-          <i className="fas fa-shopping-cart"></i>
-          {cartItemCount > 0 && <span>{cartItemCount}</span>}
+        <Link to="/warenkorb">
+          <FontAwesomeIcon icon={faShoppingCart} />
+          <span className="nav-link-text">Warenkorb</span>
+          {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
         </Link>
-        <Link to="/kontakt" className="icon-only">
-          <i className="fas fa-envelope"></i>
+        <Link to="/kontakt">
+          <FontAwesomeIcon icon={faInfoCircle} /> <span className="nav-link-text">Kontakt</span>
         </Link>
-        <Link to="/" className="large-screen">
-          Home
+        <Link to="/auth">
+          <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
         </Link>
-        <Link to="/menu" className="large-screen">
-          Menu
-        </Link>
-        <Link to="/warenkorb" className="cart-icon large-screen">
-          <i className="fas fa-shopping-cart"></i>
-          Warenkorb
-          {cartItemCount > 0 && <span>{cartItemCount}</span>}
-        </Link>
-        <Link to="/kontakt" className="large-screen">
-          Kontakt
-        </Link>
-        {user ? (
-          <div className="user-info">
-            <span>{user.username}</span>
-            <button onClick={handleLogout}>Logout</button>
-            {user.role === 'admin' && <Link to="/admin">Admin Panel</Link>}
-          </div>
-        ) : (
-          <>
-            <Link to="/register" className="large-screen">
-              Register
-            </Link>
-            <Link to="/login" className="large-screen">
-              Login
-            </Link>
-            <Link to="/register" className="icon-only">
-              <i className="fas fa-user-plus"></i>
-            </Link>
-            <Link to="/login" className="icon-only">
-              <i className="fas fa-sign-in-alt"></i>
-            </Link>
-          </>
-        )}
       </nav>
     </header>
   );
