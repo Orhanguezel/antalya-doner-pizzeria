@@ -1,45 +1,53 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      const fetchUser = async () => {
-        try {
-          const response = await axios.get('/api/auth/user');
-          setUser(response.data);
-        } catch (error) {
-          console.error('Failed to fetch user:', error);
-          logout();
-        }
-      };
-      fetchUser();
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      setUser(response.data.user);
+      if (response.data.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Login failed:', error.response ? error.response.data : error.message);
     }
-  }, [token]);
+  };
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
-    setToken(token);
+  const register = async (username, email, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/register', { username, email, password });
+      setUser(response.data.user);
+      navigate('/');
+    } catch (error) {
+      console.error('Registration failed:', error.response ? error.response.data : error.message);
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
-    setToken(null);
     setUser(null);
+    navigate('/auth');
   };
 
+  useEffect(() => {
+    // Giriş yapılmış kullanıcıyı local storage veya başka bir yöntem ile kontrol edin
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

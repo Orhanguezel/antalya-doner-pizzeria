@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Kontakt from './pages/Kontakt';
 import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
-import Auth from './pages/Auth'; // Bu satırı ekliyoruz
+import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
 import { AuthProvider } from './context/AuthContext';
 
@@ -73,8 +73,8 @@ const App = () => {
   };
 
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Header cart={cart} />
         <main>
           <Routes>
@@ -82,13 +82,13 @@ const App = () => {
             <Route path="/kontakt" element={<Kontakt />} />
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
         <Footer />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

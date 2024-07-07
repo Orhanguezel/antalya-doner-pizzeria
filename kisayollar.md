@@ -4,6 +4,8 @@ npm start
 cd ~/Desktop/antalya-doner-pizzeria/backend
 npm start
 
+
+cd ~/Desktop/antalya-doner-pizzeria/backend
 node clearDatabase.js
 node insertData1.js
 node insertData2.js
@@ -13,4 +15,17 @@ node insertData4.js
 
 
 python3 test_api.py
+
+python3 test_register_user.py
+
+
+mongo
+use antalya-doner-pizzeria
+db.categories.find().pretty()
+
+
+
+username": admin
+email: admin@example.com
+pasword: adminpassword
 

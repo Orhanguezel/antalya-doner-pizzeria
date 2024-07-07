@@ -28,4 +28,7 @@ app.listen(port, () => {
 
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
+const authRoutes = require('./routes/auth'); // auth.js dosyasını içe aktar
+
 app.use('/api/categories', categoryRoutes);
+app.use('/api/auth', authRoutes); // auth.js dosyasını kullan
