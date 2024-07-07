@@ -12,18 +12,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const response = await axios.post('/api/auth/login', { username, password });
       login(response.data.token);
       navigate('/');
-    } catch (error) {
-      setError('Invalid credentials');
+    } catch (err) {
+      console.error('Login Error:', err.response ? err.response.data : err.message);
+      setError(err.response?.data?.error || 'Invalid credentials');
     }
   };
 
   return (
     <div>
       <h2>Login</h2>
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Username:
@@ -33,7 +36,6 @@ const Login = () => {
           Password:
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </label>
-        {error && <p>{error}</p>}
         <button type="submit">Login</button>
       </form>
     </div>
