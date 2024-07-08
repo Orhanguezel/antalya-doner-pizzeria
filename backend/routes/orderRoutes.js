@@ -14,6 +14,7 @@ router.put('/:id/delivered', orderController.updateOrderStatus); // delivered st
 router.put('/:id/complete', orderController.updateOrderStatus); // completed status
 router.put('/:id/cancel', orderController.cancelOrder);
 router.put('/:id/update-preparation-time', orderController.updatePreparationTime);
+router.put('/:id/archive', orderController.archiveOrder); // Archive order route
 router.delete('/:id', orderController.deleteOrder);
 
 module.exports = router;
