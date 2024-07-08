@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Warenkorb.css';
 
 const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
@@ -44,7 +45,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
     setCustomerInfo({ ...customerInfo, [name]: value });
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const total = parseFloat(calculateTotal());
     if (orderType === 'delivery' && total < 15) {
       setErrorMessage('Für die Lieferung muss der Mindestbestellwert 15 € betragen.');
@@ -58,10 +59,25 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
       return;
     }
-    console.log('Bestellung abgeschlossen:', { orderType, cart, total, customerInfo });
-    clearCart();
-    localStorage.removeItem('cart');
-    setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
+
+    const orderData = {
+      customerInfo,
+      items: cart,
+      total,
+      orderType,
+      deliveryFee: orderType === 'delivery' ? 2 : 0 // Teslimat ücreti
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/orders', orderData);
+      console.log('Bestellung abgeschlossen:', response.data);
+      clearCart();
+      localStorage.removeItem('cart');
+      setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
+    } catch (error) {
+      console.error('Bestellung fehlgeschlagen:', error);
+      setErrorMessage('Es gab ein Problem mit Ihrer Bestellung. Bitte versuchen Sie es erneut.');
+    }
   };
 
   return (
