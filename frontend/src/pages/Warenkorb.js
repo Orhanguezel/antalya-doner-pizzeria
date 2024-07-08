@@ -7,10 +7,12 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     surname: '',
+    email: '',
     address: '',
     phone: '',
     region: '',
-    paymentMethod: ''
+    paymentMethod: '',
+    specialRequest: '' // Özel İstek alanı
   });
 
   // Açılış-kapanış saatleri ve sipariş saatlerini belirleyelim
@@ -71,6 +73,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       setErrorMessage('Bitte füllen Sie Ihre Telefonnummer aus.');
       return;
     }
+
     // Sipariş tamamlama işlemleri burada gerçekleştirilecek
     console.log('Bestellung abgeschlossen:', { orderType, cart, total, customerInfo });
     clearCart(); // Sepeti temizle
@@ -154,17 +157,15 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
           Nachname:
           <input type="text" name="surname" value={customerInfo.surname} onChange={handleInputChange} />
         </label>
-        {(orderType === 'delivery' || orderType === 'pickup') && (
-          <label>
-            Telefon:
-            <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
-          </label>
-        )}
         {orderType === 'delivery' && (
           <>
             <label>
               Adresse:
               <input type="text" name="address" value={customerInfo.address} onChange={handleInputChange} />
+            </label>
+            <label>
+              Telefon:
+              <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
             </label>
             <label>
               Region:
@@ -194,6 +195,10 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
             <p className="delivery-fee">Die Liefergebühr ist für alle Regionen gleich und beträgt 2 €.</p>
           </>
         )}
+        <label>
+          Besondere Wünsche:
+          <input type="text" name="specialRequest" value={customerInfo.specialRequest} onChange={handleInputChange} />
+        </label>
       </div>
 
       <button className="checkout-button" onClick={handleCheckout}>Bestellung abschließen</button>
