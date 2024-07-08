@@ -8,10 +8,8 @@ exports.createOrder = async (req, res) => {
     return res.status(400).json({ message: 'customerInfo, items, total ve orderType gereklidir.' });
   }
 
-  if (orderType === 'delivery') {
-    if (!customerInfo.address || !customerInfo.phone) {
-      return res.status(400).json({ message: 'Eve teslimat için address ve phone gereklidir.' });
-    }
+  if (orderType === 'delivery' && (!customerInfo.address || !customerInfo.phone)) {
+    return res.status(400).json({ message: 'Eve teslimat için address ve phone gereklidir.' });
   }
 
   try {
@@ -61,7 +59,9 @@ exports.updateOrderStatus = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    order.status = req.body.status;
+    if (req.body.status) {
+      order.status = req.body.status;
+    }
     await order.save();
     res.status(200).json(order);
   } catch (error) {
@@ -69,19 +69,16 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
-// Siparişi iptal etme
-exports.cancelOrder = async (req, res) => {
+// Siparişi silme
+exports.deleteOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    const { cancelReason } = req.body;
     const order = await Order.findById(id);
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    order.status = 'İptal Edildi';
-    order.cancelReason = cancelReason;
-    await order.save();
-    res.status(200).json(order);
+    await order.remove();
+    res.status(200).json({ message: 'Order deleted successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

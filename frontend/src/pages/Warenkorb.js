@@ -7,24 +7,19 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     surname: '',
-    email: '',
     address: '',
     phone: '',
     region: '',
     paymentMethod: '',
-    specialRequest: '' // Özel İstek alanı
+    specialRequest: '' // Yeni alan
   });
 
-  // Açılış-kapanış saatleri ve sipariş saatlerini belirleyelim
   const openingHours = "Mo. - Fr.: 11:00 bis 22:00, Sonntag: 16:00 bis 22:00, Feiertagen: 16:00 bis 22:00";
   const deliveryHours = "Mo. - Fr.: 11:30 bis 21:30, Sonntag: 16:30 bis 21:30, Feiertagen: 16:30 bis 21:30";
   const currentTime = new Date();
   const orderTime = currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-
-  // Cumartesi günleri kontrolü
   const isSaturday = currentTime.getDay() === 6;
 
-  // Sayfa yüklendiğinde cumartesi kontrolü
   useEffect(() => {
     if (isSaturday) {
       setErrorMessage('Samstag ist Ruhetag.');
@@ -50,35 +45,23 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
   };
 
   const handleCheckout = () => {
-    // Not: Sipariş saati engellemesi şu an devre dışı bırakıldı
-    // if (isSaturday) {
-    //   setErrorMessage('Samstag ist Ruhetag. Bestellungen können nicht aufgegeben werden.');
-    //   return;
-    // }
-
     const total = parseFloat(calculateTotal());
     if (orderType === 'delivery' && total < 15) {
       setErrorMessage('Für die Lieferung muss der Mindestbestellwert 15 € betragen.');
       return;
     }
-    if (orderType === 'delivery' && (!customerInfo.name || !customerInfo.surname || !customerInfo.address || !customerInfo.phone || !customerInfo.region || !customerInfo.paymentMethod)) {
+    if ((orderType === 'delivery' || orderType === 'pickup') && (!customerInfo.name || !customerInfo.surname || !customerInfo.phone)) {
       setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
       return;
     }
-    if ((orderType === 'dinein' || orderType === 'pickup') && (!customerInfo.name || !customerInfo.surname)) {
-      setErrorMessage('Bitte füllen Sie Ihren Namen und Nachnamen aus.');
+    if (orderType === 'delivery' && (!customerInfo.address || !customerInfo.region || !customerInfo.paymentMethod)) {
+      setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
       return;
     }
-    if (orderType === 'pickup' && !customerInfo.phone) {
-      setErrorMessage('Bitte füllen Sie Ihre Telefonnummer aus.');
-      return;
-    }
-
-    // Sipariş tamamlama işlemleri burada gerçekleştirilecek
     console.log('Bestellung abgeschlossen:', { orderType, cart, total, customerInfo });
-    clearCart(); // Sepeti temizle
-    localStorage.removeItem('cart'); // localStorage'dan sepeti kaldır
-    setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.'); // Siparişin tamamlandığını kullanıcıya bildir
+    clearCart();
+    localStorage.removeItem('cart');
+    setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
   };
 
   return (
@@ -150,25 +133,27 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <div className="customer-info">
         <h3>Kundendaten</h3>
         <label>
-          Name:
+          Name:<span className="required">*</span>
           <input type="text" name="name" value={customerInfo.name} onChange={handleInputChange} />
         </label>
         <label>
-          Nachname:
+          Nachname:<span className="required">*</span>
           <input type="text" name="surname" value={customerInfo.surname} onChange={handleInputChange} />
         </label>
+        {(orderType === 'pickup' || orderType === 'delivery') && (
+          <label>
+            Telefon:<span className="required">*</span>
+            <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
+          </label>
+        )}
         {orderType === 'delivery' && (
           <>
             <label>
-              Adresse:
+              Adresse:<span className="required">*</span>
               <input type="text" name="address" value={customerInfo.address} onChange={handleInputChange} />
             </label>
             <label>
-              Telefon:
-              <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
-            </label>
-            <label>
-              Region:
+              Region:<span className="required">*</span>
               <select name="region" value={customerInfo.region} onChange={handleInputChange} required>
                 <option value="">Bitte wählen...</option>
                 <option value="Aldenhoven">Aldenhoven</option>
@@ -185,7 +170,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
               </select>
             </label>
             <label>
-              Zahlungsmethode:
+              Zahlungsmethode:<span className="required">*</span>
               <select name="paymentMethod" value={customerInfo.paymentMethod} onChange={handleInputChange} required>
                 <option value="">Bitte wählen...</option>
                 <option value="Kreditkarte">Kreditkarte</option>
