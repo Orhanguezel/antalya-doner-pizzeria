@@ -51,18 +51,19 @@ const AdminPanel = () => {
     }
   };
 
-  const archiveOrder = async (id) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/api/orders/${id}/complete`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setOrders(orders.map(order => order._id === id ? response.data : order));
-    } catch (error) {
-      console.error('Error archiving order:', error);
-    }
-  };
+  
+const archiveOrder = async (orderId) => {
+  try {
+    const response = await axios.put(`http://localhost:5000/api/orders/${orderId}/archive`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    setOrders(orders.map(order => order._id === orderId ? response.data : order));
+  } catch (error) {
+    console.error('Error archiving order:', error);
+  }
+};
   
 
   const printOrder = () => {
