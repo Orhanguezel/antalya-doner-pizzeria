@@ -1,8 +1,10 @@
 const Order = require('../models/Order');
 
+
 // Yeni bir sipariş oluşturma
 exports.createOrder = async (req, res) => {
   const { customerInfo, items, total, orderType, status } = req.body;
+  let { deliveryFee } = req.body;
 
   if (!customerInfo || !items || total == null || !orderType) {
     return res.status(400).json({ message: 'customerInfo, items, total ve orderType gereklidir.' });
@@ -12,6 +14,9 @@ exports.createOrder = async (req, res) => {
     if (!customerInfo.address || !customerInfo.phone) {
       return res.status(400).json({ message: 'Eve teslimat için address ve phone gereklidir.' });
     }
+    deliveryFee = deliveryFee || 0; // Teslimat ücreti 0 olarak varsay
+  } else {
+    deliveryFee = 0; // Teslimat ücreti diğer sipariş türlerinde 0 olarak ayarla
   }
 
   try {
@@ -20,7 +25,8 @@ exports.createOrder = async (req, res) => {
       items,
       total,
       orderType,
-      status: status || 'Gelen Siparişler'
+      status: status || 'Gelen Siparişler',
+      deliveryFee // Teslimat ücretini ekleyin
     });
 
     const newOrder = await order.save();
@@ -33,7 +39,7 @@ exports.createOrder = async (req, res) => {
 // Tüm siparişleri getirme
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ archived: false }).populate('userId');
+    const orders = await Order.find({ archived: false });
     res.status(200).json(orders);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -43,7 +49,7 @@ exports.getAllOrders = async (req, res) => {
 // Belirli bir siparişi getirme
 exports.getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate('userId');
+    const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }

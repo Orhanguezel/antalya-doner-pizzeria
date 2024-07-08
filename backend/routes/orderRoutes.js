@@ -12,9 +12,9 @@ router.put('/:id/ready', orderController.updateOrderStatus); // ready status
 router.put('/:id/out-for-delivery', orderController.updateOrderStatus); // out_for_delivery status
 router.put('/:id/delivered', orderController.updateOrderStatus); // delivered status
 router.put('/:id/complete', orderController.updateOrderStatus); // completed status
-router.put('/:id/cancel', orderController.cancelOrder);
+router.put('/:id/cancel', orderController.updateOrderStatus); // canceled status
 router.put('/:id/update-preparation-time', orderController.updatePreparationTime);
-router.put('/:id/archive', orderController.archiveOrder); // Archive order route
 router.delete('/:id', orderController.deleteOrder);
+router.put('/:id/archive', orderController.archiveOrder); // archive status
 
 module.exports = router;

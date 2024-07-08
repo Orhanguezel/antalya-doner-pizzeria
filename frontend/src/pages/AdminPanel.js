@@ -51,18 +51,19 @@ const AdminPanel = () => {
     }
   };
 
-  const archiveOrder = async (orderId) => {
+  const archiveOrder = async (id) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/orders/${orderId}/archive`, {}, {
+      const response = await axios.put(`http://localhost:5000/api/orders/${id}/complete`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setOrders(orders.filter(order => order._id !== orderId));
+      setOrders(orders.map(order => order._id === id ? response.data : order));
     } catch (error) {
       console.error('Error archiving order:', error);
     }
   };
+  
 
   const printOrder = () => {
     window.print();
