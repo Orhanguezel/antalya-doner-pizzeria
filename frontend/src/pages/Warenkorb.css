@@ -127,4 +127,7 @@
   .store-info h3 {
     margin-bottom: 10px;
   }
+  .required {
+    color: red;
+  }
   

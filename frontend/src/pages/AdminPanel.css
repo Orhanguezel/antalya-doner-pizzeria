@@ -1,10 +1,11 @@
-/* frontend/src/pages/AdminPanel.css */
 .admin-panel {
     padding: 20px;
   }
   
   .order-status-buttons {
     margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
   }
   
   .order-status-buttons button {
@@ -26,28 +27,43 @@
     padding: 0;
   }
   
-  .order-item {
+  .order-card {
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 10px;
+    text-align: left; /* Ensure text is left-aligned */
   }
   
-  .order-item p {
-    margin: 5px 0;
+  .order-info {
+    text-align: left; /* Ensure text is left-aligned */
   }
   
-  .order-items {
-    list-style: none;
-    padding: 0;
+  .order-header p,
+  .order-details p {
+    margin: 0;
+    text-align: left; /* Ensure text is left-aligned */
+  }
+  
+  .order-items p,
+  .order-items ul {
+    margin: 0;
+    text-align: left; /* Ensure text is left-aligned */
   }
   
   .order-items li {
     margin-left: 15px;
+    text-align: left; /* Ensure text is left-aligned */
+  }
+  
+  .order-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 10px;
   }
   
   .order-actions button {
-    margin-right: 5px;
     padding: 5px 10px;
     cursor: pointer;
     background-color: #28a745;

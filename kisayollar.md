@@ -19,8 +19,9 @@ python3 test_api.py
 python3 test_register_user.py
 
 
- python3 test_create_order.py
+python3 test_create_order.py
 
+python3 test_order_process.py
 
 mongo
 use antalya-doner-pizzeria

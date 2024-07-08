@@ -29,7 +29,7 @@ app.listen(port, () => {
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/auth');
-const orderRoutes = require('./routes/orders');
+const orderRoutes = require('./routes/orderRoutes');
 
 app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
