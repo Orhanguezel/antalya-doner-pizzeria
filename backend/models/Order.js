@@ -17,9 +17,9 @@ const orderSchema = new mongoose.Schema({
     totalPrice: { type: Number, required: true }
   }],
   total: { type: Number, required: true },
-  status: { type: String, enum: ['Gelen Siparişler', 'Hazırlanan Siparişler', 'Taşınan Siparişler', 'Teslim Edilen Siparişler'], default: 'Gelen Siparişler' },
+  status: { type: String, enum: ['Gelen Siparişler', 'Hazırlanan Siparişler', 'Taşınan Siparişler', 'Teslim Edilen Siparişler', 'Completed'], default: 'Gelen Siparişler' },
   orderType: { type: String, required: true }, // Dine-in, Pickup, Delivery
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }
+  archived: { type: Boolean, default: false } // Arşiv Durumu
 });
 
 module.exports = mongoose.model('Order', orderSchema);

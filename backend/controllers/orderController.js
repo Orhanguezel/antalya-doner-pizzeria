@@ -33,7 +33,7 @@ exports.createOrder = async (req, res) => {
 // Tüm siparişleri getirme
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate('userId');
+    const orders = await Order.find({ archived: false }).populate('userId');
     res.status(200).json(orders);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -86,6 +86,23 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
+// Siparişi arşivleme
+exports.archiveOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    order.status = 'Completed';
+    order.archived = true;
+    await order.save();
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 // Hazırlık süresini güncelleme
 exports.updatePreparationTime = async (req, res) => {
   try {
@@ -96,22 +113,6 @@ exports.updatePreparationTime = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
     order.preparationTime = preparationTime;
-    await order.save();
-    res.status(200).json(order);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// Siparişi iptal etme
-exports.cancelOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const order = await Order.findById(id);
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-    order.status = 'İptal Edildi';
     await order.save();
     res.status(200).json(order);
   } catch (error) {
