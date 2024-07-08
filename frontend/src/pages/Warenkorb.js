@@ -5,6 +5,7 @@ import './Warenkorb.css';
 const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
   const [orderType, setOrderType] = useState('pickup'); // Default olarak 'pickup' seçili
   const [errorMessage, setErrorMessage] = useState('');
+  const [missingFields, setMissingFields] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     surname: '',
@@ -38,6 +39,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
   const handleOrderTypeChange = (type) => {
     setOrderType(type);
     setErrorMessage('');
+    setMissingFields([]);
   };
 
   const handleInputChange = (e) => {
@@ -47,15 +49,16 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
 
   const handleCheckout = async () => {
     const total = parseFloat(calculateTotal());
-    if (orderType === 'delivery' && total < 15) {
-      setErrorMessage('Für die Lieferung muss der Mindestbestellwert 15 € betragen.');
-      return;
-    }
-    if ((orderType === 'delivery' || orderType === 'pickup') && (!customerInfo.name || !customerInfo.surname || !customerInfo.phone)) {
-      setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
-      return;
-    }
-    if (orderType === 'delivery' && (!customerInfo.address || !customerInfo.region || !customerInfo.paymentMethod)) {
+    const fieldsToCheck = {
+      delivery: ['name', 'surname', 'phone', 'address', 'region', 'paymentMethod'],
+      pickup: ['name', 'surname', 'phone'],
+      dinein: ['name', 'surname'],
+    };
+    const requiredFields = fieldsToCheck[orderType];
+    const missing = requiredFields.filter(field => !customerInfo[field]);
+
+    if (missing.length > 0) {
+      setMissingFields(missing);
       setErrorMessage('Bitte füllen Sie alle erforderlichen Felder aus.');
       return;
     }
@@ -65,7 +68,9 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       items: cart,
       total,
       orderType,
-      deliveryFee: orderType === 'delivery' ? 2 : 0 // Teslimat ücreti
+      status: 'Gelen Siparişler',
+      deliveryFee: orderType === 'delivery' ? 2 : 0,
+      archived: false,
     };
 
     try {
@@ -74,8 +79,9 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       clearCart();
       localStorage.removeItem('cart');
       setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
+      setMissingFields([]);
     } catch (error) {
-      console.error('Bestellung fehlgeschlagen:', error);
+      console.error('Bestellung fehlgeschlagen:', error.response?.data || error.message);
       setErrorMessage('Es gab ein Problem mit Ihrer Bestellung. Bitte versuchen Sie es erneut.');
     }
   };
@@ -150,27 +156,56 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
         <h3>Kundendaten</h3>
         <label>
           Name:<span className="required">*</span>
-          <input type="text" name="name" value={customerInfo.name} onChange={handleInputChange} />
+          <input
+            type="text"
+            name="name"
+            value={customerInfo.name}
+            onChange={handleInputChange}
+            className={missingFields.includes('name') ? 'missing-field' : ''}
+          />
         </label>
         <label>
           Nachname:<span className="required">*</span>
-          <input type="text" name="surname" value={customerInfo.surname} onChange={handleInputChange} />
+          <input
+            type="text"
+            name="surname"
+            value={customerInfo.surname}
+            onChange={handleInputChange}
+            className={missingFields.includes('surname') ? 'missing-field' : ''}
+          />
         </label>
         {(orderType === 'pickup' || orderType === 'delivery') && (
           <label>
             Telefon:<span className="required">*</span>
-            <input type="text" name="phone" value={customerInfo.phone} onChange={handleInputChange} />
+            <input
+              type="text"
+              name="phone"
+              value={customerInfo.phone}
+              onChange={handleInputChange}
+              className={missingFields.includes('phone') ? 'missing-field' : ''}
+            />
           </label>
         )}
         {orderType === 'delivery' && (
           <>
             <label>
               Adresse:<span className="required">*</span>
-              <input type="text" name="address" value={customerInfo.address} onChange={handleInputChange} />
+              <input
+                type="text"
+                name="address"
+                value={customerInfo.address}
+                onChange={handleInputChange}
+                className={missingFields.includes('address') ? 'missing-field' : ''}
+              />
             </label>
             <label>
               Region:<span className="required">*</span>
-              <select name="region" value={customerInfo.region} onChange={handleInputChange} required>
+              <select
+                name="region"
+                value={customerInfo.region}
+                onChange={handleInputChange}
+                className={missingFields.includes('region') ? 'missing-field' : ''}
+              >
                 <option value="">Bitte wählen...</option>
                 <option value="Aldenhoven">Aldenhoven</option>
                 <option value="Niedermerz">Niedermerz</option>
@@ -187,7 +222,12 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
             </label>
             <label>
               Zahlungsmethode:<span className="required">*</span>
-              <select name="paymentMethod" value={customerInfo.paymentMethod} onChange={handleInputChange} required>
+              <select
+                name="paymentMethod"
+                value={customerInfo.paymentMethod}
+                onChange={handleInputChange}
+                className={missingFields.includes('paymentMethod') ? 'missing-field' : ''}
+              >
                 <option value="">Bitte wählen...</option>
                 <option value="Kreditkarte">Kreditkarte</option>
                 <option value="Barzahlung">Barzahlung</option>
@@ -198,7 +238,12 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
         )}
         <label>
           Besondere Wünsche:
-          <input type="text" name="specialRequest" value={customerInfo.specialRequest} onChange={handleInputChange} />
+          <input
+            type="text"
+            name="specialRequest"
+            value={customerInfo.specialRequest}
+            onChange={handleInputChange}
+          />
         </label>
       </div>
 

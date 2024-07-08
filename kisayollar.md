@@ -39,3 +39,4 @@ username": admin
 email: admin@example.com
 pasword: adminpassword
 
+15 euro alti siparis icin uyari gerekiyor. 

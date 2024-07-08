@@ -1,22 +1,26 @@
 const Order = require('../models/Order');
 
-
 // Yeni bir sipariş oluşturma
 exports.createOrder = async (req, res) => {
-  const { customerInfo, items, total, orderType, status } = req.body;
-  let { deliveryFee } = req.body;
+  const { customerInfo, items, total, orderType, status, deliveryFee } = req.body;
 
+  // Zorunlu alan kontrolü
   if (!customerInfo || !items || total == null || !orderType) {
     return res.status(400).json({ message: 'customerInfo, items, total ve orderType gereklidir.' });
   }
 
   if (orderType === 'delivery') {
-    if (!customerInfo.address || !customerInfo.phone) {
-      return res.status(400).json({ message: 'Eve teslimat için address ve phone gereklidir.' });
+    if (!customerInfo.address || !customerInfo.phone || !customerInfo.name || !customerInfo.surname || !customerInfo.region || !customerInfo.paymentMethod) {
+      return res.status(400).json({ message: 'Eve teslimat için name, surname, address, phone, region ve paymentMethod gereklidir.' });
     }
-    deliveryFee = deliveryFee || 0; // Teslimat ücreti 0 olarak varsay
-  } else {
-    deliveryFee = 0; // Teslimat ücreti diğer sipariş türlerinde 0 olarak ayarla
+  } else if (orderType === 'pickup') {
+    if (!customerInfo.name || !customerInfo.surname || !customerInfo.phone) {
+      return res.status(400).json({ message: 'Abholung im Restaurant için name, surname ve phone gereklidir.' });
+    }
+  } else if (orderType === 'dinein') {
+    if (!customerInfo.name || !customerInfo.surname) {
+      return res.status(400).json({ message: 'Im Restaurant essen için name ve surname gereklidir.' });
+    }
   }
 
   try {
@@ -26,7 +30,8 @@ exports.createOrder = async (req, res) => {
       total,
       orderType,
       status: status || 'Gelen Siparişler',
-      deliveryFee // Teslimat ücretini ekleyin
+      deliveryFee: deliveryFee || 0,
+      archived: false
     });
 
     const newOrder = await order.save();
@@ -35,6 +40,8 @@ exports.createOrder = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
 
 // Tüm siparişleri getirme
 exports.getAllOrders = async (req, res) => {

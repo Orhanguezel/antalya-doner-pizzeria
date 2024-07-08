@@ -4,12 +4,24 @@ const orderSchema = new mongoose.Schema({
   customerInfo: {
     name: { type: String, required: true },
     surname: { type: String, required: true },
-    email: { type: String, required: false }, // Zorunlu değil
-    address: { type: String, required: true },
-    phone: { type: String, required: true },
-    region: { type: String, required: true },
-    paymentMethod: { type: String, required: true },
-    specialRequest: { type: String, required: false, default: '' } // Özel İstek
+    email: { type: String, required: false },
+    address: {
+      type: String,
+      required: function() { return this.parent().orderType === 'delivery'; }
+    },
+    phone: {
+      type: String,
+      required: function() { return this.parent().orderType !== 'dinein'; }
+    },
+    region: {
+      type: String,
+      required: function() { return this.parent().orderType === 'delivery'; }
+    },
+    paymentMethod: {
+      type: String,
+      required: function() { return this.parent().orderType === 'delivery'; }
+    },
+    specialRequest: { type: String, required: false, default: '' }
   },
   items: [{
     name: { type: String, required: true },
@@ -18,9 +30,9 @@ const orderSchema = new mongoose.Schema({
   }],
   total: { type: Number, required: true },
   status: { type: String, enum: ['Gelen Siparişler', 'Hazırlanan Siparişler', 'Taşınan Siparişler', 'Teslim Edilen Siparişler', 'Completed'], default: 'Gelen Siparişler' },
-  orderType: { type: String, required: true }, // Dine-in, Pickup, Delivery
-  deliveryFee: { type: Number, required: false, default: 0 }, // Teslimat ücreti
-  archived: { type: Boolean, default: false } // Arşivlenmiş siparişler için
+  orderType: { type: String, required: true },
+  deliveryFee: { type: Number, required: false, default: 0 },
+  archived: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);
