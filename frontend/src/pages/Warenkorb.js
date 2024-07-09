@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './Warenkorb.css';
 
 const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
@@ -92,7 +94,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.nr}. {item.name}</h4>
+            <h4>{item.quantity} x {item.nr}. {item.name}</h4> {/* Güncellendi */}
             {item.selectedPrice.key !== 'default' && (
               <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
             )}
@@ -110,10 +112,16 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
               <p>Preis: {item.totalPrice} €</p>
             )}
             <div className="quantity-controls">
-              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>
+                <FontAwesomeIcon icon={faMinus} />
+              </button>
               <span>{item.quantity}</span>
-              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>+</button>
-              <button onClick={() => removeCartItem(item)}>Löschen</button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+              <button onClick={() => removeCartItem(item)} className="remove-button">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
             </div>
           </li>
         ))}

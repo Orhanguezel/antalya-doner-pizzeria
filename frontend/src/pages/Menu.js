@@ -15,7 +15,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
-  // const [showCartBar, setShowCartBar] = useState(false); // Unused state removed
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -76,7 +75,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
     };
     onAddToCart(newItem);
     setSelectedItem(null);
-    // setShowCartBar(true); // Removed since it's not used
   };
 
   const handleInfoClick = (item) => {
@@ -110,7 +108,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             onClick={() => setActiveCategory(category._id)}
             className={activeCategory === category._id ? 'category-button active' : 'category-button'}
           >
-            {category.name}
+            <i className={`fas fa-${category.icon}`}></i> {category.name}
           </button>
         ))}
       </div>

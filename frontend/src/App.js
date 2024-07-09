@@ -8,8 +8,8 @@ import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
 import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
-import CartBar from './components/CartBar';
 import { AuthProvider } from './context/AuthContext';
+import CartBar from './components/CartBar'; // CartBar bileşenini ekleyelim
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -35,11 +35,11 @@ const App = () => {
     );
     if (existingItemIndex >= 0) {
       const updatedCart = [...cart];
-      updatedCart[existingItemIndex].quantity += 1;
+      updatedCart[existingItemIndex].quantity += newItem.quantity;
       updatedCart[existingItemIndex].totalPrice += newItem.totalPrice;
       setCart(updatedCart);
     } else {
-      setCart([...cart, { ...newItem, quantity: 1 }]);
+      setCart([...cart, { ...newItem, quantity: newItem.quantity }]);
     }
   };
 
@@ -87,8 +87,8 @@ const App = () => {
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
-        {cart.length > 0 && <CartBar cart={cart} />}
         <Footer />
+        {cart.length > 0 && <CartBar cart={cart} />} {/* Sabit barı ekleyelim */}
       </AuthProvider>
     </Router>
   );
