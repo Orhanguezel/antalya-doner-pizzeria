@@ -11,9 +11,9 @@ exports.getItems = async (req, res) => {
 
 exports.createItem = async (req, res) => {
   try {
-    const item = new Item(req.body);
-    await item.save();
-    res.status(201).json(item);
+    const newItem = new Item(req.body);
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

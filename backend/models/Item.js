@@ -1,22 +1,23 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const itemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
+const itemSchema = new Schema({
+  nr: { type: String, required: true },
   type: { type: String, required: true },
+  name: { type: String, required: true },
+  zusatztoffe: [Number],
+  allergene: [String],
+  description: { type: String, required: true },
   prices: {
-    default: { type: Number, required: true },
-    klein: { type: Number },
-    groß: { type: Number },
-    kleineSchale: { type: Number },
-    großeSchale: { type: Number }
+    default: { type: Number },
+    klein: Number,
+    groß: Number,
+    aufPommes: Number,
+    kleineSchale: Number,
+    großeSchale: Number
   },
-  extras: {
-    type: Map,
-    of: Number
-  },
-  image: { type: String },
-  categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
+  extras: Schema.Types.Mixed,
 });
 
-module.exports = mongoose.model('Item', itemSchema);
+const Item = mongoose.model('Item', itemSchema);
+module.exports = Item;

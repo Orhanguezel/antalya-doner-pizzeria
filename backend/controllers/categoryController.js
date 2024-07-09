@@ -1,6 +1,5 @@
-const Category = require('../models/Category');
+const { Category } = require('../models/Category');
 
-// Kategorileri döndürme fonksiyonu
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find().populate({
