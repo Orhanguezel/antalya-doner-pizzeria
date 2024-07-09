@@ -1,53 +1,48 @@
 const mongoose = require('mongoose');
-const Category = require('./models/Category');
+const { Category, Subcategory, Item } = require('./models/Category');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+mongoose.set('strictQuery', false);
 
 const categories = [
   {
-    name: 'sparmenu',
-    description: 'Unsere Sparmenus bieten eine großartige Kombination aus Geschmack und Preis.',
+    name: 'kinder',
+    description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
     subcategories: [
       {
-        name: 'sparmenus',
-        description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
-        images: ['../assets/menu/25.jpg', '../assets/menu/26.jpg'],
+        name: 'fuerKinder',
+        description: 'Unsere Kindergerichte sind speziell auf die Bedürfnisse der kleinen Gäste abgestimmt.',
+        images: ['/assets/menu/32.jpg', '/assets/menu/31.jpg'],
         items: [
           {
-            nr: '142',
+            nr: '110',
             type: 'food',
-            name: 'Menü 1',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Döner Teller komplett + Softgetränk 0,33 L',
-            prices: { default: 12.5 },
-            image: '../assets/menu/45.jpg',
-            extras: {} // Boş extras alanı
+            name: 'Kinder Döner',
+            zusatztoffe: [2, 3, 4],
+            allergene: ['a', 'g', 'f', 'l', 'b'],
+            description: 'mit Salat und Tzatziki',
+            prices: { default: 4.0 }
           },
           {
-            nr: '143',
+            nr: '111',
             type: 'food',
-            name: 'Menü 2',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Döner überbacken + Pommes & Salat + Softgetränk 0,33 L',
-            prices: { default: 12.5 },
-            image: '../assets/menu/46.jpg',
-            extras: {} // Boş extras alanı
+            name: 'Kinder Box',
+            zusatztoffe: [2, 3, 4],
+            allergene: ['g', 'f', 'l', 'b'],
+            description: 'mit Pommes',
+            prices: { default: 7.5 }
           },
           {
-            nr: '144',
+            nr: '112',
             type: 'food',
-            name: 'Menü 3',
-            zusatztoffe: [],
-            allergene: [],
-            description: 'Currywurst + Pommes + Softgetränk 0,33 L',
-            prices: { default: 9.5 },
-            image: '../assets/menu/47.jpg',
-            extras: {} // Boş extras alanı
+            name: 'Kinder Teller',
+            zusatztoffe: [2, 3, 4],
+            allergene: ['a', 'g', 'f', 'l', 'b'],
+            description: 'mit Pommes, Salat und Tzatziki',
+            prices: { default: 9.0 }
           }
         ]
       }
@@ -57,11 +52,30 @@ const categories = [
 
 const insertData = async () => {
   try {
-    await Category.insertMany(categories);
-    console.log('Data successfully inserted');
+    for (const categoryData of categories) {
+      const subcategories = [];
+      for (const subcategoryData of categoryData.subcategories) {
+        const items = await Item.insertMany(subcategoryData.items);
+        const subcategory = {
+          ...subcategoryData,
+          items: items.map(item => item._id)
+        };
+        const subcat = new Subcategory(subcategory);
+        await subcat.save();
+        subcategories.push(subcat._id);
+      }
+
+      const category = new Category({
+        ...categoryData,
+        subcategories
+      });
+
+      await category.save();
+    }
+    console.log('All categories successfully inserted');
     mongoose.connection.close();
   } catch (error) {
-    console.error('Error inserting data:', error);
+    console.error('Error inserting category data:', error);
     mongoose.connection.close();
   }
 };

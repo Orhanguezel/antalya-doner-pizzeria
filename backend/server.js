@@ -30,7 +30,11 @@ app.listen(port, () => {
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/orderRoutes');
+const itemsRouter = require('./routes/itemsRouter');
+const subcategoriesRouter = require('./routes/subcategoriesRouter');
 
 app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/items', itemsRouter);
+app.use('/api/subcategories', subcategoriesRouter);

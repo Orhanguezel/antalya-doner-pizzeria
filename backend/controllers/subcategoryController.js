@@ -11,10 +11,9 @@ exports.getSubcategories = async (req, res) => {
 
 exports.createSubcategory = async (req, res) => {
   try {
-    const { name, description, images } = req.body;
-    const subcategory = new Subcategory({ name, description, images });
-    await subcategory.save();
-    res.status(201).json(subcategory);
+    const newSubcategory = new Subcategory(req.body);
+    const savedSubcategory = await newSubcategory.save();
+    res.status(201).json(savedSubcategory);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
