@@ -11,11 +11,11 @@ mongoose.set('strictQuery', false);
 
 const categories = [
   {
-    name: 'getraenke',
+    name: 'Getränke',
     description: 'Unsere Auswahl an Getränken.',
     subcategories: [
       {
-        name: 'alkoholischeGetraenke',
+        name: 'Alkoholische Getränke',
         description: 'Unsere Auswahl an alkoholischen Getränken.',
         images: ['../assets/menu/38.jpg', '../assets/menu/39.jpg'],
         items: [
@@ -68,7 +68,7 @@ const categories = [
         ]
       },
       {
-        name: 'alkoholfreieGetraenke',
+        name: 'Alkoholfreie Getränke',
         description: 'Unsere Auswahl an alkoholfreien Getränken.',
         images: ['../assets/menu/42.jpg', '../assets/menu/43.jpg'],
         items: [

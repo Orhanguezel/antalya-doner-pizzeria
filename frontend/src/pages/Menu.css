@@ -7,11 +7,6 @@
   margin-bottom: 20px;
 }
 
-.menu-header .logo {
-  display: block;
-  margin: 0 auto;
-}
-
 .menu-title {
   font-size: 24px;
   margin: 10px 0;
@@ -20,19 +15,19 @@
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Butonlar arasındaki boşluk */
+  gap: 5px; /* Butonlar arasındaki boşluk */
   justify-content: center;
   margin-bottom: 20px;
   position: sticky;
   top: 0;
   background: #fff;
-  z-index: 1000;
-  padding: 10px 0;
+  z-index: 10;
+  padding: 5px 0;
 }
 
 .category-button {
-  flex: 1 1 22%; /* Buton genişliği */
-  padding: 10px 10px;
+  flex: 1 1 25%; /* Buton genişliği */
+  padding: 10px 5px;
   font-size: 1rem;
   text-align: center;
   background-color: #fa7e1e; /* Buton rengi */
@@ -87,6 +82,13 @@
   justify-content: center;
 }
 
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
 .card {
   position: relative;
   padding: 10px;
@@ -98,6 +100,7 @@
   transition: transform 0.2s;
   flex: 1 1 350px; /* Kart genişliği */
   max-width: 400px; /* Maksimum genişlik */
+  min-width: 350px; /* Minimum genişlik */
 }
 
 .card:hover {
@@ -157,6 +160,14 @@
   opacity: 0.8;
 }
 
+.card-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px 10px 0 0;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -164,7 +175,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5); /* Arka planı flu yapmak için */
-  z-index: 999;
+  z-index: 9999; /* Güncelledik */
 }
 
 .modal {
@@ -178,19 +189,22 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 10000; /* Güncelledik */
   color: #333;
   background-color: #f8f9fa; /* Kontrast artırmak için arka plan rengi */
 }
 
-.subcategory-images img {
-  margin: 5px;
-}
-
-.items-container {
+.categories-container {
   display: flex;
   flex-wrap: wrap;
+  gap: 5px; /* Butonlar arasındaki boşluk */
   justify-content: center;
+  margin-bottom: 10px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1000; /* Z-index değerini güncelledik */
+  padding: 10px 0;
 }
 
 .cart-bar {
@@ -204,7 +218,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  z-index: 1000;
+  z-index: 999; /* Z-index değerini güncelledik */
 }
 
 .cart-icon-container {
@@ -253,6 +267,6 @@
   }
 
   .category-button {
-    flex: 1 1 45%; /* Küçük ekranlarda buton genişliği */
+    flex: 1 1 25%; /* Küçük ekranlarda buton genişliği */
   }
 }

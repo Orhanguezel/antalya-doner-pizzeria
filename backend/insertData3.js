@@ -11,11 +11,11 @@ mongoose.set('strictQuery', false);
 
 const categories = [
   {
-    name: 'kinder',
+    name: 'Für Kinder',
     description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
     subcategories: [
       {
-        name: 'fuerKinder',
+        name: 'Für unsere kleine Freunde',
         description: 'Unsere Kindergerichte sind speziell auf die Bedürfnisse der kleinen Gäste abgestimmt.',
         images: ['../assets/menu/32.jpg', '../assets/menu/31.jpg'],
         items: [

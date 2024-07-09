@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUtensils, faShoppingCart, faInfoCircle, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUtensils, faShoppingCart, faPhone, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 
 const Header = ({ cart }) => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="../assets/logo/11.png" alt="Logo" />
+        <img src="../assets/logo/1.png" alt="Logo" />
       </div>
       <nav className="navbar">
         <Link to="/">
@@ -23,7 +23,7 @@ const Header = ({ cart }) => {
           {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
         </Link>
         <Link to="/kontakt">
-          <FontAwesomeIcon icon={faInfoCircle} /> <span className="nav-link-text">Kontakt</span>
+          <FontAwesomeIcon icon={faPhone} /> <span className="nav-link-text">Kontakt</span>
         </Link>
         <Link to="/auth">
           <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>

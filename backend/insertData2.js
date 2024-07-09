@@ -10,13 +10,13 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 mongoose.set('strictQuery', false);
 
 const categoryData = {
-    name: "beilagen",
+    name: "Beilagen",
     description: "Unsere Beilagen ergänzen jedes Gericht perfekt.",
     subcategories: [
       {
         name: "Pizzabrötchen 6 Stk",
         description: "Frisch aus dem Steinofen.",
-        images: ["../assets/menu/11.jpg", "../assets/menu/12.jpg"],
+        images: ["../assets/menu/15.jpg", "../assets/menu/17.jpg"],
         items: [
           {
             nr: "55",
@@ -209,7 +209,7 @@ const categoryData = {
       {
         name: "Schnitzelgerichte",
         description: "Alle Schnitzelgerichte werden mit Pommes & Salat serviert.",
-        images: ["../assets/menu/13.jpg", "../assets/menu/14.jpg"],
+        images: ["../assets/menu/18.jpg", "../assets/menu/19.jpg"],
         items: [
           {
             nr: "62",
@@ -324,7 +324,7 @@ const categoryData = {
       {
         name: "Wurst & Pommes",
         description: "Klassische Würstchen mit knusprigen Pommes.",
-        images: ["../assets/menu/15.jpg", "../assets/menu/16.jpg"],
+        images: ["../assets/menu/23.jpg", "../assets/menu/24.jpg"],
         items: [
           {
             nr: "74",
@@ -457,7 +457,7 @@ const categoryData = {
       {
         name: "Pasta al Forno",
         description: "Hausgemachte Pasta frisch aus dem Ofen.",
-        images: ["../assets/menu/19.jpg", "../assets/menu/20.jpg"],
+        images: ["../assets/menu/25.jpg", "../assets/menu/26.jpg"],
         items: [
           {
             nr: "91",
@@ -514,7 +514,7 @@ const categoryData = {
       {
         name: "Tortellini",
         description: "Frisch und lecker.",
-        images: ["../assets/menu/21.jpg", "../assets/menu/22.jpg"],
+        images: ["../assets/menu/27.jpg", "../assets/menu/28.jpg"],
         items: [
           {
             nr: "100",
@@ -561,7 +561,7 @@ const categoryData = {
       {
         name: "Maccaroni",
         description: "Ein echter Klassiker.",
-        images: ["../assets/menu/23.jpg", "../assets/menu/24.jpg"],
+        images: ["../assets/menu/29.jpg", "../assets/menu/30.jpg"],
         items: [
           {
             nr: "106",

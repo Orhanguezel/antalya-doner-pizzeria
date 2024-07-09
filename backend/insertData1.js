@@ -10,7 +10,7 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 mongoose.set('strictQuery', false);
 
 const categoryData = {
-  name: 'hauptgerichte',
+  name: 'Hauptgerichte',
   description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
   subcategories: [
     {
