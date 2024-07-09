@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+// Unused imports have been removed
 
 Modal.setAppElement('#root');
 
@@ -17,7 +15,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
-  const [showCartBar, setShowCartBar] = useState(false);
+  // const [showCartBar, setShowCartBar] = useState(false); // Unused state removed
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -78,7 +76,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
     };
     onAddToCart(newItem);
     setSelectedItem(null);
-    setShowCartBar(true);
+    // setShowCartBar(true); // Removed since it's not used
   };
 
   const handleInfoClick = (item) => {
@@ -97,10 +95,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
       setQuantity(newQuantity);
       setTotalPrice(selectedPrice.value * newQuantity + extras.reduce((acc, curr) => acc + curr.price * newQuantity, 0));
     }
-  };
-
-  const calculateCartTotal = () => {
-    return cart.reduce((acc, item) => acc + item.totalPrice, 0).toFixed(2);
   };
 
   return (
@@ -143,20 +137,16 @@ const Menu = ({ onAddToCart, cart = [] }) => {
                   <div className="items-container">
                     {subcategory.items.map((item) => (
                       <div className="card" key={item._id}>
+                        <div className="card-header">
+                          <button className="info-button" onClick={() => handleInfoClick(item)}>i</button>
+                          <h4>{item.nr}. {item.name}</h4>
+                          <p>Preis: {Math.min(...Object.values(item.prices))} €</p>
+                          <button className="add-button" onClick={() => handleSelectItem(item)}>+</button>
+                        </div>
+                        <p>{item.description}</p>
                         {item.image && (
                           <img src={item.image} alt={item.name} className="card-image" />
                         )}
-                        <div className="card-header">
-                          <button className="info-button" onClick={() => handleInfoClick(item)}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                          </button>
-                          <h4>{item.nr}. {item.name}</h4>
-                          <p>Preis: {Math.min(...Object.values(item.prices))} €</p>
-                          <button className="add-button" onClick={() => handleSelectItem(item)}>
-                            <FontAwesomeIcon icon={faPlus} />
-                          </button>
-                        </div>
-                        <p>{item.description}</p>
                       </div>
                     ))}
                   </div>
@@ -193,8 +183,8 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div className="extras-container">
               <p>Ekstralar:</p>
               <div className="extras-list">
-                {Object.entries(selectedItem.extras).map(([extraName, extraPrice], idx) => (
-                  <div key={idx}>
+                {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (
+                  <div key={index}>
                     <input
                       type="checkbox"
                       id={`extra-${extraName}`}
@@ -224,8 +214,8 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div>
               <p>Zusatzstoffe:</p>
               <ul>
-                {infoItem.zusatztoffe.map((code, idx) => (
-                  <li key={idx}>{zusatztoffeMap[code]}</li>
+                {infoItem.zusatztoffe.map((code) => (
+                  <li key={code}>{zusatztoffeMap[code]}</li>
                 ))}
               </ul>
             </div>
@@ -234,24 +224,14 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div>
               <p>Allergene:</p>
               <ul>
-                {infoItem.allergene.map((code, idx) => (
-                  <li key={idx}>{allergeneMap[code]}</li>
+                {infoItem.allergene.map((code) => (
+                  <li key={code}>{allergeneMap[code]}</li>
                 ))}
               </ul>
             </div>
           )}
           <button onClick={() => setInfoItem(null)}>Schließen</button>
         </Modal>
-      )}
-      {showCartBar && cart && cart.length > 0 && (
-        <div className="cart-bar">
-          <div className="cart-icon-container">
-            <FontAwesomeIcon icon={faShoppingCart} className="cart-icon" data-count={cart.length} />
-            <span>{cart.length} Artikel</span>
-          </div>
-          <Link to="/warenkorb" className="cart-button">Zum Warenkorb</Link>
-          <div className="cart-total">{calculateCartTotal()} €</div>
-        </div>
       )}
     </div>
   );
