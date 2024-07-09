@@ -28,6 +28,9 @@ python3 test_register_user.py
 
 python3 test_create_order.py
 
+python3 test_api.py 
+
+python3 test_beilagen.py
 
 cd ~/Desktop/antalya-doner-pizzeria/backend
 python3 test_get_categories_and_items.py
@@ -52,25 +55,8 @@ pasword: adminpassword
 
 15 euro alti siparis icin uyari gerekiyor. 
 
-const mongoose = require('mongoose');
+Alle Dosen Getränke + 0,25€ Pfand  sepette, eve sipariste bu ilave edilecek.
 
-const itemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
-  type: { type: String, required: true },
-  prices: {
-    default: { type: Number, required: true },
-    klein: { type: Number },
-    groß: { type: Number },
-    kleineSchale: { type: Number },
-    großeSchale: { type: Number }
-  },
-  extras: {
-    type: Map,
-    of: Number
-  },
-  image: { type: String },
-  categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
-});
 
-module.exports = mongoose.model('Item', itemSchema);
+
+

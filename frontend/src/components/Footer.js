@@ -38,7 +38,12 @@ const Footer = () => {
         </a>
       </p>
       <p className="copyright">© Copyright - All Rights Reserved to ANTALYA Döner & Pizzeria</p>
-      <p><button className="foot-terms-link" style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>Designed by OG</button></p>
+      <p>
+  <button className="foot-terms-link" onClick={() => window.open("https://www.guezelwebdesign.com", "_blank")}
+    style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>
+    Designed by OG
+  </button>
+</p>
     </footer>
   );
 };

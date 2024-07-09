@@ -23,15 +23,23 @@
 
 .social {
   margin: 10px 0;
+  
 }
+.social i {
+  margin: 10px 0;
+  font-size: 44px;
+  
+}
+
 
 .social a {
   margin: 0 10px;
   color: #333;
+
 }
 
 .social a:hover {
-  color: #000;
+  color: #FAB60D
 }
 
 .foot-terms {
