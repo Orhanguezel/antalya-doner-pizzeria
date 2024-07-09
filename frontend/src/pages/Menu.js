@@ -106,7 +106,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
   return (
     <div className="menu-page">
       <div className="menu-header">
-        <img src="/path-to-logo.png" alt="Logo" className="logo" />
         <h1 className="menu-title">Speisekarte</h1>
         <p>Sie können jetzt online bestellen und bei Lieferung bezahlen. Kreditkarten werden akzeptiert.</p>
       </div>
@@ -179,7 +178,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
           ) : (
             <p>Preis: {selectedPrice.value} €</p>
           )}
-          {selectedItem.extras && (
+          {selectedItem.extras && Object.keys(selectedItem.extras).length > 0 && (
             <div>
               <p>Ekstralar:</p>
               {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (

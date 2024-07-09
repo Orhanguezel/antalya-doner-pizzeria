@@ -1,22 +1,23 @@
 const mongoose = require('mongoose');
-const { Category, Item } = require('./models/Category');
+const Category = require('./models/Category');
+const Subcategory = require('./models/Subcategory');
+const Item = require('./models/Item');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 mongoose.set('strictQuery', false);
 
 const categories = [
   {
     name: 'getraenke',
-    description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
+    description: 'Unsere Auswahl an Getränken.',
     subcategories: [
       {
         name: 'alkoholischeGetraenke',
         description: 'Unsere Auswahl an alkoholischen Getränken.',
-        images: ['/assets/menu/38.jpg', '/assets/menu/39.jpg'],
+        images: ['../assets/menu/38.jpg', '../assets/menu/39.jpg'],
         items: [
           {
             nr: '123',
@@ -26,7 +27,7 @@ const categories = [
             allergene: [],
             description: '0,33L',
             prices: { default: 2.50 },
-            extras: { extraKäse: 0.50 }
+           
           },
           {
             nr: '124',
@@ -69,7 +70,7 @@ const categories = [
       {
         name: 'alkoholfreieGetraenke',
         description: 'Unsere Auswahl an alkoholfreien Getränken.',
-        images: ['/assets/menu/42.jpg', '/assets/menu/43.jpg'],
+        images: ['../assets/menu/42.jpg', '../assets/menu/43.jpg'],
         items: [
           {
             nr: '128',
@@ -79,7 +80,6 @@ const categories = [
             allergene: [],
             description: 'Cola 0,33L',
             prices: { default: 2.00 },
-            extras: { extraKäse: 0.50 }
           },
           {
             nr: '129',
@@ -186,7 +186,7 @@ const categories = [
             name: 'Tasse Kaffee',
             zusatztoffe: [],
             allergene: [],
-            description: '',
+            description: 'Tasse Kaffee',
             prices: { default: 2.50 }
           },
           {
@@ -195,7 +195,7 @@ const categories = [
             name: 'Tee',
             zusatztoffe: [],
             allergene: [],
-            description: '',
+            description: 'Tee',
             prices: { default: 1.50 }
           }
         ]
@@ -214,7 +214,9 @@ const insertData = async () => {
           ...subcategoryData,
           items: items.map(item => item._id)
         };
-        subcategories.push(subcategory);
+        const subcat = new Subcategory(subcategory);
+        await subcat.save();
+        subcategories.push(subcat._id);
       }
 
       const category = new Category({

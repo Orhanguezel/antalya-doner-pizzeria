@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { Category, Subcategory, Item } = require('./models/Category');
+const Category = require('./models/Category');
+const Subcategory = require('./models/Subcategory');
+const Item = require('./models/Item');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
@@ -15,7 +17,7 @@ const categories = [
       {
         name: 'fuerKinder',
         description: 'Unsere Kindergerichte sind speziell auf die Bedürfnisse der kleinen Gäste abgestimmt.',
-        images: ['/assets/menu/32.jpg', '/assets/menu/31.jpg'],
+        images: ['../assets/menu/32.jpg', '../assets/menu/31.jpg'],
         items: [
           {
             nr: '110',

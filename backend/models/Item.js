@@ -7,7 +7,7 @@ const itemSchema = new Schema({
   name: { type: String, required: true },
   zusatztoffe: [Number],
   allergene: [String],
-  description: { type: String, required: true },
+  description: { type: String }, // required kaldırıldı
   prices: {
     default: { type: Number },
     klein: Number,
@@ -16,7 +16,7 @@ const itemSchema = new Schema({
     kleineSchale: Number,
     großeSchale: Number
   },
-  extras: Schema.Types.Mixed,
+  extras: { type: Schema.Types.Mixed, default: null }, // extras opsiyonel ve default olarak null
 });
 
 const Item = mongoose.model('Item', itemSchema);

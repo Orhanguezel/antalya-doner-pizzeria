@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
-const { Category, Subcategory, Item } = require('./models/Category');
+const Category = require('./models/Category'); // Correctly import the Category model
+const Subcategory = require('./models/Subcategory'); // Correctly import the Subcategory model
+const Item = require('./models/Item'); // Correctly import the Item model
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 mongoose.set('strictQuery', false);
 
 const clearDatabase = async () => {
