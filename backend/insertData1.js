@@ -117,6 +117,7 @@ const categoryData = {
           prices: { default: 10.0 }
         }
       ]
+
     },
     {
       name: 'Döner Überbacken',
@@ -633,8 +634,7 @@ const categoryData = {
           prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
-            GoudaKäse: 2.0
-          }
+            GoudaKäse: 2.0 }
         }
       ]
     }

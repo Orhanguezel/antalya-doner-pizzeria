@@ -118,12 +118,12 @@
 
 .info-button {
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   background: #ccc; /* Gri renk */
   border: none;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -136,7 +136,7 @@
 .add-button {
   position: absolute;
   bottom: 10px;
-  left: 50%;
+  left: 5%;
   transform: translateX(-50%);
   background: #28a745; /* Belirgin yeşil renk */
   color: white;
@@ -144,8 +144,8 @@
   font-size: 14px;
   border-radius: 5px;
   padding: 5px;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;

@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
-const { Category, Item } = require('./models/Category');
+const Category = require('./models/Category');
+const Subcategory = require('./models/Subcategory');
+const Item = require('./models/Item');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 mongoose.set('strictQuery', false);
 
-const sparmenusData = {
+const categories = [
+  {
   name: "sparmenus",
   description: "Unsere Sparmenus bieten eine großartige Kombination aus Geschmack und Preis.",
   subcategories: [
@@ -130,27 +132,32 @@ const sparmenusData = {
       ]
     }
   ]
-};
+}
+];
 
 const insertData = async () => {
   try {
-    const subcategories = [];
-    for (const subcategoryData of sparmenusData.subcategories) {
-      const items = await Item.insertMany(subcategoryData.items);
-      const subcategory = {
-        ...subcategoryData,
-        items: items.map(item => item._id)
-      };
-      subcategories.push(subcategory);
+    for (const categoryData of categories) {
+      const subcategories = [];
+      for (const subcategoryData of categoryData.subcategories) {
+        const items = await Item.insertMany(subcategoryData.items);
+        const subcategory = {
+          ...subcategoryData,
+          items: items.map(item => item._id)
+        };
+        const subcat = new Subcategory(subcategory);
+        await subcat.save();
+        subcategories.push(subcat._id);
+      }
+
+      const category = new Category({
+        ...categoryData,
+        subcategories
+      });
+
+      await category.save();
     }
-
-    const category = new Category({
-      ...sparmenusData,
-      subcategories
-    });
-
-    await category.save();
-    console.log('Category data successfully inserted');
+    console.log('All categories successfully inserted');
     mongoose.connection.close();
   } catch (error) {
     console.error('Error inserting category data:', error);

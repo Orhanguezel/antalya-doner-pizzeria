@@ -9,8 +9,7 @@ mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
 });
 mongoose.set('strictQuery', false);
 
-const categoriesData = [
-  {
+const categoryData = {
     name: "beilagen",
     description: "Unsere Beilagen ergänzen jedes Gericht perfekt.",
     subcategories: [
@@ -202,10 +201,10 @@ const categoriesData = [
               Hirtenkäse: 2.0,
               Meeresfrüchte: 2.0,
               Krabben: 2.0,
-              Sucuk: 2.0
-            }
+              Sucuk: 2.0 }
           }
         ]
+
       },
       {
         name: "Schnitzelgerichte",
@@ -334,7 +333,7 @@ const categoriesData = [
             zusatztoffe: [],
             allergene: [],
             description: "",
-            prices: { small: 3.00, large: 3.50 }
+            prices: { klein: 3.00, groß: 3.50 }
           },
           {
             nr: "75",
@@ -397,7 +396,7 @@ const categoriesData = [
             zusatztoffe: [],
             allergene: [],
             description: "",
-            prices: { small: 4.00, large: 5.00 }
+            prices: { klein: 4.00, groß: 5.00 }
           },
           {
             nr: "81",
@@ -607,38 +606,29 @@ const categoriesData = [
         ]
       }
     ]
-  }
-];
+};
 
 const insertData = async () => {
   try {
-    for (const categoryData of categoriesData) {
-      const subcategories = [];
-      for (const subcategoryData of categoryData.subcategories) {
-        // `extras` alanı boş veya undefined ise `{}` olarak atanıyor
-        const itemsWithDefaults = subcategoryData.items.map(item => ({
-          ...item,
-          extras: item.extras || {} // extras alanı boş veya undefined ise boş nesne atanıyor
-        }));
-
-        const items = await Item.insertMany(itemsWithDefaults);
-        const subcategory = {
-          ...subcategoryData,
-          items: items.map(item => item._id)
-        };
-        const subcat = new Subcategory(subcategory);
-        await subcat.save();
-        subcategories.push(subcat._id);
-      }
-
-      const category = new Category({
-        ...categoryData,
-        subcategories
-      });
-
-      await category.save();
+    const subcategories = [];
+    for (const subcategoryData of categoryData.subcategories) {
+      const items = await Item.insertMany(subcategoryData.items);
+      const subcategory = {
+        ...subcategoryData,
+        items: items.map(item => item._id)
+      };
+      const subcat = new Subcategory(subcategory);
+      await subcat.save();
+      subcategories.push(subcat._id);
     }
-    console.log('All categories successfully inserted');
+
+    const category = new Category({
+      ...categoryData,
+      subcategories
+    });
+
+    await category.save();
+    console.log('Category data successfully inserted');
     mongoose.connection.close();
   } catch (error) {
     console.error('Error inserting category data:', error);
