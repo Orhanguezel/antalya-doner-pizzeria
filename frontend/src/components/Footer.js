@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="footer-section">
       <div className="navbar-logo">
-        <img src="/img/logo/2.png" alt="Logo" />
+        <img src="../assets/logo/11.png" alt="Logo" />
       </div>
       <h2 className="foot-title margin-top">ANTALYA Döner & Pizzeria</h2>
       <p className="foot-p">Kapellenplatz 1, 52457 Aldenhoven</p>

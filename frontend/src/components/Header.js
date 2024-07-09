@@ -8,7 +8,7 @@ const Header = ({ cart }) => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="/path/to/logo.png" alt="Logo" />
+        <img src="../assets/logo/11.png" alt="Logo" />
       </div>
       <nav className="navbar">
         <Link to="/">

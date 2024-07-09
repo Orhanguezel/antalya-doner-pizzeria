@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
-const { Category, Item } = require('./models/Category');
+const Category = require('./models/Category');
+const Subcategory = require('./models/Subcategory');
+const Item = require('./models/Item');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+mongoose.set('strictQuery', false);
 
 const categoryData = {
   name: 'hauptgerichte',
@@ -13,7 +16,7 @@ const categoryData = {
     {
       name: 'Döner Spezialitäten',
       description: 'Drehspieß nach Döner Art aus Kalbfleisch.',
-      images: ['/assets/menu/1.jpg', '/assets/menu/2.jpg'],
+      images: ['../assets/menu/1.jpg', '../assets/menu/2.jpg'],
       items: [
         {
           nr: '1',
@@ -22,7 +25,7 @@ const categoryData = {
           zusatztoffe: [2, 3, 4],
           allergene: ['a', 'g', 'f', 'l', 'b'],
           description: 'mit Salat und Tzatziki',
-          prices: { klein: 6.5, groß: 9.5, default: 6.5 },
+          prices: { klein: 6.5, groß: 9.5},
           extras: { Hirtenkäse: 0.7 }
         },
         {
@@ -82,7 +85,7 @@ const categoryData = {
           zusatztoffe: [2, 3, 4],
           allergene: ['g'],
           description: 'mit Zwiebeln und Tzatziki',
-          prices: { klein: 9.0, groß: 11.5, default: 9.0 },
+          prices: { klein: 9.0, groß: 11.5 },
           extras: { Hirtenkäse: 0.7 }
         },
         {
@@ -92,7 +95,7 @@ const categoryData = {
           zusatztoffe: [2, 3, 4],
           allergene: ['f'],
           description: 'mit Rahmsauce und Gouda Käse',
-          prices: { klein: 9.0, groß: 11.5, default: 9.0 },
+          prices: { klein: 9.0, groß: 11.5 },
           extras: { Hirtenkäse: 0.7 }
         },
         {
@@ -118,7 +121,7 @@ const categoryData = {
     {
       name: 'Döner Überbacken',
       description: 'Alle Döner Überbacken Gerichte werden mit Pommes & Salat serviert.',
-      images: ['/assets/menu/3.jpg', '/assets/menu/4.jpg'],
+      images: ['../assets/menu/3.jpg', '../assets/menu/4.jpg'],
       items: [
         {
           nr: '11',
@@ -179,7 +182,7 @@ const categoryData = {
     {
       name: 'Teigtaschen',
       description: 'Im Steinofen frisch gebacken.',
-      images: ['/assets/menu/5.jpg', '/assets/menu/6.jpg'],
+      images: ['../assets/menu/5.jpg', '../assets/menu/6.jpg'],
       items: [
         {
           nr: '18',
@@ -267,7 +270,7 @@ const categoryData = {
     {
       name: 'Pizza',
       description: 'Alle Pizzen mit Goudakäse und Oregano. Alle Pizzen auf Wunsch mit Knoblauch und scharf + 0.30€.',
-      images: ['/assets/menu/8.jpg', '/assets/menu/10.jpg'],
+      images: ['../assets/menu/8.jpg', '../assets/menu/10.jpg'],
       items: [
         {
           nr: '26',
@@ -276,7 +279,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: '',
-          prices: { klein: 6.5, groß: 7.5, default: 6.5 },
+          prices: { klein: 6.5, groß: 7.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -289,7 +292,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami',
-          prices: { klein: 7.5, groß: 9.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -302,7 +305,7 @@ const categoryData = {
           zusatztoffe: [3, 9],
           allergene: ['a', 'i', 'j'],
           description: 'mit Schinken',
-          prices: { klein: 7.5, groß: 9.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -315,7 +318,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Pilze',
-          prices: { klein: 7.5, groß: 9.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -328,7 +331,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g', 'f'],
           description: 'mit Thunfisch und Zwiebeln',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -341,7 +344,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami und Schinken',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -354,7 +357,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Ananas und Schinken',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -367,7 +370,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Thunfisch, Paprika, Salami, Knoblauch (scharf)',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -380,7 +383,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 6],
           allergene: ['a', 'g'],
           description: 'mit Paprika, Peperoni, Oliven (scharf)',
-          prices: { klein: 7.5, groß: 9.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -393,7 +396,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami, Thunfisch und Zwiebeln',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -406,7 +409,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Broccoli, Paprika und Zwiebeln',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -419,7 +422,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami, Schinken und Pilze',
-          prices: { klein: 7.5, groß: 9.5, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.5},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -432,7 +435,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'Teigtasche mit Schinken, Salami und Paprika',
-          prices: { klein: 7.5, groß: 9.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 9.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -445,7 +448,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Broccoli, Pilzen, Tomaten, Zwiebeln und Paprika',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -458,7 +461,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 4],
           allergene: ['a', 'g', 'f', 'l', 'b'],
           description: 'mit Dönerfleisch, Zwiebeln und Tomaten',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -471,7 +474,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 4],
           allergene: ['a', 'g', 'f', 'l', 'b'],
           description: 'mit Dönerfleisch, Hirtenkäse, Peperoni und Gouda',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -484,7 +487,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 4],
           allergene: ['a', 'g', 'f', 'l', 'b'],
           description: 'mit Dönerfleisch, Hirtenkäse und Zwiebeln (scharf)',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -497,7 +500,7 @@ const categoryData = {
           zusatztoffe: [1, 3, 9],
           allergene: ['a', 'i', 'j'],
           description: 'mit Schinken, Thunfisch, Ei, Champignons, Zwiebeln (scharf)',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -510,7 +513,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Krabben und Knoblauch',
-          prices: { klein: 7.5, groß: 10.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 10.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -523,7 +526,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Spinat, Hirtenkäse und Pilze',
-          prices: { klein: 7.5, groß: 10.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 10.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -536,7 +539,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami, Pilze, Thunfisch und Paprika',
-          prices: { klein: 8.5, groß: 10.5, default: 8.5 },
+          prices: { klein: 8.5, groß: 10.5 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -549,7 +552,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 6],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Thunfisch, Schinken, Sardellen, Oliven und Zwiebeln',
-          prices: { klein: 9.0, groß: 11.0, default: 9.0 },
+          prices: { klein: 9.0, groß: 11.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -562,7 +565,7 @@ const categoryData = {
           zusatztoffe: [1, 6],
           allergene: ['a', 'g'],
           description: 'mit Sardellen, Oliven und Zwiebeln',
-          prices: { klein: 7.5, groß: 10.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 10.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -575,7 +578,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit fr. Tomaten',
-          prices: { klein: 7.5, groß: 10.0, default: 7.5 },
+          prices: { klein: 7.5, groß: 10.0},
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -588,7 +591,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'mit Thunfisch, Paprika und Zwiebeln',
-          prices: { klein: 8.0, groß: 10.5, default: 8.0 },
+          prices: { klein: 8.0, groß: 10.5 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -601,7 +604,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3],
           allergene: ['a', 'g', 'i', 'j'],
           description: 'mit Salami, Thunfisch, Champignons und Schinken',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -614,7 +617,7 @@ const categoryData = {
           zusatztoffe: [1],
           allergene: ['a', 'g'],
           description: 'Pizza mit türk. Knoblauchwurst',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -627,7 +630,7 @@ const categoryData = {
           zusatztoffe: [1, 2, 3, 4],
           allergene: ['a', 'g', 'f', 'l', 'b'],
           description: 'mit Dönerfleisch, Schinken und Ananas',
-          prices: { klein: 8.5, groß: 11.0, default: 8.5 },
+          prices: { klein: 8.5, groß: 11.0 },
           extras: {
             mitKnoblauchundScharf: 0.3,
             GoudaKäse: 2.0
@@ -647,7 +650,9 @@ const insertData = async () => {
         ...subcategoryData,
         items: items.map(item => item._id)
       };
-      subcategories.push(subcategory);
+      const subcat = new Subcategory(subcategory);
+      await subcat.save();
+      subcategories.push(subcat._id);
     }
 
     const category = new Category({

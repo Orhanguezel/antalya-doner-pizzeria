@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const { Category, Item } = require('./models/Category');
+const Category = require('./models/Category');
+const Subcategory = require('./models/Subcategory');
+const Item = require('./models/Item');
 
 mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 mongoose.set('strictQuery', false);
 
 const categoriesData = [
@@ -16,7 +17,7 @@ const categoriesData = [
       {
         name: "Pizzabrötchen 6 Stk",
         description: "Frisch aus dem Steinofen.",
-        images: ["/assets/menu/11.jpg", "/assets/menu/12.jpg"],
+        images: ["../assets/menu/11.jpg", "../assets/menu/12.jpg"],
         items: [
           {
             nr: "55",
@@ -209,7 +210,7 @@ const categoriesData = [
       {
         name: "Schnitzelgerichte",
         description: "Alle Schnitzelgerichte werden mit Pommes & Salat serviert.",
-        images: ["/assets/menu/13.jpg", "/assets/menu/14.jpg"],
+        images: ["../assets/menu/13.jpg", "../assets/menu/14.jpg"],
         items: [
           {
             nr: "62",
@@ -324,7 +325,7 @@ const categoriesData = [
       {
         name: "Wurst & Pommes",
         description: "Klassische Würstchen mit knusprigen Pommes.",
-        images: ["/assets/menu/15.jpg", "/assets/menu/16.jpg"],
+        images: ["../assets/menu/15.jpg", "../assets/menu/16.jpg"],
         items: [
           {
             nr: "74",
@@ -457,7 +458,7 @@ const categoriesData = [
       {
         name: "Pasta al Forno",
         description: "Hausgemachte Pasta frisch aus dem Ofen.",
-        images: ["/assets/menu/19.jpg", "/assets/menu/20.jpg"],
+        images: ["../assets/menu/19.jpg", "../assets/menu/20.jpg"],
         items: [
           {
             nr: "91",
@@ -514,7 +515,7 @@ const categoriesData = [
       {
         name: "Tortellini",
         description: "Frisch und lecker.",
-        images: ["/assets/menu/21.jpg", "/assets/menu/22.jpg"],
+        images: ["../assets/menu/21.jpg", "../assets/menu/22.jpg"],
         items: [
           {
             nr: "100",
@@ -561,7 +562,7 @@ const categoriesData = [
       {
         name: "Maccaroni",
         description: "Ein echter Klassiker.",
-        images: ["/assets/menu/23.jpg", "/assets/menu/24.jpg"],
+        images: ["../assets/menu/23.jpg", "../assets/menu/24.jpg"],
         items: [
           {
             nr: "106",
@@ -611,15 +612,23 @@ const categoriesData = [
 
 const insertData = async () => {
   try {
-    for (const categoryData of categories) {
+    for (const categoryData of categoriesData) {
       const subcategories = [];
       for (const subcategoryData of categoryData.subcategories) {
-        const items = await Item.insertMany(subcategoryData.items);
+        // `extras` alanı boş veya undefined ise `{}` olarak atanıyor
+        const itemsWithDefaults = subcategoryData.items.map(item => ({
+          ...item,
+          extras: item.extras || {} // extras alanı boş veya undefined ise boş nesne atanıyor
+        }));
+
+        const items = await Item.insertMany(itemsWithDefaults);
         const subcategory = {
           ...subcategoryData,
           items: items.map(item => item._id)
         };
-        subcategories.push(subcategory);
+        const subcat = new Subcategory(subcategory);
+        await subcat.save();
+        subcategories.push(subcat._id);
       }
 
       const category = new Category({
