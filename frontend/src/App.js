@@ -8,6 +8,7 @@ import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
 import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
+import CartBar from './components/CartBar';
 import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
@@ -86,6 +87,7 @@ const App = () => {
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
+        {cart.length > 0 && <CartBar cart={cart} />}
         <Footer />
       </AuthProvider>
     </Router>

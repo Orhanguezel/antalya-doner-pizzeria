@@ -100,7 +100,6 @@
   transition: transform 0.2s;
   flex: 1 1 350px; /* Kart genişliği */
   max-width: 400px; /* Maksimum genişlik */
-  min-width: 350px; /* Minimum genişlik */
 }
 
 .card:hover {
