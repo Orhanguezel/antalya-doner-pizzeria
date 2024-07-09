@@ -11,7 +11,7 @@ mongoose.set('strictQuery', false);
 
 const categories = [
   {
-  name: "sparmenus",
+  name: "Sparmenus",
   description: "Unsere Sparmenus bieten eine großartige Kombination aus Geschmack und Preis.",
   subcategories: [
     {

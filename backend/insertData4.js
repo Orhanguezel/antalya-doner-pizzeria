@@ -11,11 +11,11 @@ mongoose.set('strictQuery', false);
 
 const categories = [
   {
-    name: 'salateSaucen',
+    name: 'Salate und Saucen',
     description: 'Unsere Hauptgerichte sind herzhaft und sättigend, perfekt für den großen Hunger.',
     subcategories: [
       {
-        name: 'salate',
+        name: 'Salate',
         description: 'Frische Salate und köstliche Saucen, die jedes Gericht ergänzen.',
         images: ['../assets/menu/34.jpg', '../assets/menu/35.jpg'],
         items: [
@@ -112,7 +112,7 @@ const categories = [
         ]
       },
       {
-        name: 'saucen',
+        name: 'Saucen',
         description: 'Sie können zusätzlich zu allen Gerichten bestellt werden',
         images: ['../assets/menu/13.jpg', '../assets/menu/12.jpg'],
         items: [

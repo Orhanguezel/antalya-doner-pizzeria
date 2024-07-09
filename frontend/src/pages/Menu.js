@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
@@ -127,23 +127,34 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div key={category._id}>
               {category.subcategories.map((subcategory) => (
                 <div key={subcategory._id}>
-                  <h3>{subcategory.name}</h3>
-                  <p>{subcategory.description}</p>
-                  {subcategory.images && (
-                    <div className="subcategory-images">
-                      {subcategory.images.map((image, index) => (
-                        <img key={index} src={image} alt={`Subcategory ${index}`} style={{ width: '50%' }} />
-                      ))}
-                    </div>
+                  {category.name.toLowerCase() !== 'sparmenus' && (
+                    <React.Fragment>
+                      <h3>{subcategory.name}</h3>
+                      <p>{subcategory.description}</p>
+                      {subcategory.images && (
+                        <div className="subcategory-images">
+                          {subcategory.images.map((image, index) => (
+                            <img key={index} src={image} alt={`Subcategory ${index}`} style={{ width: '50%' }} />
+                          ))}
+                        </div>
+                      )}
+                    </React.Fragment>
                   )}
                   <div className="items-container">
                     {subcategory.items.map((item) => (
                       <div className="card" key={item._id}>
+                        {item.image && (
+                          <img src={item.image} alt={item.name} className="card-image" />
+                        )}
                         <div className="card-header">
-                          <button className="info-button" onClick={() => handleInfoClick(item)}>i</button>
+                          <button className="info-button" onClick={() => handleInfoClick(item)}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                          </button>
                           <h4>{item.nr}. {item.name}</h4>
                           <p>Preis: {Math.min(...Object.values(item.prices))} €</p>
-                          <button className="add-button" onClick={() => handleSelectItem(item)}>+</button>
+                          <button className="add-button" onClick={() => handleSelectItem(item)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
                         </div>
                         <p>{item.description}</p>
                       </div>
@@ -179,18 +190,20 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <p>Preis: {selectedPrice.value} €</p>
           )}
           {selectedItem.extras && Object.keys(selectedItem.extras).length > 0 && (
-            <div>
+            <div className="extras-container">
               <p>Ekstralar:</p>
-              {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (
-                <div key={index}>
-                  <input
-                    type="checkbox"
-                    id={`extra-${extraName}`}
-                    onChange={(e) => handleExtraChange(extraName, extraPrice, e.target.checked)}
-                  />
-                  <label htmlFor={`extra-${extraName}`}>{extraName.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extraPrice} €)</label>
-                </div>
-              ))}
+              <div className="extras-list">
+                {Object.entries(selectedItem.extras).map(([extraName, extraPrice], idx) => (
+                  <div key={idx}>
+                    <input
+                      type="checkbox"
+                      id={`extra-${extraName}`}
+                      onChange={(e) => handleExtraChange(extraName, extraPrice, e.target.checked)}
+                    />
+                    <label htmlFor={`extra-${extraName}`}>{extraName.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extraPrice} €)</label>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           <div className="quantity-controls">
@@ -211,8 +224,8 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div>
               <p>Zusatzstoffe:</p>
               <ul>
-                {infoItem.zusatztoffe.map((code, index) => (
-                  <li key={index}>{zusatztoffeMap[code]}</li>
+                {infoItem.zusatztoffe.map((code, idx) => (
+                  <li key={idx}>{zusatztoffeMap[code]}</li>
                 ))}
               </ul>
             </div>
@@ -221,8 +234,8 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div>
               <p>Allergene:</p>
               <ul>
-                {infoItem.allergene.map((code, index) => (
-                  <li key={index}>{allergeneMap[code]}</li>
+                {infoItem.allergene.map((code, idx) => (
+                  <li key={idx}>{allergeneMap[code]}</li>
                 ))}
               </ul>
             </div>
