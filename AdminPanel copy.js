@@ -16,7 +16,6 @@ const AdminPanel = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(response.data); // Veriyi konsola yazdır
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -83,71 +82,47 @@ const AdminPanel = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Ters tarihe göre sıralama
 
-  const orderTypeMap = {
-    delivery: 'Lieferung',
-    pickup: 'Abholung',
-    dinein: 'Im Restaurant essen'
-  };
-
   return (
     <div className="admin-panel">
       <h2>Admin Panel</h2>
       <div className="order-status-buttons">
-        <button onClick={() => filterOrders('Gelen Siparişler')} className={filter === 'Gelen Siparişler' ? 'active' : ''}>Eingegangene</button>
-        <button onClick={() => filterOrders('Hazırlanan Siparişler')} className={filter === 'Hazırlanan Siparişler' ? 'active' : ''}>Vorbereitete</button>
-        <button onClick={() => filterOrders('Taşınan Siparişler')} className={filter === 'Taşınan Siparişler' ? 'active' : ''}>Liefernde</button>
-        <button onClick={() => filterOrders('Teslim Edilen Siparişler')} className={filter === 'Teslim Edilen Siparişler' ? 'active' : ''}>Gelieferte</button>
+        <button onClick={() => filterOrders('Gelen Siparişler')} className={filter === 'Gelen Siparişler' ? 'active' : ''}>In Bestellungen</button>
+        <button onClick={() => filterOrders('Hazırlanan Siparişler')} className={filter === 'Hazırlanan Siparişler' ? 'active' : ''}>In Bearbeitung</button>
+        <button onClick={() => filterOrders('Taşınan Siparişler')} className={filter === 'Taşınan Siparişler' ? 'active' : ''}>Unterwegs</button>
+        <button onClick={() => filterOrders('Teslim Edilen Siparişler')} className={filter === 'Teslim Edilen Siparişler' ? 'active' : ''}>Geliefert</button>
       </div>
       <ul className="order-list">
         {filteredOrders.map(order => (
           <li key={order._id} className="order-card">
             <p><strong>Bestell-ID:</strong> {order._id}</p>
             <p><strong>Bestellzeit:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-            <p><strong>Kunde:</strong> {order.customerInfo.name} {order.customerInfo.surname}</p>
+            <p><strong>Kundenname:</strong> {order.customerInfo.name}</p>
+            <p><strong>Nachname:</strong> {order.customerInfo.surname}</p>
             <p><strong>Email:</strong> {order.customerInfo.email}</p>
             <p><strong>Telefon:</strong> {order.customerInfo.phone}</p>
             <p><strong>Adresse:</strong> {order.customerInfo.address}</p>
             <p><strong>Region:</strong> {order.customerInfo.region}</p>
             <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
-            <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
             <p><strong>Sonderwunsch:</strong> {order.customerInfo.specialRequest}</p>
             <h4>Produkte:</h4>
             <ul className="order-items">
               {order.items.map(item => (
-                <li key={item._id}>
-                  <h4>{item.quantity} x {item.name}</h4>
-                  {item.selectedPrice && item.selectedPrice.key !== 'default' && (
-                    <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
-                  )}
-                  {item.extras && item.extras.length > 0 && (
-                    <>
-                      <p>Extras:</p>
-                      <ul>
-                        {item.extras.map((extra, index) => (
-                          <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-                  <p>Gesamtpreis: {item.totalPrice} €</p>
-                </li>
+                <li key={item._id}>{item.quantity}x {item.name} - {item.totalPrice}€</li>
               ))}
             </ul>
-            {order.orderType === 'delivery' && <p>Lieferungskosten: 2 €</p>}
-            <p><strong>Gesamt:</strong> {order.total} €</p>
-            <p><strong>Status:</strong> {order.status}</p>
+            <p><strong>Gesamt:</strong> {order.total}€</p>
             <div className="order-actions">
-              {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
-              {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Taşınan Siparişler')}>Liefern</button>}
-              {filter === 'Taşınan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Abgeschlossen</button>}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={printOrder}>Drucken</button>}
-              {filter === 'Teslim Edilen Siparişler' && (
+              {filter === 'Gelen Bestellungen' && <button onClick={() => updateOrderStatus(order._id, 'In Bearbeitung')}>In Bearbeitung</button>}
+              {filter === 'In Bearbeitung' && <button onClick={() => updateOrderStatus(order._id, 'Unterwegs')}>Unterwegs</button>}
+              {filter === 'Unterwegs' && <button onClick={() => updateOrderStatus(order._id, 'Geliefert')}>Geliefert</button>}
+              {filter !== 'Geliefert' && <button onClick={printOrder}>Drucken</button>}
+              {filter === 'Geliefert' && (
                 <>
                   <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
                   <button onClick={printOrder}>Drucken</button>
                 </>
               )}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => deleteOrder(order._id)}>Löschen</button>}
+              {filter !== 'Geliefert' && <button onClick={() => deleteOrder(order._id)}>Löschen</button>}
             </div>
           </li>
         ))}

@@ -1,25 +1,39 @@
 import React from 'react';
-import './Cart.css';
 
-const Cart = ({ cart }) => {
+const Cart = ({ cart, updateCartItemQuantity, removeCartItem, calculateTotal }) => {
   return (
     <div className="cart">
-      <h2>Sipariş Listesi</h2>
+      <h2>Bestellliste</h2>
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.nr}. {item.name}</h4>
-            <p>Seçilen Fiyat: {item.selectedPrice.key} - {item.selectedPrice.value} €</p>
-            <p>Ekstralar:</p>
-            <ul>
-              {item.extras.map((extra, index) => (
-                <li key={index}>{extra.name} (+{extra.price} €)</li>
-              ))}
-            </ul>
-            <p>Toplam Fiyat: {item.totalPrice} €</p>
+            <h4>{item.quantity} x {item.nr}. {item.name}</h4>
+            {item.selectedPrice && item.selectedPrice.key !== 'default' && (
+              <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
+            )}
+            {item.extras && item.extras.length > 0 ? (
+              <>
+                <p>Extras:</p>
+                <ul>
+                  {item.extras.map((extra, idx) => (
+                    <li key={idx}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
+                  ))}
+                </ul>
+                <p>Gesamtpreis: {item.totalPrice} €</p>
+              </>
+            ) : (
+              <p>Preis: {item.totalPrice} €</p>
+            )}
+            <div className="quantity-controls">
+              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+              <span>{item.quantity}</span>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>+</button>
+              <button onClick={() => removeCartItem(item)} className="remove-button">🗑️</button>
+            </div>
           </li>
         ))}
       </ul>
+      <h3>Gesamtbetrag: {calculateTotal()} €</h3>
     </div>
   );
 };
