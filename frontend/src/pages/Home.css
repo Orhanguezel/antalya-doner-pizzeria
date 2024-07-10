@@ -1,117 +1,150 @@
+/* Home.css */
+
+/* Hero Section */
 .hero {
-    background-image: url('../assets/bg/dukkan.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 500px;
-    color: white;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    opacity: 0;
-    animation: fadeIn 2s forwards; /* Fade-in animasyonu */
+  background-image: url('../assets/bg/dukkan.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn 2s forwards; /* Fade-in animasyonu */
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
-  
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .hero-content {
-    background-color: rgba(0, 0, 0, 0.5); /* Siyah arka plan %50 opaklık ile */
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .hero h1 {
-    font-size: 40px;
-    margin: 0;
-  }
-  
-  .hero p {
-    font-size: 20px;
-    margin: 10px 0;
-  }
-  
-  .cta-button {
-    background-color: #ff6600; /* Turuncu renk */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .cta-button:hover {
-    background-color: #e65c00; /* Daha koyu turuncu */
-  }
-  
-  .services {
-    text-align: center;
-    padding: 50px 0;
-  }
-  
-  .service-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .service {
-    flex: 1 1 350px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.3s;
-  }
-  
-  .service img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px 10px 0 0;
-  }
-  
-  .service h3 {
-    margin-top: 10px;
-    font-size: 24px;
-  }
-  
-  .service p {
-    margin-top: 10px;
-    font-size: 16px;
-  }
-  
-  .service:hover {
-    transform: scale(1.05);
-  }
-  
-  .gallery {
-    text-align: center;
-    padding: 50px 0;
-  }
-  
-  .gallery-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
+}
+
+.hero-content {
+  background-color: rgba(0, 0, 0, 0.5); /* Siyah arka plan %50 opaklık ile */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hero h1 {
+  font-size: 40px;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.cta-button {
+  background-color: #ff6600; /* Turuncu renk */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cta-button:hover {
+  background-color: #e65c00; /* Daha koyu turuncu */
+}
+
+/* Services Section */
+.services {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.services h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.service-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.service {
+  flex: 1 1 250px;
+  max-width: 350px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s;
+}
+
+.service img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px 10px 0 0;
+}
+
+.service h3 {
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.service p {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.service:hover {
+  transform: scale(1.05);
+}
+
+/* Gallery Section */
+.gallery {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.gallery h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.gallery p {
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.gallery-item {
+  flex: 1 1 calc(33.333% - 40px);
+  max-width: 200px; /* Maksimum genişlik 200px */
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
   .gallery-item {
-    width: 350px;
-    height: auto;
-    border-radius: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    flex: 1 1 calc(50% - 20px);
   }
-  
-  .gallery-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 480px) {
+  .gallery-item {
+    flex: 1 1 100%;
   }
-  
+}

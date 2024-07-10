@@ -1,9 +1,19 @@
-@import 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+/* Gallery.css */
 
-.gallery-section {
-  padding: 50px 20px;
-  background-color: #fff;
+/* Gallery Section */
+.gallery {
   text-align: center;
+  padding: 50px 20px;
+}
+
+.gallery h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.gallery p {
+  font-size: 16px;
+  margin-bottom: 40px;
 }
 
 .gallery-container {
@@ -14,28 +24,26 @@
 }
 
 .gallery-item {
-  flex: 1 1 calc(20% - 20px);
-  margin: 10px;
-  transition: transform 0.3s ease;
+  flex: 1 1 calc(33.333% - 40px);
+  max-width: 200px; /* Maksimum genişlik 200px */
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .gallery-item:hover {
   transform: scale(1.05);
-}
-
-.gallery-image {
-  width: 100%;
-  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 768px) {
   .gallery-item {
-    flex: 1 1 calc(33.333% - 20px);
+    flex: 1 1 calc(50% - 20px);
   }
 }
 
 @media (max-width: 480px) {
   .gallery-item {
-    flex: 1 1 calc(50% - 20px);
+    flex: 1 1 100%;
   }
 }

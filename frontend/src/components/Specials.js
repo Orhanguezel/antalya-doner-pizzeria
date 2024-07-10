@@ -1,24 +1,26 @@
 import React from 'react';
 import './Specials.css';
 
-const specials = [
-  { image: '../assets/home/20.jpg', title: 'Pizza', description: 'Unsere Pizzen werden mit den frischesten Zutaten und viel Liebe zubereitet.' },
-  { image: '../assets/home/12.jpg', title: 'Döner', description: 'Genießen Sie unseren köstlichen Döner, perfekt gewürzt und frisch zubereitet.' },
-  { image: '../assets/home/2.jpg', title: 'Salate', description: 'Unsere Salate sind frisch und gesund, perfekt als Beilage oder Hauptgericht.' },
-];
-
 function Specials() {
   return (
-    <section id="specials" className="specials-section">
+    <section id="services" className="services">
       <h2>Unsere Spezialitäten</h2>
-      <div className="specials-container">
-        {specials.map((special, index) => (
-          <div className="special-card" key={index}>
-            <img src={special.image} alt={special.title} />
-            <h3>{special.title}</h3>
-            <p>{special.description}</p>
-          </div>
-        ))}
+      <div className="service-container">
+        <div className="service">
+          <img src="../assets/home/20.jpg" alt="Pizza" />
+          <h3>Pizza</h3>
+          <p>Unsere Pizzen werden mit den frischesten Zutaten und viel Liebe zubereitet.</p>
+        </div>
+        <div className="service">
+          <img src="../assets/home/12.jpg" alt="Döner" />
+          <h3>Döner</h3>
+          <p>Genießen Sie unseren köstlichen Döner, perfekt gewürzt und frisch zubereitet.</p>
+        </div>
+        <div className="service">
+          <img src="../assets/home/2.jpg" alt="Salat" />
+          <h3>Salate</h3>
+          <p>Unsere Salate sind frisch und gesund, perfekt als Beilage oder Hauptgericht.</p>
+        </div>
       </div>
     </section>
   );

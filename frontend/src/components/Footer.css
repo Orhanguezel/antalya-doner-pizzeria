@@ -1,45 +1,54 @@
+/* Footer.css */
+
+/* Footer Section */
 .footer-section {
+  background-color: #333;
+  color: white;
   text-align: center;
-  padding: 20px;
-  background-color: #f8f8f8;
-  border-top: 1px solid #e7e7e7;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.footer-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(to right, #333, #FAB60D, #333);
 }
 
 .navbar-logo img {
-  width: 200px;
+  width: 150px; /* Logo boyutu küçültüldü */
   height: auto;
 }
 
 .foot-title {
   margin-top: 10px;
-  font-size: 24px;
+  font-size: 28px; /* Font boyutu artırıldı */
   font-weight: bold;
 }
 
 .foot-p {
   margin: 10px 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .social {
-  margin: 10px 0;
-  
+  margin: 20px 0;
 }
-.social i {
-  margin: 10px 0;
-  font-size: 44px;
-  
-}
-
 
 .social a {
-  margin: 0 10px;
-  color: #333;
-
+  margin: 0 15px;
+  color: white;
+  font-size: 24px; /* Icon boyutu küçültüldü */
+  transition: color 0.3s;
 }
 
 .social a:hover {
-  color: #FAB60D
+  color: #FAB60D; /* Hover rengi değiştirildi */
 }
 
 .foot-terms {
@@ -47,8 +56,9 @@
 }
 
 .foot-terms-link {
-  color: #333;
+  color: white;
   text-decoration: none;
+  transition: text-decoration 0.3s;
 }
 
 .foot-terms-link:hover {
@@ -56,7 +66,14 @@
 }
 
 .copyright {
-  margin: 10px 0;
-  font-size: 12px;
-  color: #777;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #bbb;
+}
+
+/* New Version Note */
+.new-version-note {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #bbb;
 }
