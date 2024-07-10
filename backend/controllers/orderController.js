@@ -41,8 +41,6 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-
-
 // Tüm siparişleri getirme
 exports.getAllOrders = async (req, res) => {
   try {

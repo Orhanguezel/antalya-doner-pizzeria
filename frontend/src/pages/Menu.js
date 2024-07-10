@@ -72,10 +72,19 @@ const Menu = ({ onAddToCart, cart = [] }) => {
       extras,
       totalPrice,
       quantity,
+      itemDetails: { 
+        name: selectedItem.name,
+        nr: selectedItem.nr,
+        description: selectedItem.description,
+        prices: selectedItem.prices,
+        extras: selectedItem.extras,
+      }
     };
     onAddToCart(newItem);
     setSelectedItem(null);
   };
+  
+
 
   const handleInfoClick = (item) => {
     setInfoItem(item);
