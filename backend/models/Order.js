@@ -24,9 +24,18 @@ const orderSchema = new mongoose.Schema({
     specialRequest: { type: String, required: false, default: '' }
   },
   items: [{
+    nr: { type: String, required: true },
     name: { type: String, required: true },
     quantity: { type: Number, required: true },
-    totalPrice: { type: Number, required: true }
+    totalPrice: { type: Number, required: true },
+    selectedPrice: {
+      key: { type: String, required: false, default: 'default' },
+      value: { type: Number, required: false, default: 0 }
+    },
+    extras: [{
+      name: { type: String, required: false, default: null },
+      price: { type: Number, required: false, default: 0 }
+    }]
   }],
   total: { type: Number, required: true },
   status: { type: String, enum: ['Gelen Siparişler', 'Hazırlanan Siparişler', 'Taşınan Siparişler', 'Teslim Edilen Siparişler', 'Completed'], default: 'Gelen Siparişler' },

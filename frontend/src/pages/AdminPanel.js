@@ -16,7 +16,6 @@ const AdminPanel = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(response.data); // Veriyi konsola yazdır
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -115,16 +114,13 @@ const AdminPanel = () => {
             <ul className="order-items">
               {order.items.map(item => (
                 <li key={item._id}>
-                  <h4>{item.quantity} x {item.name}</h4>
-                  {item.selectedPrice && item.selectedPrice.key !== 'default' && (
-                    <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
-                  )}
+                  <h5>{item.quantity}x {item.nr}. {item.name} - {item.totalPrice}€ {item.selectedPrice && item.selectedPrice.key !== 'default' ? `(${item.selectedPrice.key})` : ''}</h5>
                   {item.extras && item.extras.length > 0 && (
                     <>
                       <p>Extras:</p>
                       <ul>
                         {item.extras.map((extra, index) => (
-                          <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
+                          <li key={index}>{extra.name} (+{extra.price} €)</li>
                         ))}
                       </ul>
                     </>
@@ -133,13 +129,13 @@ const AdminPanel = () => {
                 </li>
               ))}
             </ul>
-            {order.orderType === 'delivery' && <p>Lieferungskosten: 2 €</p>}
+            {order.deliveryFee > 0 && <p><strong>Lieferungskosten:</strong> {order.deliveryFee} €</p>}
             <p><strong>Gesamt:</strong> {order.total} €</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
               {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
               {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Taşınan Siparişler')}>Liefern</button>}
-              {filter === 'Taşınan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Abgeschlossen</button>}
+              {filter === 'Taşınan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Geliefert</button>}
               {filter !== 'Teslim Edilen Siparişler' && <button onClick={printOrder}>Drucken</button>}
               {filter === 'Teslim Edilen Siparişler' && (
                 <>

@@ -95,11 +95,8 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.quantity} x {item.nr}. {item.name}</h4>
-            {item.selectedPrice.key !== 'default' && (
-              <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
-            )}
-            {item.extras.length > 0 ? (
+            <h4>{item.quantity}x {item.nr}. {item.name} - {item.totalPrice}€ {item.selectedPrice.key !== 'default' && <span>({item.selectedPrice.key})</span>}</h4>
+            {item.extras.length > 0 && (
               <>
                 <p>Extras:</p>
                 <ul>
@@ -107,11 +104,9 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
                     <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
                   ))}
                 </ul>
-                <p>Gesamtpreis: {item.totalPrice} €</p>
               </>
-            ) : (
-              <p>Preis: {item.totalPrice} €</p>
             )}
+            <p>Preis: {item.totalPrice} €</p>
             <div className="quantity-controls">
               <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
               <span>{item.quantity}</span>
