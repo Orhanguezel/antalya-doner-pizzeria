@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './Warenkorb.css';
 
 const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
@@ -17,7 +15,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
     paymentMethod: '',
     specialRequest: '' // Yeni alan
   });
-
+  const [orderSuccessMessage, setOrderSuccessMessage] = useState('');
   const openingHours = "Mo. - Fr.: 11:00 bis 22:00, Sonntag: 16:00 bis 22:00, Feiertagen: 16:00 bis 22:00";
   const deliveryHours = "Mo. - Fr.: 11:30 bis 21:30, Sonntag: 16:30 bis 21:30, Feiertagen: 16:30 bis 21:30";
   const currentTime = new Date();
@@ -37,6 +35,8 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
     }
     return total.toFixed(2);
   };
+
+  const isOrderBelowMinimum = orderType === 'delivery' && parseFloat(calculateTotal()) < 15;
 
   const handleOrderTypeChange = (type) => {
     setOrderType(type);
@@ -80,7 +80,8 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       console.log('Bestellung abgeschlossen:', response.data);
       clearCart();
       localStorage.removeItem('cart');
-      setErrorMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
+      setOrderSuccessMessage('Ihre Bestellung wurde erfolgreich abgeschlossen.');
+      setErrorMessage('');
       setMissingFields([]);
     } catch (error) {
       console.error('Bestellung fehlgeschlagen:', error.response?.data || error.message);
@@ -94,7 +95,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.quantity} x {item.nr}. {item.name}</h4> {/* Güncellendi */}
+            <h4>{item.quantity} x {item.nr}. {item.name}</h4>
             {item.selectedPrice.key !== 'default' && (
               <p>{item.selectedPrice.key} - {item.selectedPrice.value} €</p>
             )}
@@ -112,16 +113,10 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
               <p>Preis: {item.totalPrice} €</p>
             )}
             <div className="quantity-controls">
-              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>
-                <FontAwesomeIcon icon={faMinus} />
-              </button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
               <span>{item.quantity}</span>
-              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>
-                <FontAwesomeIcon icon={faPlus} />
-              </button>
-              <button onClick={() => removeCartItem(item)} className="remove-button">
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>+</button>
+              <button onClick={() => removeCartItem(item)} className="remove-button">🗑️</button>
             </div>
           </li>
         ))}
@@ -255,15 +250,37 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
         </label>
       </div>
 
-      <button className="checkout-button" onClick={handleCheckout}>Bestellung abschließen</button>
+      {isOrderBelowMinimum && <div className="minimum-order-warning"></div>}
+      {orderSuccessMessage && <p className="order-success">{orderSuccessMessage}</p>}
+      
+      <button 
+        className="checkout-button" 
+        onClick={handleCheckout} 
+        disabled={isOrderBelowMinimum}
+        title={isOrderBelowMinimum ? 'Für Lieferungen beträgt der Mindestbestellwert 15 Euro.' : ''}
+      >
+        Bestellung abschließen
+      </button>
 
       <div className="store-info">
-        <h3><strong>Öffnungszeiten:</strong></h3>
-        <p>{openingHours}</p>
-        <h3><strong>Lieferzeiten:</strong></h3>
-        <p>{deliveryHours}</p>
-        <h3>Bestellzeit</h3>
-        <p>{orderTime}</p>
+        <div className="card">
+          <h3><strong>Öffnungszeiten:</strong></h3>
+          <p>{openingHours}</p>
+        </div>
+        <div className="card">
+          <h3><strong>Lieferzeiten:</strong></h3>
+          <p>{deliveryHours}</p>
+        </div>
+        <div className="card">
+          <h3><strong>Bestellzeit</strong></h3>
+          <p>{orderTime}</p>
+        </div>
+        {isSaturday && (
+          <div className="card">
+            <h3><strong>Ruhetag</strong></h3>
+            <p>Samstag</p>
+          </div>
+        )}
       </div>
     </div>
   );
