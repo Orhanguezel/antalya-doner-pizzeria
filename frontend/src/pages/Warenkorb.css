@@ -109,6 +109,16 @@
   margin-top: 10px;
 }
 
+.order-success {
+  color: green;
+  margin-top: 10px;
+}
+
+.minimum-order-warning {
+  color: red;
+  margin-top: 10px;
+}
+
 .checkout-button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -120,12 +130,31 @@
   font-size: 16px;
 }
 
-.store-info {
-  margin-top: 20px;
+.checkout-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.store-info h3 {
-  margin-bottom: 10px;
+.store-info {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.store-info .card {
+  flex: 1 1 100%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s;
+  text-align: center;
+}
+
+.store-info .card:hover {
+  transform: scale(1.05);
 }
 
 .required {

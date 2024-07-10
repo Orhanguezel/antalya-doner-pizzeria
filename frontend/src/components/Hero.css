@@ -1,18 +1,51 @@
 .hero {
-    background-image: url('../assets/bg/dukkan.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 500px;
-    color: white;
-    text-align: center;
-    padding-top: 150px;
+  background-image: url('../assets/bg/dukkan.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn 2s forwards; /* Fade-in animasyonu */
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
-  
-  .hero h1 {
-    font-size: 50px;
-  }
-  
-  .hero p {
-    font-size: 24px;
-  }
-  
+}
+
+.hero-content {
+  background-color: rgba(0, 0, 0, 0.5); /* Siyah arka plan %50 opaklık ile */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hero h1 {
+  font-size: 50px;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.cta-button {
+  background-color: #ff6600; /* Turuncu renk */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cta-button:hover {
+  background-color: #e65c00; /* Daha koyu turuncu */
+}
