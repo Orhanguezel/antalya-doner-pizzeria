@@ -1,45 +1,54 @@
-.specials-section {
-  padding: 50px 20px;
-  background-color: #f8f9fa;
+/* Specials.css */
+
+.services {
   text-align: center;
+  padding: 30px 0; /* Boşluk azaltıldı */
 }
 
-.specials-container {
+.service-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* Boşluk azaltıldı */
 }
 
-.special-card {
+.service {
+  flex: 1 1 300px; /* Kart genişliği küçültüldü */
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: calc(33.333% - 40px);
-  margin: 20px;
+  transition: transform 0.3s;
+  margin: 10px;
 }
 
-.special-card img {
+.service img {
   width: 100%;
-  border-radius: 10px;
+  height: auto;
+  border-radius: 10px 10px 0 0;
 }
 
-.special-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.service h3 {
+  margin-top: 10px;
+  font-size: 24px;
 }
 
-@media (max-width: 768px) {
-  .special-card {
-    width: calc(50% - 40px);
-  }
+.service p {
+  margin-top: 10px;
+  font-size: 16px;
 }
 
-@media (max-width: 480px) {
-  .special-card {
-    width: 100%;
-  }
+.service:hover {
+  transform: scale(1.05);
+}
+
+/* Başlıklar */
+h2 {
+  text-align: center; /* Başlıklar ortalandı */
+  margin-bottom: 20px; /* Standart boşluk eklendi */
+}
+
+h3 {
+  text-align: center; /* Başlıklar ortalandı */
+  margin-bottom: 15px; /* Standart boşluk eklendi */
 }

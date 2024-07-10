@@ -1,17 +1,17 @@
-import React from 'react';
-import './Footer.css';
+import React from "react";
+import "./Footer.css";
 
 const Footer = () => {
   return (
     <footer className="footer-section">
       <div className="navbar-logo">
-        <img src="../assets/logo/11.png" alt="Logo" />
+        <img src="../assets/logo/1.png" alt="Logo" />
       </div>
       <h2 className="foot-title margin-top">ANTALYA Döner & Pizzeria</h2>
       <p className="foot-p">Kapellenplatz 1, 52457 Aldenhoven</p>
       <div className="social">
         <a
-          className='foot-terms-link'
+          className="foot-terms-link"
           href="https://www.facebook.com/profile.php?id=100063527353789"
           target="_blank"
           rel="noopener noreferrer"
@@ -19,7 +19,7 @@ const Footer = () => {
           <i className="fab fa-facebook"></i>
         </a>
         <a
-          className='foot-terms-link'
+          className="foot-terms-link"
           href="https://www.instagram.com/antalya_doner_pizzeria/"
           target="_blank"
           rel="noopener noreferrer"
@@ -37,13 +37,30 @@ const Footer = () => {
           Privacy & Terms
         </a>
       </p>
-      <p className="copyright">© Copyright - All Rights Reserved to ANTALYA Döner & Pizzeria</p>
+      <p className="copyright">
+        © Copyright - All Rights Reserved to ANTALYA Döner & Pizzeria
+      </p>
+      <p className="new-version-note">
+        Diese Website befindet sich in der Testphase und wird regelmäßig
+        aktualisiert.
+      </p>
       <p>
-  <button className="foot-terms-link" onClick={() => window.open("https://www.guezelwebdesign.com", "_blank")}
-    style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>
-    Designed by OG
-  </button>
-</p>
+        <button
+          className="foot-terms-link"
+          onClick={() =>
+            window.open("https://www.guezelwebdesign.com", "_blank")
+          }
+          style={{
+            background: "none",
+            border: "none",
+            color: "inherit",
+            padding: 0,
+            cursor: "pointer",
+          }}
+        >
+          Designed by OG
+        </button>
+      </p>
     </footer>
   );
 };

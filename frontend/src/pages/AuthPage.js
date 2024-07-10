@@ -19,17 +19,17 @@ const AuthPage = () => {
         await login(email, password); // Kullanıcı adı yerine e-posta kullanarak giriş yapma
       }
     } catch (err) {
-      setError(err.response ? err.response.data.error : 'An error occurred');
+      setError(err.response ? err.response.data.error : 'Ein Fehler ist aufgetreten');
     }
   };
 
   return (
     <div className="auth-container">
-      <h2>{isRegister ? 'Register' : 'Login'}</h2>
+      <h2>{isRegister ? 'Registrieren' : 'Login'}</h2>
       <form onSubmit={handleAuth}>
         {isRegister && (
           <div className="input-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Benutzername</label>
             <input
               type="text"
               id="username"
@@ -50,7 +50,7 @@ const AuthPage = () => {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Passwort</label>
           <input
             type="password"
             id="password"
@@ -60,12 +60,13 @@ const AuthPage = () => {
           />
         </div>
         {error && <p className="error">{error}</p>}
-        <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
+        <button type="submit">{isRegister ? 'Registrieren' : 'Login'}</button>
       </form>
+      <p className="info-note">Hinweis: Unser Mitgliedschaftssystem ist derzeit nicht aktiv.</p>
       <p>
-        {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+        {isRegister ? 'Bereits ein Konto?' : 'Noch kein Konto?'}{' '}
         <button onClick={() => setIsRegister(!isRegister)}>
-          {isRegister ? 'Login' : 'Register'}
+          {isRegister ? 'Login' : 'Registrieren'}
         </button>
       </p>
     </div>

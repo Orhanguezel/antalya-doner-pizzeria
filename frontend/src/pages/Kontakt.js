@@ -11,8 +11,7 @@ function Kontakt() {
           <i className="fas fa-phone icon-contact"></i>
           <h2 className="contact-title">Lieferservice</h2>
           <h2 className="contact-title">02464 85 37</h2>
-          <p className="contact-p"></p>
-           <p className="contact-p"></p>
+          <p className="contact-p">Kapellenplatz 1, 52457 Aldenhoven</p>
         </div>
         <div className="card">
           <i className="fas fa-clock icon-contact"></i>

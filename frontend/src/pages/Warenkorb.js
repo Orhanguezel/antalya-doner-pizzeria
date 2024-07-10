@@ -271,16 +271,19 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
           <h3><strong>Lieferzeiten:</strong></h3>
           <p>{deliveryHours}</p>
         </div>
-        <div className="card">
-          <h3><strong>Bestellzeit</strong></h3>
-          <p>{orderTime}</p>
-        </div>
+
         {isSaturday && (
           <div className="card">
             <h3><strong>Ruhetag</strong></h3>
             <p>Samstag</p>
           </div>
         )}
+        
+        <div className="card">
+          <h3><strong>Bestellzeit</strong></h3>
+          <p>{orderTime}</p>
+        </div>
+      
       </div>
     </div>
   );

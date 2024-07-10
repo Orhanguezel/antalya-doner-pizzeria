@@ -1,3 +1,6 @@
+/* Hero.css */
+/* Hero section with animation and transparent background */
+
 .hero {
   background-image: url('../assets/bg/dukkan.jpg');
   background-size: cover;
@@ -26,12 +29,12 @@
 }
 
 .hero h1 {
-  font-size: 50px;
+  font-size: 40px;
   margin: 0;
 }
 
 .hero p {
-  font-size: 24px;
+  font-size: 20px;
   margin: 10px 0;
 }
 
