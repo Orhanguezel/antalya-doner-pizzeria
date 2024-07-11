@@ -104,3 +104,18 @@
   font-size: 12px; /* Daha küçük font boyutu */
   font-family: inherit; /* Standart font ailesi */
 }
+
+.confirm-delete {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.confirm-delete p {
+  margin: 0 0 10px;
+}
+
+.confirm-delete button {
+  margin-right: 5px;
+}

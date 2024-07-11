@@ -7,6 +7,7 @@ const AdminPanel = () => {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState('Gelen Siparişler');
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -64,8 +65,15 @@ const AdminPanel = () => {
     }
   };
 
-  const printOrder = () => {
-    window.print();
+  const printOrder = (orderId) => {
+    const orderElement = document.getElementById(`order-${orderId}`);
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Bestellung</title>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write(orderElement.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
   };
 
   const filterOrders = (status) => {
@@ -80,7 +88,7 @@ const AdminPanel = () => {
       if (filter === 'Teslim Edilen Siparişler') return order.status === 'Teslim Edilen Siparişler';
       return false;
     })
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Ters tarihe göre sıralama
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const orderTypeMap = {
     delivery: 'Lieferung',
@@ -99,7 +107,7 @@ const AdminPanel = () => {
       </div>
       <ul className="order-list">
         {filteredOrders.map(order => (
-          <li key={order._id} className="order-card">
+          <li key={order._id} id={`order-${order._id}`} className="order-card">
             <p><strong>Bestell-ID:</strong> {order._id}</p>
             <p><strong>Bestellzeit:</strong> {new Date(order.createdAt).toLocaleString()}</p>
             <p><strong>Kunde:</strong> {order.customerInfo.name} {order.customerInfo.surname}</p>
@@ -109,12 +117,12 @@ const AdminPanel = () => {
             <p><strong>Region:</strong> {order.customerInfo.region}</p>
             <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
             <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
-            <p><strong>Sonderwunsch:</strong> {order.customerInfo.specialRequest}</p>
+            <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>
             <h4>Produkte:</h4>
             <ul className="order-items">
               {order.items.map(item => (
                 <li key={item._id}>
-                  <h5>{item.quantity}x {item.nr}. {item.name} - {item.totalPrice}€ {item.selectedPrice && item.selectedPrice.key !== 'default' ? `(${item.selectedPrice.key})` : ''}</h5>
+                  <h4>{item.quantity} x {item.nr ? `${item.nr}. ` : ''}{item.name} {item.selectedPrice.key === 'default' ? `${item.selectedPrice.value} €` : `${item.selectedPrice.key} - ${item.selectedPrice.value} €`}</h4>
                   {item.extras && item.extras.length > 0 && (
                     <>
                       <p>Extras:</p>
@@ -129,22 +137,29 @@ const AdminPanel = () => {
                 </li>
               ))}
             </ul>
-            {order.deliveryFee > 0 && <p><strong>Lieferungskosten:</strong> {order.deliveryFee} €</p>}
-            <p><strong>Gesamt:</strong> {order.total} €</p>
+            {order.orderType === 'delivery' && <p>Lieferungskosten: {order.deliveryFee}€</p>}
+            <p><strong>Gesamt:</strong> {order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)}€</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
               {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
               {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Taşınan Siparişler')}>Liefern</button>}
               {filter === 'Taşınan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Geliefert</button>}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={printOrder}>Drucken</button>}
+              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => printOrder(order._id)}>Drucken</button>}
               {filter === 'Teslim Edilen Siparişler' && (
                 <>
                   <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
-                  <button onClick={printOrder}>Drucken</button>
+                  <button onClick={() => printOrder(order._id)}>Drucken</button>
                 </>
               )}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => deleteOrder(order._id)}>Löschen</button>}
+              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>}
             </div>
+            {confirmDelete === order._id && (
+              <div className="confirm-delete">
+                <p>Gerçekten bu siparişi silmek istiyor musunuz?</p>
+                <button onClick={() => deleteOrder(order._id)}>Evet</button>
+                <button onClick={() => setConfirmDelete(null)}>Hayır</button>
+              </div>
+            )}
           </li>
         ))}
       </ul>
