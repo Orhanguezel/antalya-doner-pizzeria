@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
-// Unused imports have been removed
 
 Modal.setAppElement('#root');
 
@@ -83,8 +82,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
     onAddToCart(newItem);
     setSelectedItem(null);
   };
-  
-
 
   const handleInfoClick = (item) => {
     setInfoItem(item);
@@ -144,6 +141,9 @@ const Menu = ({ onAddToCart, cart = [] }) => {
                   <div className="items-container">
                     {subcategory.items.map((item) => (
                       <div className="card" key={item._id}>
+                        {category.name.toLowerCase() === 'sparmenus' && item.image && (
+                          <img src={item.image} alt={item.name} className="card-image-top" />
+                        )}
                         <div className="card-header">
                           <button className="info-button" onClick={() => handleInfoClick(item)}>i</button>
                           <h4>{item.nr}. {item.name}</h4>
@@ -151,9 +151,6 @@ const Menu = ({ onAddToCart, cart = [] }) => {
                           <button className="add-button" onClick={() => handleSelectItem(item)}>+</button>
                         </div>
                         <p>{item.description}</p>
-                        {item.image && (
-                          <img src={item.image} alt={item.name} className="card-image" />
-                        )}
                       </div>
                     ))}
                   </div>

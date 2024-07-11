@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa'; // İkonları import ettik
 import './Warenkorb.css';
 
 const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) => {
@@ -95,8 +96,8 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.quantity}x {item.nr}. {item.name} - {item.totalPrice}€ {item.selectedPrice.key !== 'default' && <span>({item.selectedPrice.key})</span>}</h4>
-            {item.extras.length > 0 && (
+            <h4>{item.quantity} x {item.nr}. {item.name} {item.selectedPrice.key === 'default' ? `${item.selectedPrice.value} €` : `${item.selectedPrice.key} - ${item.selectedPrice.value} €`}</h4>
+            {item.extras.length > 0 ? (
               <>
                 <p>Extras:</p>
                 <ul>
@@ -104,14 +105,16 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
                     <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
                   ))}
                 </ul>
+                <p>Gesamtpreis: {item.totalPrice} €</p>
               </>
+            ) : (
+              <p>Preis: {item.totalPrice} €</p>
             )}
-            <p>Preis: {item.totalPrice} €</p>
             <div className="quantity-controls">
-              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}><FaMinus /></button>
               <span>{item.quantity}</span>
-              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}>+</button>
-              <button onClick={() => removeCartItem(item)} className="remove-button">🗑️</button>
+              <button onClick={() => updateCartItemQuantity(item, item.quantity + 1)}><FaPlus /></button>
+              <button onClick={() => removeCartItem(item)} className="remove-button"><FaTrash /></button>
             </div>
           </li>
         ))}
@@ -245,7 +248,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
         </label>
       </div>
 
-      {isOrderBelowMinimum && <div className="minimum-order-warning"></div>}
+      {isOrderBelowMinimum && <div className="minimum-order-warning">Für Lieferungen beträgt der Mindestbestellwert 15 Euro.</div>}
       {orderSuccessMessage && <p className="order-success">{orderSuccessMessage}</p>}
       
       <button 

@@ -1,11 +1,11 @@
 .cart {
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 900px;
   background: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  margin: 20px auto; /* Merkeze hizalanmış */
 }
 
 .cart h2 {
@@ -37,6 +37,7 @@
 
 .cart li ul li {
   margin: 5px 0;
+  font-size: 0.9em; /* Daha küçük font boyutu */
 }
 
 .quantity-controls {
@@ -62,6 +63,13 @@
 
 .quantity-controls span {
   margin: 0 10px;
+}
+
+.quantity-controls .remove-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
 }
 
 .order-type {
@@ -163,13 +171,4 @@
 
 .missing-field {
   border: 1px solid red;
-}
-
-.remove-button {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
 }
