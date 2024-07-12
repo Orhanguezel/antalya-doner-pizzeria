@@ -7,7 +7,7 @@ const testLoginUser = async () => {
   };
 
   try {
-    const response = await axios.post('http://localhost:5000/api/auth/login', loginPayload);
+    const response = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/login', loginPayload);
     console.log('Login Response Status Code:', response.status);
     console.log('Login Response Data:', response.data);
   } catch (error) {

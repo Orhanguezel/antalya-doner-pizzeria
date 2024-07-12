@@ -60,3 +60,53 @@ Alle Dosen Getränke + 0,25€ Pfand  sepette, eve sipariste bu ilave edilecek.
 
 
 
+
+
+
+
+cd ~/frontend
+pm2 start npm --name frontend -- run start
+
+cd ~/backend
+pm2 start npm --name frontend -- run start
+
+
+sudo nano /etc/nginx/sites-available/default
+
+ssh root@141.136.36.40
+
+
+mongosh
+use antalya-doner-pizzeria
+db.users.find().pretty()
+
+
+db.users.deleteMany({})
+
+db.users.deleteOne({ email: 'admin@example.com' });
+
+db.categories.find().pretty()   kategori kontrol etmek icin. 
+
+show collections
+
+
+
+
+cd ~/backend/controllers
+nano authController.js
+
+$2b$10$Us.ZWMmnLyoFqY751qu7/.rXVJSvNXoI5NDNdmUsubNxotvAwlEea
+
+
+node testPassword.js
+nano testPassword.js
+
+cd ~/frontend/src/pages/
+
+
+projeyi kaatma.
+
+pm2 stop all
+pm2 delete all
+
+

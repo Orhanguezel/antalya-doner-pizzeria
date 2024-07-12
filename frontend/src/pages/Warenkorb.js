@@ -77,7 +77,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/orders', orderData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/orders`, orderData);
       console.log('Bestellung abgeschlossen:', response.data);
       clearCart();
       localStorage.removeItem('cart');
