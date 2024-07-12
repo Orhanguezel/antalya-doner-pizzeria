@@ -12,7 +12,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/orders', {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -28,7 +28,7 @@ const AdminPanel = () => {
 
   const updateOrderStatus = async (orderId, status) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/orders/${orderId}/status`, { status }, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/status`, { status }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -41,7 +41,7 @@ const AdminPanel = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -54,7 +54,7 @@ const AdminPanel = () => {
 
   const archiveOrder = async (orderId) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/orders/${orderId}/archive`, null, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/archive`, null, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -69,7 +69,7 @@ const AdminPanel = () => {
     const orderElement = document.getElementById(`order-${orderId}`);
     const printWindow = window.open('', '', 'height=600,width=800');
     printWindow.document.write('<html><head><title>Bestellung</title>');
-    printWindow.document.write('</head><body >');
+    printWindow.document.write('</head><body>');
     printWindow.document.write(orderElement.innerHTML);
     printWindow.document.write('</body></html>');
     printWindow.document.close();

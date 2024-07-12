@@ -1,7 +1,7 @@
 import requests
 
 def test_create_order(order_type, payment_method):
-    url = "http://localhost:5000/api/orders"
+    url = "${process.env.REACT_APP_API_URL}/api/orders"
     payload = {
         "customerInfo": {
             "name": "John",

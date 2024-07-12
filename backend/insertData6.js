@@ -1,14 +1,20 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Category = require('./models/Category');
 const Subcategory = require('./models/Subcategory');
 const Item = require('./models/Item');
 
-mongoose.connect('mongodb://localhost:27017/antalya-doner-pizzeria', {
+// .env dosyasından MongoDB bağlantı URI'sini alıyoruz
+const uri = process.env.MONGO_URI;
+
+if (!uri) {
+  throw new Error('MONGO_URI is not defined in .env file');
+}
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-mongoose.set('strictQuery', false);
-
 const categories = [
   {
   name: "Sparmenus",

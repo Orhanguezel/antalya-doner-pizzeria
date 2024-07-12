@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000/api"
+BASE_URL = "${process.env.REACT_APP_API_URL}/api"
 
 def get_all_categories():
     response = requests.get(f"{BASE_URL}/categories")

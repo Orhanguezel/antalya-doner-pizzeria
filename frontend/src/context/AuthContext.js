@@ -1,48 +1,38 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      setUser(response.data.user);
-      if (response.data.user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { email, password });
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token);
     } catch (error) {
-      console.error('Login failed:', error.response ? error.response.data : error.message);
+      throw error;
     }
   };
 
   const register = async (username, email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { username, email, password });
-      setUser(response.data.user);
-      navigate('/');
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, { username, email, password });
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token);
     } catch (error) {
-      console.error('Registration failed:', error.response ? error.response.data : error.message);
+      throw error;
     }
   };
 
   const logout = () => {
-    setUser(null);
-    navigate('/auth');
+    setToken(null);
+    localStorage.removeItem('token');
   };
 
-  useEffect(() => {
-    // Giriş yapılmış kullanıcıyı local storage veya başka bir yöntem ile kontrol edin
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

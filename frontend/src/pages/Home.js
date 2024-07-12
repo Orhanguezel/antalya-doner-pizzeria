@@ -2,7 +2,7 @@ import React from 'react';
 import Hero from '../components/Hero';
 import Specials from '../components/Specials';
 import Gallery from '../components/Gallery';
-import Kontakt from '../pages/Kontakt';
+import Kontakt from './Kontakt';
 import './Home.css';
 
 function Home() {

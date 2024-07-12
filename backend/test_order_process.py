@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000/api/orders"
+BASE_URL = "${process.env.REACT_APP_API_URL}/api/orders"
 
 def create_order():
     order_data = {

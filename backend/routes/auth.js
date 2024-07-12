@@ -4,7 +4,7 @@ const { registerUser, loginUser, getUserProfile } = require('../controllers/auth
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/register', registerUser);
-router.post('/login', loginUser); // Bu yolun doğru olduğundan emin olun
+router.post('/login', loginUser);
 router.get('/profile', protect, getUserProfile);
 
 module.exports = router;

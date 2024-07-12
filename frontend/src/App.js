@@ -48,7 +48,11 @@ const App = () => {
       return;
     }
     const updatedCart = cart.map(cartItem => {
-      if (cartItem.nr === item.nr && cartItem.selectedPrice.key === item.selectedPrice.key && JSON.stringify(cartItem.extras) === JSON.stringify(item.extras)) {
+      if (
+        cartItem.nr === item.nr && 
+        cartItem.selectedPrice.key === item.selectedPrice.key && 
+        JSON.stringify(cartItem.extras) === JSON.stringify(item.extras)
+      ) {
         const basePrice = cartItem.selectedPrice.value + cartItem.extras.reduce((acc, extra) => acc + extra.price, 0);
         return {
           ...cartItem,

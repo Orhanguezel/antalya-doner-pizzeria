@@ -2,8 +2,8 @@ import requests
 from datetime import datetime
 
 def test_register_and_login_user():
-    url_register = "http://localhost:5000/api/auth/register"
-    url_login = "http://localhost:5000/api/auth/login"
+    url_register = "${process.env.REACT_APP_API_URL}/api/auth/register"
+    url_login = "${process.env.REACT_APP_API_URL}/api/auth/login"
     current_time = datetime.now().strftime("%Y%m%d%H%M%S")
     
     username = f"testuser_{current_time}"

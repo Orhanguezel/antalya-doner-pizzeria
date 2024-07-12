@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
+import api from '../apiRaxios';
 
 Modal.setAppElement('#root');
 
@@ -18,12 +19,13 @@ const Menu = ({ onAddToCart, cart = [] }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/categories');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
+        const response = await api.get('/categories');
+        console.log('Fetch response:', response);
+
+        const data = response.data;
+        console.log('Fetched data:', data);
         setCategories(data);
+
         if (data.length > 0) {
           setActiveCategory(data[0]._id);
         }

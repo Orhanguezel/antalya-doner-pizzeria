@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('/api/auth/login', { username, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { username, password });
       login(response.data.token);
       navigate('/');
     } catch (err) {
