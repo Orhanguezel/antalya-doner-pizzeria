@@ -35,7 +35,7 @@ const Breadcrumb = () => {
         const routeTo = `/admin/${pathnames.slice(1, index + 1).join('/')}`;
         return (
           <span key={name} className="breadcrumb-item">
-            {' > '}
+            <span className="breadcrumb-arrow">▶</span>
             {index === pathnames.length - 1 ? (
               <span className="breadcrumb-active">{formatPathname(name)}</span>
             ) : (
