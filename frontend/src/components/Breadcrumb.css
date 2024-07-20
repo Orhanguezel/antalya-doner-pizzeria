@@ -17,15 +17,29 @@
     color: #007bff;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+    background-color: #e2e6ea;
   }
   
   .breadcrumb-link:hover {
     color: #0056b3;
+    background-color: #d0d7de;
   }
   
   .breadcrumb-active {
     color: #6c757d;
     font-weight: normal;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+    background-color: #e2e6ea;
+  }
+  
+  .breadcrumb-arrow {
+    margin: 0 5px;
+    color: #6c757d;
   }
   
