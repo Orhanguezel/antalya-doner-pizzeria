@@ -1,6 +1,7 @@
 import React from 'react';
+import { calculateTotal } from '../utils/cart-utils';
 
-const Cart = ({ cart, updateCartItemQuantity, removeCartItem, calculateTotal }) => {
+const Cart = ({ cart, updateCartItemQuantity, removeCartItem }) => {
   return (
     <div className="cart">
       <h2>Bestellliste</h2>
@@ -33,7 +34,7 @@ const Cart = ({ cart, updateCartItemQuantity, removeCartItem, calculateTotal }) 
           </li>
         ))}
       </ul>
-      <h3>Gesamtbetrag: {calculateTotal()} €</h3>
+      <h3>Gesamtbetrag: {calculateTotal(cart)} €</h3>
     </div>
   );
 };

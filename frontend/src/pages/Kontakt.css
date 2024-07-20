@@ -48,13 +48,30 @@
   margin: 10px 0;
 }
 
-iframe {
-  flex: 1 1 100%;
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Maksimum genişlik */
   margin-top: 20px;
-  max-width: 600px;
+}
+
+.responsive-map {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9; /* En-boy oranını korumak için */
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.overlay-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
 
 @media (max-width: 768px) {
   .contact-section {
