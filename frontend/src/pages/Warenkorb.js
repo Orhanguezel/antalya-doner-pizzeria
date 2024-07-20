@@ -96,19 +96,19 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       <ul>
         {cart.map((item, index) => (
           <li key={index}>
-            <h4>{item.quantity} x {item.nr}. {item.name} {item.selectedPrice.key === 'default' ? `${item.selectedPrice.value} €` : `${item.selectedPrice.key} - ${item.selectedPrice.value} €`}</h4>
+            <h4>{item.quantity} x {item.nr}. {item.name} {item.selectedPrice.key === 'default' ? `${item.selectedPrice.value.toFixed(2)} €` : `${item.selectedPrice.key} - ${item.selectedPrice.value.toFixed(2)} €`}</h4>
             {item.extras.length > 0 ? (
               <>
                 <p>Extras:</p>
                 <ul>
                   {item.extras.map((extra, index) => (
-                    <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price} €)</li>
+                    <li key={index}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price.toFixed(2)} €)</li>
                   ))}
                 </ul>
-                <p>Gesamtpreis: {item.totalPrice} €</p>
+                <p>Gesamtpreis: {item.totalPrice.toFixed(2)} €</p>
               </>
             ) : (
-              <p>Preis: {item.totalPrice} €</p>
+              <p>Preis: {item.totalPrice.toFixed(2)} €</p>
             )}
             <div className="quantity-controls">
               <button onClick={() => updateCartItemQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}><FaMinus /></button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -8,13 +8,18 @@ import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
 import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
+import LieferungOrders from './pages/LieferungOrders';
+import AbholungOrders from './pages/AbholungOrders';
+import RestaurantOrders from './pages/RestaurantOrders';
+import Analysis from './pages/Analysis';
+import MenuEdit from './pages/MenuEdit';
+import Authorization from './pages/Authorization';
 import { AuthProvider } from './context/AuthContext';
-import CartBar from './components/CartBar'; // CartBar bileşenini ekleyelim
+import CartBar from './components/CartBar';
 
 const App = () => {
   const [cart, setCart] = useState([]);
 
-  // Component mount olduğunda localStorage'dan cart bilgisini yükle
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
@@ -22,7 +27,6 @@ const App = () => {
     }
   }, []);
 
-  // Cart değiştiğinde localStorage'a kaydet
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
@@ -88,11 +92,19 @@ const App = () => {
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/*" element={<AdminPanel />}>
+              <Route path="*" element={<Navigate to="/admin/lieferung-orders" />} />
+            </Route>
+            <Route path="/admin/lieferung-orders" element={<LieferungOrders />} />
+            <Route path="/admin/abholung-orders" element={<AbholungOrders />} />
+            <Route path="/admin/restaurant-orders" element={<RestaurantOrders />} />
+            <Route path="/admin/analysis" element={<Analysis />} />
+            <Route path="/admin/menu-edit" element={<MenuEdit />} />
+            <Route path="/admin/authorization" element={<Authorization />} />
           </Routes>
         </main>
         <Footer />
-        {cart.length > 0 && <CartBar cart={cart} />} {/* Sabit barı ekleyelim */}
+        {cart.length > 0 && <CartBar cart={cart} />}
       </AuthProvider>
     </Router>
   );
