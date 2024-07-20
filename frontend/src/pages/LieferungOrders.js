@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Breadcrumb from '../components/Breadcrumb';
-import './AdminPanel.css';
+import './LieferungOrders.css';
 
 const LieferungOrders = () => {
   const { token } = useAuth();
@@ -18,9 +18,7 @@ const LieferungOrders = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        // Sadece Bestellart: Lieferung olan siparişleri filtrele
-        const lieferungOrders = response.data.filter(order => order.orderType === 'delivery');
-        setOrders(lieferungOrders);
+        setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
       }
@@ -84,6 +82,7 @@ const LieferungOrders = () => {
   };
 
   const filteredOrders = orders
+    .filter(order => order.orderType === 'delivery')
     .filter(order => {
       if (filter === 'Gelen Siparişler') return order.status === 'Gelen Siparişler';
       if (filter === 'Hazırlanan Siparişler') return order.status === 'Hazırlanan Siparişler';
@@ -92,6 +91,12 @@ const LieferungOrders = () => {
       return false;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const orderTypeMap = {
+    delivery: 'Lieferung',
+    pickup: 'Abholung',
+    dinein: 'Im Restaurant essen'
+  };
 
   return (
     <div className="lieferung-orders">
@@ -114,7 +119,7 @@ const LieferungOrders = () => {
             <p><strong>Adresse:</strong> {order.customerInfo.address}</p>
             <p><strong>Region:</strong> {order.customerInfo.region}</p>
             <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
-            <p><strong>Bestellart:</strong> Lieferung</p>
+            <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
             <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>
             <h4>Produkte:</h4>
             <ul className="order-items">

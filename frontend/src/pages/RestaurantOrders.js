@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Breadcrumb from '../components/Breadcrumb';
-import './AdminPanel.css';
+import './RestaurantOrders.css';
 
 const RestaurantOrders = () => {
   const { token } = useAuth();
@@ -18,9 +18,7 @@ const RestaurantOrders = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        // Sadece Bestellart: Im Restaurant essen olan siparişleri filtrele
-        const restaurantOrders = response.data.filter(order => order.orderType === 'dinein');
-        setOrders(restaurantOrders);
+        setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
       }
@@ -84,6 +82,7 @@ const RestaurantOrders = () => {
   };
 
   const filteredOrders = orders
+    .filter(order => order.orderType === 'dinein')
     .filter(order => {
       if (filter === 'Gelen Siparişler') return order.status === 'Gelen Siparişler';
       if (filter === 'Hazırlanan Siparişler') return order.status === 'Hazırlanan Siparişler';
@@ -91,6 +90,12 @@ const RestaurantOrders = () => {
       return false;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const orderTypeMap = {
+    delivery: 'Lieferung',
+    pickup: 'Abholung',
+    dinein: 'Im Restaurant essen'
+  };
 
   return (
     <div className="restaurant-orders">
@@ -112,7 +117,7 @@ const RestaurantOrders = () => {
             <p><strong>Adresse:</strong> {order.customerInfo.address}</p>
             <p><strong>Region:</strong> {order.customerInfo.region}</p>
             <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
-            <p><strong>Bestellart:</strong> Im Restaurant essen</p>
+            <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
             <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>
             <h4>Produkte:</h4>
             <ul className="order-items">
@@ -133,13 +138,18 @@ const RestaurantOrders = () => {
                 </li>
               ))}
             </ul>
-            <p><strong>Gesamt:</strong> {order.total.toFixed(2)}€</p>
+            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)).toFixed(2)}€</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
               {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
               {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Servis</button>}
-              <button onClick={() => printOrder(order._id)}>Drucken</button>
-              <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
+              {filter === 'Teslim Edilen Siparişler' && (
+                <>
+                  <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
+                  <button onClick={() => printOrder(order._id)}>Drucken</button>
+                </>
+              )}
+              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>}
             </div>
             {confirmDelete === order._id && (
               <div className="confirm-delete">
