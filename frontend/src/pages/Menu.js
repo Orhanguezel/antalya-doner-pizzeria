@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
-import api from '../apiRaxios';
+import api from '../api/axios';
 
 Modal.setAppElement('#root');
 
