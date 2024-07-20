@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
 import api from '../api/axios';
+import { calculateTotal } from '../utils/cart-utils';
 
 Modal.setAppElement('#root');
 
@@ -190,7 +191,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
               <p>Ekstralar:</p>
               <div className="extras-list">
                 {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (
-                  <div key={index}>
+                  <div key={index} className="extra-item">
                     <input
                       type="checkbox"
                       id={`extra-${extraName}`}
@@ -207,9 +208,9 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <span>{quantity}</span>
             <button onClick={increaseQuantity}>+</button>
           </div>
-          <h3>Gesamtpreis: {totalPrice} €</h3>
-          <button onClick={handleAddToCart}>In den Warenkorb</button>
-          <button onClick={() => setSelectedItem(null)}>Schließen</button>
+          <h3>Gesamtpreis: {totalPrice.toFixed(2)} €</h3>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>In den Warenkorb</button>
+          <button className="close-button" onClick={() => setSelectedItem(null)}>Schließen</button>
         </Modal>
       )}
       {infoItem && (
@@ -236,7 +237,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
               </ul>
             </div>
           )}
-          <button onClick={() => setInfoItem(null)}>Schließen</button>
+          <button className="close-button" onClick={() => setInfoItem(null)}>Schließen</button>
         </Modal>
       )}
     </div>
