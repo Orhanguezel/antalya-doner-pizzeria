@@ -41,7 +41,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// Tüm siparişleri getirme
+// Tüm aktif siparişleri getirme
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({ archived: false });
@@ -51,7 +51,17 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// Belirli bir siparişi getirme
+// Arşivlenmiş siparişleri getirme
+exports.getArchivedOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ archived: true });
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Belirli bir siparişi ID'ye göre getirme
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);

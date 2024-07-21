@@ -248,7 +248,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
         </label>
       </div>
 
-      {isOrderBelowMinimum && <div className="minimum-order-warning">Für Lieferungen beträgt der Mindestbestellwert 15 Euro.</div>}
+    
       {orderSuccessMessage && <p className="order-success">{orderSuccessMessage}</p>}
       
       <button 

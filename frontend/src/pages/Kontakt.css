@@ -47,7 +47,6 @@
 .card p {
   margin: 10px 0;
 }
-
 .map-container {
   position: relative;
   width: 100%;
@@ -71,6 +70,7 @@
   height: 100%;
   z-index: 10;
 }
+
 
 
 @media (max-width: 768px) {
