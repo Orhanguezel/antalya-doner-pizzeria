@@ -33,15 +33,17 @@ function Kontakt() {
           <p className="contact-p">Ruhetag</p>
         </div>
       </section>
-      <iframe
-        title="Antalya Döner & Pizzeria Map"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0192586249363!2d144.96315761531695!3d-37.8141079797517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0xf577d1e5e4f4e345!2sAntalya%20D%C3%B6ner%20%26%20Pizzeria!5e0!3m2!1sen!2sus!4v1611223337356!5m2!1sen!2sus"
-        width="600"
-        height="450"
+      <div class="map-container">
+    <iframe
+        class="responsive-map"
+        title="Kapellenpl. 1, 52457 Aldenhoven, Almanya"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2531.2610589363953!2d6.277949115738342!3d50.90547657954145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bf554d939b2527%3A0xb08e9985ec05cd0d!2sKapellenpl.%201%2C%2052457%20Aldenhoven%2C%20Germany!5e0!3m2!1sen!2str!4v1627475933423!5m2!1sen!2str"
         allowFullScreen=""
         loading="lazy"
-        style={{ border: 0 }}
-      ></iframe>
+    ></iframe>
+    <a href="https://www.google.com/maps?q=Kapellenpl.+1,+52457+Aldenhoven,+Germany&hl=en" target="_blank" class="overlay-link"></a>
+</div>
+
     </div>
   );
 }

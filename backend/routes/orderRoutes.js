@@ -4,6 +4,7 @@ const orderController = require('../controllers/orderController');
 
 router.post('/', orderController.createOrder);
 router.get('/', orderController.getAllOrders);
+router.get('/archived', orderController.getArchivedOrders); // Arşivlenmiş siparişler için endpoint
 router.get('/:id', orderController.getOrderById);
 router.put('/:id/status', orderController.updateOrderStatus);
 router.put('/:id/accept', orderController.updateOrderStatus); // accepted status
