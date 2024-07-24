@@ -2,10 +2,8 @@
 
 /* Kontakt Container */
 .kontakt-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  text-align: center;
+  padding: 30px 0; /* Boşluk azaltıldı */
 }
 
 .kontakt-container h1 {
@@ -20,38 +18,52 @@
 
 .contact-section {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* Boşluk azaltıldı */
 }
 
 .card {
-  flex: 1 1 calc(50% - 40px);
+  flex: 1 1 300px; /* Kart genişliği küçültüldü */
   background: white;
-  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: transform 0.3s;
-  margin-bottom: 20px;
+  padding: 20px;
+  transition: transform 0.3s, background-color 0.3s, color 0.3s;
+  margin: 20px;
+  border: 2px solid #fa7e1e; /* Turuncu çerçeve */
+  color: #333;
+  display: inline-block; /* Yan yana olmalarını sağlar */
+  justify-content: center;
 }
 
 .card:hover {
   transform: scale(1.05);
+  background-color: #fa7e1e; /* Hover'da arka plan turuncu */
+  color: white; /* Hover'da metin beyaz */
+  border: 2px solid #fa7e1e; /* Hover'da çerçeve aynı renk */
+}
+
+.card:hover h2,
+.card:hover p {
+  color: white; /* Hover'da başlık ve paragraf metin rengi beyaz */
 }
 
 .card h2 {
-  margin-top: 0;
+  margin-top: 10px;
+  font-size: 24px;
 }
 
 .card p {
-  margin: 10px 0;
+  margin-top: 10px;
+  font-size: 16px;
 }
+
 .map-container {
   position: relative;
   width: 100%;
   max-width: 800px; /* Maksimum genişlik */
-  margin-top: 20px;
+  margin: 20px auto; /* Üst ve alt boşluk, otomatik sağ ve sol boşluk */
 }
 
 .responsive-map {
@@ -71,8 +83,6 @@
   z-index: 10;
 }
 
-
-
 @media (max-width: 768px) {
   .contact-section {
     flex-direction: column;
@@ -80,9 +90,22 @@
 
   .card {
     flex: 1 1 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   iframe {
     margin-top: 20px;
   }
+}
+
+/* Başlıklar */
+h2 {
+  text-align: center; /* Başlıklar ortalandı */
+  margin-bottom: 20px; /* Standart boşluk eklendi */
+}
+
+h3 {
+  text-align: center; /* Başlıklar ortalandı */
+  margin-bottom: 15px; /* Standart boşluk eklendi */
 }

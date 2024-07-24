@@ -104,7 +104,9 @@
 /* Gallery Section */
 .gallery {
   text-align: center;
-  padding: 50px 20px;
+  margin-top: 30px;
+  padding: 10px 10px;
+
 }
 
 .gallery h2 {
