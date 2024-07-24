@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AuthPage.css';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -15,12 +14,10 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { username, password });
-      login(response.data.token);
+      await login(emailOrUsername, password);
       navigate('/');
     } catch (err) {
-      console.error('Login Error:', err.response ? err.response.data : err.message);
-      setError(err.response?.data?.error || 'Ungültige Anmeldedaten');
+      setError(err.response?.data?.error || 'Invalid login credentials');
     }
   };
 
@@ -30,17 +27,17 @@ const Login = () => {
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="username">Benutzername</label>
+          <label htmlFor="emailOrUsername">Email or Username</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="emailOrUsername"
+            value={emailOrUsername}
+            onChange={(e) => setEmailOrUsername(e.target.value)}
             required
           />
         </div>
         <div className="input-group">
-          <label htmlFor="password">Passwort</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
@@ -49,12 +46,11 @@ const Login = () => {
             required
           />
         </div>
-        {error && <p className="error-message">{error}</p>}
         <button type="submit">Login</button>
       </form>
-      <p className="info-note">Hinweis: Unser Mitgliedschaftssystem ist derzeit nicht aktiv.</p>
+      <p className="info-note">Note: Our membership system is currently not active.</p>
       <p>
-        Noch kein Konto? <button onClick={() => navigate('/register')}>Registrieren</button>
+        Don't have an account? <button onClick={() => navigate('/register')}>Register</button>
       </p>
     </div>
   );

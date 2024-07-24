@@ -24,7 +24,7 @@ const categoryData = {
     {
       name: 'Döner Spezialitäten',
       description: 'Drehspieß nach Döner Art aus Kalbfleisch.',
-      images: ['../assets/menu/1.jpg', '../assets/menu/2.jpg'],
+      images: ['/assets/menu/1.jpg', '/assets/menu/2.jpg'],
       items: [
         {
           nr: '1',
@@ -130,7 +130,7 @@ const categoryData = {
     {
       name: 'Döner Überbacken',
       description: 'Alle Döner Überbacken Gerichte werden mit Pommes & Salat serviert.',
-      images: ['../assets/menu/3.jpg', '../assets/menu/4.jpg'],
+      images: ['/assets/menu/3.jpg', '/assets/menu/4.jpg'],
       items: [
         {
           nr: '11',
@@ -191,7 +191,7 @@ const categoryData = {
     {
       name: 'Teigtaschen',
       description: 'Im Steinofen frisch gebacken.',
-      images: ['../assets/menu/5.jpg', '../assets/menu/6.jpg'],
+      images: ['/assets/menu/5.jpg', '/assets/menu/6.jpg'],
       items: [
         {
           nr: '18',
@@ -279,7 +279,7 @@ const categoryData = {
     {
       name: 'Pizza',
       description: 'Alle Pizzen mit Goudakäse und Oregano. Alle Pizzen auf Wunsch mit Knoblauch und scharf + 0.30€.',
-      images: ['../assets/menu/8.jpg', '../assets/menu/10.jpg'],
+      images: ['/assets/menu/8.jpg', '/assets/menu/10.jpg'],
       items: [
         {
           nr: '26',

@@ -25,7 +25,7 @@ const categories = [
       {
         name: 'Alkoholische Getränke',
         description: 'Unsere Auswahl an alkoholischen Getränken.',
-        images: ['../assets/menu/38.jpg', '../assets/menu/39.jpg'],
+        images: ['/assets/menu/38.jpg', '/assets/menu/39.jpg'],
         items: [
           {
             nr: '123',
@@ -78,7 +78,7 @@ const categories = [
       {
         name: 'Alkoholfreie Getränke',
         description: 'Unsere Auswahl an alkoholfreien Getränken.',
-        images: ['../assets/menu/42.jpg', '../assets/menu/43.jpg'],
+        images: ['/assets/menu/42.jpg', '/assets/menu/43.jpg'],
         items: [
           {
             nr: '128',

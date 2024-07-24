@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
@@ -10,12 +11,15 @@ Modal.setAppElement('#root');
 const Menu = ({ onAddToCart, cart = [] }) => {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('');
+  const [activeSubcategory, setActiveSubcategory] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [extras, setExtras] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
+
+  const { categoryId, subcategoryId } = useParams();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,8 +31,21 @@ const Menu = ({ onAddToCart, cart = [] }) => {
         console.log('Fetched data:', data);
         setCategories(data);
 
-        if (data.length > 0) {
+        if (categoryId) {
+          setActiveCategory(categoryId);
+          if (subcategoryId) {
+            setActiveSubcategory(subcategoryId);
+          } else {
+            const category = data.find(cat => cat._id === categoryId);
+            if (category && category.subcategories.length > 0) {
+              setActiveSubcategory(category.subcategories[0]._id);
+            }
+          }
+        } else if (data.length > 0) {
           setActiveCategory(data[0]._id);
+          if (data[0].subcategories.length > 0) {
+            setActiveSubcategory(data[0].subcategories[0]._id);
+          }
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -36,7 +53,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
     };
 
     fetchCategories();
-  }, []);
+  }, [categoryId, subcategoryId]);
 
   const handleSelectItem = (item) => {
     setSelectedItem(item);
@@ -170,7 +187,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
             <div>
               <p>Preisoptionen:</p>
               {Object.entries(selectedItem.prices).map(([key, value]) => (
-                <div key={key}>
+                <div key={key} className="extra-item">
                   <input
                     type="radio"
                     id={`price-${key}`}
@@ -188,7 +205,7 @@ const Menu = ({ onAddToCart, cart = [] }) => {
           )}
           {selectedItem.extras && Object.keys(selectedItem.extras).length > 0 && (
             <div className="extras-container">
-              <p>Ekstralar:</p>
+              <p>Extras:</p>
               <div className="extras-list">
                 {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (
                   <div key={index} className="extra-item">

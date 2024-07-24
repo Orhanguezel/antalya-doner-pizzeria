@@ -1,14 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUtensils, faShoppingCart, faPhone, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUtensils, faShoppingCart, faPhone, faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../context/AuthContext';
 import './Header.css';
 
 const Header = ({ cart }) => {
+  const { token, logout } = useAuth();
+
   return (
     <header className="header">
       <div className="logo">
-        <img src="../assets/logo/1.png" alt="Logo" />
+        <img src="/assets/logo/1.png" alt="Logo" />
       </div>
       <nav className="navbar">
         <Link to="/">
@@ -25,9 +28,19 @@ const Header = ({ cart }) => {
         <Link to="/kontakt">
           <FontAwesomeIcon icon={faPhone} /> <span className="nav-link-text">Kontakt</span>
         </Link>
-        <Link to="/auth">
-          <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
-        </Link>
+        {token ? (
+          <div className="nav-user">
+            <FontAwesomeIcon icon={faUser} /> 
+            <div className="user-dropdown">
+              <Link to="/profile">Profil</Link>
+              <button onClick={logout}>Logout</button>
+            </div>
+          </div>
+        ) : (
+          <Link to="/auth">
+            <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
+          </Link>
+        )}
       </nav>
     </header>
   );

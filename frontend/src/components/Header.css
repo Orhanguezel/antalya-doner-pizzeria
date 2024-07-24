@@ -1,51 +1,97 @@
+/* Header.css */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #ff9900;
+  padding: 1rem 2rem;
+  background-color: #E65C00;
+  color: white;
 }
 
 .logo img {
-  height: 50px;
+  max-height: 50px;
 }
 
 .navbar {
   display: flex;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
-.navbar a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
+.navbar a, .nav-user {
   display: flex;
   align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
   position: relative;
 }
 
-.navbar a:hover {
-  opacity: 0.8;
-}
-
 .nav-link-text {
-  display: none;
+  margin-left: 0.5rem;
 }
 
 .cart-count {
   background-color: red;
   color: white;
   border-radius: 50%;
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 0.2rem 0.5rem;
   position: absolute;
   top: -10px;
   right: -10px;
+  font-size: 0.8rem;
 }
 
-@media (min-width: 600px) {
+.nav-user {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  padding: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-user:hover .user-dropdown {
+  display: block;
+}
+
+.user-dropdown a, .user-dropdown button {
+  display: block;
+  padding: 0.5rem;
+  color: black;
+  text-decoration: none;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-dropdown button:hover, .user-dropdown a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    gap: 1rem;
+  }
+
   .nav-link-text {
-    display: inline;
-    margin-left: 5px;
+    display: none;
+  }
+
+  .navbar a {
+    font-size: 1.5rem;
+  }
+
+  .logo img {
+    max-height: 40px;
   }
 }

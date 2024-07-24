@@ -23,16 +23,16 @@
   position: sticky; /* Sayfa kaydırıldığında sabit kalma */
   top: 0; /* Üstte konumlandır */
   background: #fff; /* Beyaz arka plan */
-  z-index: 10; /* Öncelik sırası */
+  z-index: 1; /* Öncelik sırası */
   padding: 5px 0; /* İçerik etrafındaki boşluk */
 }
 
 .category-button {
   flex: 1 1 25%; /* Esnek genişlik ayarı */
-  padding: 10px 5px; /* İçerik etrafındaki boşluk */
+  padding: 5px 5px; /* İçerik etrafındaki boşluk */
   font-size: 0.9rem; /* Yazı boyutu */
   text-align: center; /* Ortala */
-  background-color: #fa7e1e; /* Arka plan rengi */
+  background-color: #E65C00; /* Arka plan rengi */
   color: white; /* Yazı rengi */
   border: none; /* Kenar çizgisi yok */
   border-radius: 5px; /* Köşeleri yuvarla */
@@ -45,6 +45,7 @@
   display: flex; /* Flexbox düzeni */
   align-items: center; /* Dikeyde ortala */
   justify-content: center; /* Yatayda ortala */
+ 
 }
 
 .category-button i {
@@ -103,6 +104,7 @@
   transition: transform 0.2s; /* Geçiş efekti */
   flex: 1 1 350px; /* Esnek genişlik ayarı */
   max-width: 400px; /* Maksimum genişlik */
+  min-height: 70px;
 }
 
 .card:hover {
@@ -196,10 +198,10 @@
   transform: translate(-50%, -50%); /* Ortala */
   width: 80%; /* Genişlik */
   max-width: 600px; /* Maksimum genişlik */
-  background: white; /* Arka plan rengi */
-  padding: 20px; /* İçerik etrafındaki boşluk */
+  background: rgb(210, 214, 156); /* Arka plan rengi */
+  padding: 10px; /* İçerik etrafındaki boşluk */
   border-radius: 10px; /* Köşeleri yuvarla */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6); /* Gölge efekti */
   z-index: 10000; /* Öncelik sırası */
   color: #333; /* Yazı rengi */
   background-color: #f8f9fa; /* Arka plan rengi */
@@ -207,24 +209,30 @@
 
 /* Extras için stil ayarları */
 .extras-container {
-  margin-top: 20px; /* Üst boşluk */
+  margin-top: 5px; /* Üst boşluk */
 }
 
 .extras-list {
   display: flex; /* Flexbox düzeni */
   flex-wrap: wrap; /* İçerikleri sarmala */
-  gap: 10px; /* Aralık */
+  gap: 5px; /* Aralık */
+  font-size: 0.6rem; /* Yazı boyutu */
 }
 
 .extra-item {
-  display: inline-block; /* Satır içi blok */
-  margin-right: 10px; /* Sağ boşluk */
+  display: inline-flex; /* Satır içi flex */
+  align-items: center; /* Dikeyde ortala */
+  margin-right: 5px; /* Sağ boşluk */
+}
+
+.extra-item input {
+  margin-right: 5px; /* Sağ boşluk */
 }
 
 .quantity-controls {
   display: flex; /* Flexbox düzeni */
   align-items: center; /* Dikeyde ortala */
-  gap: 10px; /* Aralık */
+  gap: 5px; /* Aralık */
   margin-top: 10px; /* Üst boşluk */
 }
 
@@ -243,14 +251,14 @@
 }
 
 .quantity-controls span {
-  margin: 0 10px; /* Kenar boşluğu */
+  margin: 0 5px; /* Kenar boşluğu */
 }
 
 .add-to-cart-button {
   background-color: #28a745; /* Arka plan rengi */
   color: white; /* Yazı rengi */
   border: none; /* Kenar çizgisi yok */
-  padding: 10px 20px; /* İçerik etrafındaki boşluk */
+  padding: 5px 10px; /* İçerik etrafındaki boşluk */
   border-radius: 5px; /* Köşeleri yuvarla */
   cursor: pointer; /* İmleç göstergesi */
   margin-top: 10px; /* Üst boşluk */
@@ -260,7 +268,7 @@
   background-color: #333; /* Arka plan rengi */
   color: white; /* Yazı rengi */
   border: none; /* Kenar çizgisi yok */
-  padding: 10px 20px; /* İçerik etrafındaki boşluk */
+  padding: 5px 10px; /* İçerik etrafındaki boşluk */
   border-radius: 5px; /* Köşeleri yuvarla */
   cursor: pointer; /* İmleç göstergesi */
   margin-top: 10px; /* Üst boşluk */
@@ -329,4 +337,14 @@
   .category-button {
     flex: 1 1 25%; /* Esnek genişlik ayarı */
   }
+}
+
+.price-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.price-option label {
+  margin-left: 10px;
 }
