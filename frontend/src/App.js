@@ -90,6 +90,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/kontakt" element={<Kontakt />} />
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
+            <Route path="/menu/:categoryId/:subcategoryId" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin/*" element={<AdminPanel />}>

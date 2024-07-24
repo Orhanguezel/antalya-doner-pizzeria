@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+// Load environment variables from .env file
 dotenv.config();
 
 mongoose.set('strictQuery', false);
@@ -29,12 +30,14 @@ app.listen(port, () => {
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const itemsRouter = require('./routes/itemsRouter');
 const subcategoriesRouter = require('./routes/subcategoriesRouter');
 
 app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/items', itemsRouter);
 app.use('/api/subcategories', subcategoriesRouter);

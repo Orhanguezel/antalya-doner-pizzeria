@@ -1,17 +1,9 @@
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
-  });
-};
+const generateToken = require('../utils/generateToken');
 
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
-
-  console.log('Register Request Body:', req.body);
 
   try {
     const existingUser = await User.findOne({ email });
@@ -26,7 +18,6 @@ const registerUser = async (req, res) => {
     const token = generateToken(user._id);
     res.status(201).json({ token, user });
   } catch (error) {
-    console.error('Register User Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -34,9 +25,8 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, username, password } = req.body;
 
-  console.log('Login Request Body:', req.body);
-
   try {
+    console.log('Login Request Body:', req.body);
     const user = await User.findOne({ $or: [{ email }, { username }] });
     if (!user) {
       console.log('User not found with email or username:', email || username);
@@ -58,7 +48,6 @@ const loginUser = async (req, res) => {
       res.status(401).json({ error: 'Invalid email/username or password' });
     }
   } catch (error) {
-    console.error('Login User Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -71,7 +60,6 @@ const getUserProfile = async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    console.error('Get User Profile Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };

@@ -1,3 +1,4 @@
+// pages/AuthPage.js
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './AuthPage.css';
@@ -16,7 +17,7 @@ const AuthPage = () => {
       if (isRegister) {
         await register(username, email, password);
       } else {
-        await login(email, password); // Kullanıcı adı yerine e-posta kullanarak giriş yapma
+        await login(email, password);
       }
     } catch (err) {
       setError(err.response ? err.response.data.error : 'Ein Fehler ist aufgetreten');

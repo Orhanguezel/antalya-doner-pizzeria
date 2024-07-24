@@ -23,7 +23,7 @@ const categories = [
     {
       name: "Sparmenu",
       description: "Alle Dosen Getränke + 0,25€ Pfand",
-      images: ["../assets/menu/25.jpg", "../assets/menu/26.jpg"],
+      images: ["/assets/menu/25.jpg", "/assets/menu/26.jpg"],
       items: [
         {
           nr: "142",
@@ -33,7 +33,7 @@ const categories = [
           allergene: [],
           description: "Döner Teller komplett + Softgetränk 0,33 L",
           prices: { default: 12.50 },
-          image: "../assets/menu/45.jpg"
+          image: "/assets/menu/45.jpg"
         },
         {
           nr: "143",
@@ -43,7 +43,7 @@ const categories = [
           allergene: [],
           description: "Döner überbacken + Pommes & Salat + Softgetränk 0,33 L",
           prices: { default: 12.50 },
-          image: "../assets/menu/46.jpg"
+          image: "/assets/menu/46.jpg"
         },
         {
           nr: "144",
@@ -53,7 +53,7 @@ const categories = [
           allergene: [],
           description: "Currywurst + Pommes + Softgetränk 0,33 L",
           prices: { default: 9.50 },
-          image: "../assets/menu/47.jpg"
+          image: "/assets/menu/47.jpg"
         },
         {
           nr: "145",
@@ -63,7 +63,7 @@ const categories = [
           allergene: [],
           description: "Pizza nach Wahl + Softgetränk 0,33 L",
           prices: { default: 12.50 },
-          image: "../assets/menu/48.jpg"
+          image: "/assets/menu/48.jpg"
         },
         {
           nr: "146",
@@ -73,7 +73,7 @@ const categories = [
           allergene: [],
           description: "Schnitzel nach Wahl mit Pommes & Salat + Softgetränk 0,33 L",
           prices: { default: 12.50 },
-          image: "../assets/menu/49.jpg"
+          image: "/assets/menu/49.jpg"
         },
         {
           nr: "147",
@@ -83,7 +83,7 @@ const categories = [
           allergene: [],
           description: "Lahmacun komplett + Softgetränk 0,33 L",
           prices: { default: 9.50 },
-          image: "../assets/menu/50.jpg"
+          image: "/assets/menu/50.jpg"
         },
         {
           nr: "148",
@@ -93,7 +93,7 @@ const categories = [
           allergene: [],
           description: "Döner Tasche komplett mit Pommes + Softgetränk 0,33 L",
           prices: { default: 9.50 },
-          image: "../assets/menu/51.jpg"
+          image: "/assets/menu/51.jpg"
         },
         {
           nr: "149",
@@ -103,7 +103,7 @@ const categories = [
           allergene: [],
           description: "Pide nach Wahl + Softgetränk 0,33 L",
           prices: { default: 11.00 },
-          image: "../assets/menu/52.jpg"
+          image: "/assets/menu/52.jpg"
         },
         {
           nr: "150",
@@ -113,7 +113,7 @@ const categories = [
           allergene: [],
           description: "Hamburger + Pommes + Softgetränk 0,33 L",
           prices: { default: 9.00 },
-          image: "../assets/menu/53.jpg"
+          image: "/assets/menu/53.jpg"
         },
         {
           nr: "151",
@@ -123,7 +123,7 @@ const categories = [
           allergene: [],
           description: "Falafel Teller 7 Stk. mit Pommes & Salat + Softgetränk 0,33 L",
           prices: { default: 11.00 },
-          image: "../assets/menu/54.jpg"
+          image: "/assets/menu/54.jpg"
         },
         {
           nr: "152",
@@ -133,7 +133,7 @@ const categories = [
           allergene: [],
           description: "Chicken Nuggets 6 Stk. mit Pommes + Softgetränk 0,33 L",
           prices: { default: 9.50 },
-          image: "../assets/menu/55.jpg"
+          image: "/assets/menu/55.jpg"
         }
       ]
     }
