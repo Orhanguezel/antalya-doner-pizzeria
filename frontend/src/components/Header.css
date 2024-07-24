@@ -3,13 +3,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.6rem 1rem;
   background-color: #E65C00;
   color: white;
 }
 
 .logo img {
-  max-height: 50px;
+  max-height: 80px;
 }
 
 .navbar {
@@ -92,6 +92,6 @@
   }
 
   .logo img {
-    max-height: 40px;
+    max-height: 70px;
   }
 }

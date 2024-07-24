@@ -1,9 +1,7 @@
-/* Gallery.css */
-
 /* Gallery Section */
 .gallery {
   text-align: center;
-  padding: 50px 20px;
+  padding: 30px 0; /* Boşluk azaltıldı */
 }
 
 .gallery h2 {
@@ -18,14 +16,27 @@
 
 .gallery-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* Boşluk azaltıldı */
 }
 
 .gallery-item {
-  flex: 1 1 calc(33.333% - 40px);
-  max-width: 200px; /* Maksimum genişlik 200px */
+  flex: 1 1 400px; /* Kart genişliği minimum 400px olacak şekilde ayarlandı */
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0; /* Padding'i kaldırdık */
+  transition: transform 0.3s, background-color 0.3s, color 0.3s;
+  margin: 10px;
+  border: 2px solid #fa7e1e; /* Turuncu çerçeve */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-item img {
+  width: 100%;
   height: auto;
   border-radius: 10px;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -33,6 +44,12 @@
 
 .gallery-item:hover {
   transform: scale(1.05);
+  background-color: #fa7e1e; /* Hover'da arka plan turuncu */
+  color: white; /* Hover'da metin beyaz */
+  border: 2px solid #fa7e1e; /* Hover'da çerçeve aynı renk */
+}
+
+.gallery-item:hover img {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 

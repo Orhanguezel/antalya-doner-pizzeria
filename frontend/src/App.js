@@ -16,6 +16,7 @@ import MenuEdit from './pages/MenuEdit';
 import Authorization from './pages/Authorization';
 import { AuthProvider } from './context/AuthContext';
 import CartBar from './components/CartBar';
+import ItemDetail from './pages/ItemDetail'; // Yeni sayfa import edildi
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -90,7 +91,6 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/kontakt" element={<Kontakt />} />
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
-            <Route path="/menu/:categoryId/:subcategoryId" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin/*" element={<AdminPanel />}>
@@ -102,6 +102,7 @@ const App = () => {
             <Route path="/admin/analysis" element={<Analysis />} />
             <Route path="/admin/menu-edit" element={<MenuEdit />} />
             <Route path="/admin/authorization" element={<Authorization />} />
+            <Route path="/items/:id" element={<ItemDetail />} /> {/* Yeni rota eklendi */}
           </Routes>
         </main>
         <Footer />

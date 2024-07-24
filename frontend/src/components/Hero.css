@@ -1,11 +1,9 @@
-/* Hero.css */
-/* Hero section with animation and transparent background */
-
 .hero {
   background-image: url('../assets/bg/dukkan.jpg');
-  background-size: cover;
+  background-size: contain; /* Resmin en-boy oranını koruyarak sığdır */
   background-position: center;
-  height: 500px;
+  background-repeat: no-repeat; /* Resmin tekrarlanmamasını sağla */
+  height: auto;
   color: white;
   text-align: center;
   display: flex;
@@ -14,6 +12,8 @@
   position: relative;
   opacity: 0;
   animation: fadeIn 2s forwards; /* Fade-in animasyonu */
+  background-color: #000; /* Boş alanların rengini belirle */
+  padding: 20px; /* Küçük ekranlar için padding ekledik */
 }
 
 @keyframes fadeIn {
@@ -26,10 +26,11 @@
   background-color: rgba(0, 0, 0, 0.5); /* Siyah arka plan %50 opaklık ile */
   padding: 20px;
   border-radius: 10px;
+  margin-top: 260px; /* Büyük ekranlar için */
 }
 
 .hero h1 {
-  font-size: 40px;
+  font-size: 35px;
   margin: 0;
 }
 
@@ -51,4 +52,46 @@
 
 .cta-button:hover {
   background-color: #e65c00; /* Daha koyu turuncu */
+}
+
+/* Küçük ekranlar için düzenlemeler */
+@media (max-width: 768px) {
+  .hero-content {
+    margin-top: 250px; /* Küçük ekranlar için */
+    padding: 15px; /* Küçük ekranlar için padding azaltıldı */
+  }
+
+  .hero h1 {
+    font-size: 28px; /* Yazı boyutu küçültüldü */
+  }
+
+  .hero p {
+    font-size: 16px; /* Yazı boyutu küçültüldü */
+  }
+
+  .cta-button {
+    padding: 8px 16px; /* Küçük ekranlar için padding azaltıldı */
+    font-size: 14px; /* Yazı boyutu küçültüldü */
+  }
+}
+
+/* Daha küçük ekranlar için düzenlemeler */
+@media (max-width: 480px) {
+  .hero-content {
+    margin-top: 100px; /* Daha küçük ekranlar için */
+    padding: 10px; /* Daha küçük ekranlar için padding azaltıldı */
+  }
+
+  .hero h1 {
+    font-size: 24px; /* Yazı boyutu daha da küçültüldü */
+  }
+
+  .hero p {
+    font-size: 14px; /* Yazı boyutu daha da küçültüldü */
+  }
+
+  .cta-button {
+    padding: 6px 12px; /* Daha küçük ekranlar için padding azaltıldı */
+    font-size: 12px; /* Yazı boyutu daha da küçültüldü */
+  }
 }

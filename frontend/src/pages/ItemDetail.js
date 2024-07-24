@@ -1,8 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const ItemDetail = ({ item, onClose }) => {
-  const [selectedPrice, setSelectedPrice] = useState(Object.keys(item.prices)[0]);
+const ItemDetail = () => {
+  const { id } = useParams();
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(null);
   const [selectedExtras, setSelectedExtras] = useState([]);
+
+  useEffect(() => {
+    const fetchItem = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/items/${id}`);
+        setItem(response.data);
+        setSelectedPrice(Object.keys(response.data.prices)[0]);
+      } catch (err) {
+        setError(err.response ? err.response.data.message : 'Error fetching item');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchItem();
+  }, [id]);
 
   const handlePriceChange = (e) => {
     setSelectedPrice(e.target.value);
@@ -24,6 +45,10 @@ const ItemDetail = ({ item, onClose }) => {
     });
     return totalPrice;
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!item) return <div>No item found</div>; // Veri null olduğunda
 
   return (
     <div className="item-detail">
@@ -62,7 +87,7 @@ const ItemDetail = ({ item, onClose }) => {
         ))}
       </div>
       <p>Total Price: {calculateTotalPrice()} €</p>
-      <button onClick={onClose}>Close</button>
+      <button onClick={() => window.history.back()}>Close</button>
     </div>
   );
 };
