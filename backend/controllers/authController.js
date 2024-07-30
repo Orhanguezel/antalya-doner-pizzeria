@@ -1,11 +1,7 @@
-// authController.js
-
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const CustomError = require('../utils/CustomError');
-const sendEmail = require('../utils/sendEmail');
-const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const register = async (req, res, next) => {
   try {
@@ -48,21 +44,12 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(`Login request: ${JSON.stringify(req.body)}`);
-
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      console.log('User not found');
       return next(new CustomError('Invalid credentials', 400));
     }
 
-    console.log(`User found: ${JSON.stringify(user)}`);
-
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(`Password provided: ${password}`);
-    console.log(`Password in database: ${user.password}`);
-    console.log(`Password match: ${isMatch}`);
-
     if (!isMatch) {
       return next(new CustomError('Invalid credentials', 400));
     }
@@ -92,25 +79,9 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-
-const deleteUser = async (req, res, next) => {
+const blockUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return next(new CustomError('User not found', 404));
-    }
-    res.status(200).json({
-      success: true,
-      data: {}
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const updateUserRole = async (req, res, next) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, { role: req.body.role }, { new: true });
+    const user = await User.findByIdAndUpdate(req.params.id, { blocked: true }, { new: true });
     if (!user) {
       return next(new CustomError('User not found', 404));
     }
@@ -118,123 +89,6 @@ const updateUserRole = async (req, res, next) => {
       success: true,
       data: user
     });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const updateProfile = async (req, res, next) => {
-  try {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['username', 'email', 'password', 'profile_image'];
-    const isValidOperation = updates.every(update => allowedUpdates.includes(update));
-
-    if (!isValidOperation) {
-      return next(new CustomError('Invalid updates', 400));
-    }
-
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return next(new CustomError('User not found', 404));
-    }
-
-    updates.forEach(update => user[update] = req.body[update]);
-    if (req.body.password) {
-      user.password = await bcrypt.hash(req.body.password, 10);
-    }
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const uploadProfileImage = async (req, res, next) => {
-  // Implement file upload logic here, for example using multer or any other file upload library
-};
-
-const forgotPassword = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return next(new CustomError('User not found', 404));
-    }
-
-    const resetToken = user.getResetPasswordToken();
-    await user.save({ validateBeforeSave: false });
-
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
-
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
-
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: 'Password reset token',
-        message
-      });
-
-      res.status(200).json({ success: true, data: 'Email sent' });
-    } catch (error) {
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-
-      await user.save({ validateBeforeSave: false });
-
-      return next(new CustomError('Email could not be sent', 500));
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-const resetPassword = async (req, res, next) => {
-  const resetPasswordToken = crypto.createHash('sha256').update(req.params.resetToken).digest('hex');
-
-  try {
-    const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() }
-    });
-
-    if (!user) {
-      return next(new CustomError('Invalid token', 400));
-    }
-
-    user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save();
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h'
-    });
-
-    res.status(200).json({
-      success: true,
-      token
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const logout = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    data: 'User logged out'
-  });
-};
-
-const deleteAllUsers = async (req, res, next) => {
-  try {
-    await User.deleteMany({});
-    res.status(200).json({ success: true, message: 'All users deleted' });
   } catch (error) {
     next(error);
   }
@@ -244,12 +98,5 @@ module.exports = {
   register,
   login,
   getAllUsers,
-  deleteUser,
-  updateUserRole,
-  updateProfile,
-  uploadProfileImage,
-  forgotPassword,
-  resetPassword,
-  logout,
-  deleteAllUsers
+  blockUser
 };

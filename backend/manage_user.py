@@ -3,7 +3,7 @@ import requests
 # URL'leri ayarlayın
 base_url = "http://localhost:5000/api/auth"
 login_url = f"{base_url}/login"
-users_url = f"{base_url}/users"
+block_url = f"{base_url}/users/block"
 
 # Admin bilgileri
 admin_user = {
@@ -16,21 +16,21 @@ def login_test(user):
     print(f"Login: {response.status_code} {response.json()}")
     return response.json().get("token")
 
-def get_all_users(token):
+def block_user(user_id, token):
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(users_url, headers=headers)
-    print(f"Get all users response text: {response.text}")
+    response = requests.put(f"{block_url}/{user_id}", headers=headers)
+    print(f"Block user response text: {response.text}")
     if response.status_code == 200:
-        return response.json().get("data", [])
+        print(f"Blocked user {user_id}: {response.status_code} {response.json()}")
     else:
-        print(f"Error getting users: {response.status_code} {response.json()}")
-        return []
+        print(f"Error blocking user {user_id}: {response.status_code} {response.text}")
 
 print("Admin Login Test")
 admin_token = login_test(admin_user)
 
 if admin_token:
-    print("Get All Users Test")
-    users = get_all_users(admin_token)
-    for user in users:
-        print(f"User: {user}")
+    # Kullanıcı kimlik numarasını buraya elle ekleyin
+    user_id_to_block = '66a8e643470c6652329f2d68'  # Örneğin 'user1' kimlik numarası
+
+    print("Block User Test")
+    block_user(user_id_to_block, admin_token)
