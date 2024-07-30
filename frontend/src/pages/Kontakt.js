@@ -45,7 +45,7 @@ function Kontakt() {
           allowFullScreen=""
           loading="lazy"
         ></iframe>
-        <a href="https://www.google.com/maps?q=Kapellenpl.+1,+52457+Aldenhoven,+Germany&hl=en" target="_blank" className="overlay-link"></a>
+        <a href="https://www.google.com/maps?q=Kapellenpl.+1,+52457+Aldenhoven,+Germany&hl=en" target="_blank" rel="noopener noreferrer" className="overlay-link">Open in Google Maps</a>
       </div>
     </div>
   );

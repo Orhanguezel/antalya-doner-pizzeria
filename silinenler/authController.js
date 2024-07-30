@@ -1,44 +1,26 @@
-// authController.js
-
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../utils/CustomError');
-const sendEmail = require('../utils/sendEmail');
-const crypto = require('crypto');
 
 const register = async (req, res, next) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return next(new CustomError('Username or email already exists', 400));
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      role: role || 'user'
-    });
-
-    const userResponse = {
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      profile_image: user.profile_image,
-      blocked: user.blocked,
-      _id: user._id,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    const user = await User.create({ username, email, password });
 
     res.status(201).json({
       success: true,
-      data: userResponse
+      data: {
+        username: user.username,
+        email: user.email,
+        _id: user._id
+      }
     });
   } catch (error) {
     next(error);
@@ -48,21 +30,13 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(`Login request: ${JSON.stringify(req.body)}`);
 
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      console.log('User not found');
       return next(new CustomError('Invalid credentials', 400));
     }
 
-    console.log(`User found: ${JSON.stringify(user)}`);
-
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(`Password provided: ${password}`);
-    console.log(`Password in database: ${user.password}`);
-    console.log(`Password match: ${isMatch}`);
-
     if (!isMatch) {
       return next(new CustomError('Invalid credentials', 400));
     }
@@ -79,7 +53,6 @@ const login = async (req, res, next) => {
     next(error);
   }
 };
-
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
@@ -91,7 +64,6 @@ const getAllUsers = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const deleteUser = async (req, res, next) => {
   try {
@@ -152,10 +124,6 @@ const updateProfile = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
-
-const uploadProfileImage = async (req, res, next) => {
-  // Implement file upload logic here, for example using multer or any other file upload library
 };
 
 const forgotPassword = async (req, res, next) => {
@@ -247,7 +215,6 @@ module.exports = {
   deleteUser,
   updateUserRole,
   updateProfile,
-  uploadProfileImage,
   forgotPassword,
   resetPassword,
   logout,

@@ -1,4 +1,3 @@
-// pages/AuthPage.js
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './AuthPage.css';
@@ -7,7 +6,7 @@ const AuthPage = () => {
   const { login, register } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -15,9 +14,9 @@ const AuthPage = () => {
     e.preventDefault();
     try {
       if (isRegister) {
-        await register(username, email, password);
+        await register(username, emailOrUsername, password);
       } else {
-        await login(email, password);
+        await login(emailOrUsername, password);
       }
     } catch (err) {
       setError(err.response ? err.response.data.error : 'Ein Fehler ist aufgetreten');
@@ -41,12 +40,12 @@ const AuthPage = () => {
           </div>
         )}
         <div className="input-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="emailOrUsername">Email oder Benutzername</label>
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            id="emailOrUsername"
+            value={emailOrUsername}
+            onChange={(e) => setEmailOrUsername(e.target.value)}
             required
           />
         </div>

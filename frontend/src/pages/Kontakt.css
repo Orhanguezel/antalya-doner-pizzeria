@@ -1,9 +1,7 @@
-/* Kontakt.css */
-
 /* Kontakt Container */
 .kontakt-container {
   text-align: center;
-  padding: 30px 0; /* Boşluk azaltıldı */
+  padding: 30px 0;
 }
 
 .kontakt-container h1 {
@@ -18,13 +16,13 @@
 
 .contact-section {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Kartları yatay olarak ortala */
   flex-wrap: wrap;
-  gap: 10px; /* Boşluk azaltıldı */
+  gap: 10px;
 }
 
 .card {
-  flex: 1 1 300px; /* Kart genişliği küçültüldü */
+  flex: 1 1 350px; /* Kart genişliği küçültüldü */
   background: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -33,7 +31,20 @@
   margin: 20px;
   border: 2px solid #fa7e1e; /* Turuncu çerçeve */
   color: #333;
-  display: inline-block; /* Yan yana olmalarını sağlar */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Kart içeriğini yatay olarak ortala */
+  justify-content: space-between; /* Kart içeriğini dikey olarak yay */
+  text-align: center; /* Metni ortala */
+  min-width: 350px; /* Minimum genişlik */
+  min-height: 300px; /* Minimum yükseklik */
+  height: 100%; /* Yüksekliği eşit tut */
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -86,6 +97,7 @@
 @media (max-width: 768px) {
   .contact-section {
     flex-direction: column;
+    align-items: center; /* Kartları dikey olarak ortala */
   }
 
   .card {

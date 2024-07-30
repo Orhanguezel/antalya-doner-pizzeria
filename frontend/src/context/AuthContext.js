@@ -1,14 +1,15 @@
-import React, { createContext, useContext, useState } from 'react';
+// AuthContext.js
 import axios from 'axios';
+import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  const login = async (email, password) => {
+  const login = async (emailOrUsername, password) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, { emailOrUsername, password });
       setToken(response.data.token);
       localStorage.setItem('token', response.data.token);
     } catch (error) {
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, { username, email, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, { username, email, password });
       setToken(response.data.token);
       localStorage.setItem('token', response.data.token);
     } catch (error) {
