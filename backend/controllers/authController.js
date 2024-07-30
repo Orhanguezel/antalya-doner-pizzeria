@@ -1,67 +1,65 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const generateToken = require('../utils/generateToken');
+const jwt = require('jsonwebtoken');
+const CustomError = require('../utils/CustomError');
 
-const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
-
+const register = async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ email });
+    const { username, email, password } = req.body;
+
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return next(new CustomError('Username or email already exists', 400));
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword });
-    await user.save();
+    const user = await User.create({ username, email, password });
 
-    const token = generateToken(user._id);
-    res.status(201).json({ token, user });
+    res.status(201).json({
+      success: true,
+      data: {
+        username: user.username,
+        email: user.email,
+        _id: user._id
+      }
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const loginUser = async (req, res) => {
-  const { email, username, password } = req.body;
-
+const login = async (req, res, next) => {
   try {
-    console.log('Login Request Body:', req.body);
-    const user = await User.findOne({ $or: [{ email }, { username }] });
+    const { email, password } = req.body;
+    console.log(`Login request: ${JSON.stringify(req.body)}`);
+
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      console.log('User not found with email or username:', email || username);
-      return res.status(401).json({ error: 'Invalid email/username or password' });
+      console.log('User not found');
+      return next(new CustomError('Invalid credentials', 400));
     }
 
-    console.log('User found:', user);
-    console.log('Password from request:', password);
-    console.log('Hashed Password from database:', user.password);
+    console.log(`User found: ${JSON.stringify(user)}`);
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match result:', isMatch);
+    console.log(`Password provided: ${password}`);
+    console.log(`Password in database: ${user.password}`);
+    console.log(`Password match: ${isMatch}`);
 
-    if (isMatch) {
-      const token = generateToken(user._id);
-      res.json({ token, user });
-    } else {
-      console.log('Invalid password for user:', email || username);
-      res.status(401).json({ error: 'Invalid email/username or password' });
+    if (!isMatch) {
+      return next(new CustomError('Invalid credentials', 400));
     }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h'
+    });
+
+    res.status(200).json({
+      success: true,
+      token
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-module.exports = { registerUser, loginUser, getUserProfile };
+module.exports = { register, login };
