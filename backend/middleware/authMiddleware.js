@@ -4,11 +4,7 @@ const CustomError = require('../utils/CustomError');
 
 exports.protect = async (req, res, next) => {
   let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
 
@@ -18,7 +14,6 @@ exports.protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {
@@ -26,7 +21,7 @@ exports.protect = async (req, res, next) => {
     }
 
     next();
-  } catch (error) {
+  } catch (err) {
     return next(new CustomError('Not authorized to access this route', 401));
   }
 };
@@ -34,7 +29,7 @@ exports.protect = async (req, res, next) => {
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new CustomError(`User role ${req.user.role} is not authorized to access this route`, 403));
+      return next(new CustomError('User role not authorized to access this route', 403));
     }
     next();
   };
