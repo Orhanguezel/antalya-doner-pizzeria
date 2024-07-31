@@ -14,30 +14,30 @@ const Header = ({ cart }) => {
         <img src="/assets/logo/1.png" alt="Logo" />
       </div>
       <nav className="navbar">
-        <Link to="/">
+        <Link to="/" aria-label="Home">
           <FontAwesomeIcon icon={faHome} /> <span className="nav-link-text">Home</span>
         </Link>
-        <Link to="/menu">
+        <Link to="/menu" aria-label="Menu">
           <FontAwesomeIcon icon={faUtensils} /> <span className="nav-link-text">Menu</span>
         </Link>
-        <Link to="/warenkorb">
+        <Link to="/warenkorb" aria-label="Warenkorb">
           <FontAwesomeIcon icon={faShoppingCart} />
           <span className="nav-link-text">Warenkorb</span>
           {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
         </Link>
-        <Link to="/kontakt">
+        <Link to="/kontakt" aria-label="Kontakt">
           <FontAwesomeIcon icon={faPhone} /> <span className="nav-link-text">Kontakt</span>
         </Link>
         {token ? (
           <div className="nav-user">
-            <FontAwesomeIcon icon={faUser} /> 
+            <FontAwesomeIcon icon={faUser} aria-label="User" /> 
             <div className="user-dropdown">
-              <Link to="/profile">Profil</Link>
-              <button onClick={logout}>Logout</button>
+              <Link to="/profile" aria-label="Profile">Profil</Link>
+              <button onClick={logout} aria-label="Logout">Logout</button>
             </div>
           </div>
         ) : (
-          <Link to="/auth">
+          <Link to="/auth" aria-label="Register or Login">
             <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
           </Link>
         )}
