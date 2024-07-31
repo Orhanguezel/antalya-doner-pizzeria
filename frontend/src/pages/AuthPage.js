@@ -6,7 +6,7 @@ const AuthPage = () => {
   const { login, register } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
-  const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -14,9 +14,9 @@ const AuthPage = () => {
     e.preventDefault();
     try {
       if (isRegister) {
-        await register(username, emailOrUsername, password);
+        await register(username, email, password);
       } else {
-        await login(emailOrUsername, password);
+        await login(email, password);
       }
     } catch (err) {
       setError(err.response ? err.response.data.error : 'Ein Fehler ist aufgetreten');
@@ -40,12 +40,12 @@ const AuthPage = () => {
           </div>
         )}
         <div className="input-group">
-          <label htmlFor="emailOrUsername">Email oder Benutzername</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="text"
-            id="emailOrUsername"
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
