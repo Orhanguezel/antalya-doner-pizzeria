@@ -1,45 +1,67 @@
-import React, { createContext, useContext, useState } from 'react';
-import axiosInstance from './axiosInstance';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const navigate = useNavigate();
 
-  const login = async (emailOrUsername, password) => {
-    try {
-      const response = await axiosInstance.post('/auth/login', { emailOrUsername, password });
-      setToken(response.data.token);
-      localStorage.setItem('token', response.data.token);
-    } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      throw error;
+  useEffect(() => {
+    if (token) {
+      const decoded = jwt_decode(token);
+      setUser(decoded);
     }
+  }, [token]);
+
+  const login = async (email, password) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, { email, password });
+    const { token, data } = response.data;
+    setToken(token);
+    setUser(data);
+    localStorage.setItem('token', token);
+    navigate(data.role === 'admin' ? '/admin' : '/profile');
   };
 
   const register = async (username, email, password) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, { username, email, password });
+    const { token, data } = response.data;
+    setToken(token);
+    setUser(data);
+    localStorage.setItem('token', token);
+    navigate('/profile');
+  };
+
+  const googleLogin = async (response) => {
     try {
-      const response = await axiosInstance.post('/auth/register', { username, email, password });
-      setToken(response.data.token);
-      localStorage.setItem('token', response.data.token);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/google`, {
+        token: response.credential,
+      });
+      const { token, data } = res.data;
+      setToken(token);
+      setUser(data);
+      localStorage.setItem('token', token);
+      navigate(data.role === 'admin' ? '/admin' : '/profile');
     } catch (error) {
-      console.error('Register error:', error.response?.data || error.message);
-      throw error;
+      console.error('Google login error:', error);
     }
   };
 
   const logout = () => {
     setToken(null);
+    setUser(null);
     localStorage.removeItem('token');
+    navigate('/auth');
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, login, register, googleLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

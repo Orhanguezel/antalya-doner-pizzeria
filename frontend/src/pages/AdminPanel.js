@@ -13,7 +13,7 @@ import './AdminPanel.css';
 
 const AdminPanel = () => {
   const location = useLocation();
-  const { token } = useAuth();
+  const { user, token } = useAuth();
   const [orderCounts, setOrderCounts] = useState({
     lieferung: 0,
     abholung: 0,
@@ -25,8 +25,7 @@ const AdminPanel = () => {
   const [prevOrderCount, setPrevOrderCount] = useState(0);
 
   useEffect(() => {
-    // Bildirim izinlerini kontrol et
-    if (Notification.permission !== "granted") {
+    if (Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
   }, []);
@@ -41,18 +40,18 @@ const AdminPanel = () => {
         });
 
         const orders = response.data;
-        const newOrderCount = orders.length; // Toplam sipariş sayısını alıyoruz
+        const newOrderCount = orders.length;
 
-        // Yeni sipariş kontrolü
         if (newOrderCount > prevOrderCount) {
-          // Bildirim göster
-          if (Notification.permission === "granted") {
-            new Notification("Yeni Sipariş!", {
-              body: "Yeni bir sipariş geldi.",
+          if (Notification.permission === 'granted') {
+            new Notification('Yeni Sipariş!', {
+              body: 'Yeni bir sipariş geldi.',
             });
+            const audio = new Audio('/notification_sound.mp3');
+            audio.play().catch((error) => console.error('Audio play error:', error));
           }
         }
-        setPrevOrderCount(newOrderCount); // Önceki sipariş sayısını güncelle
+        setPrevOrderCount(newOrderCount);
 
         const lieferungCount = orders.filter(order => order.orderType === 'delivery' && !order.archived).length;
         const abholungCount = orders.filter(order => order.orderType === 'pickup' && !order.archived).length;
@@ -69,11 +68,19 @@ const AdminPanel = () => {
     };
 
     // 30 saniyede bir yeni siparişleri kontrol et
-    const intervalId = setInterval(fetchOrderCounts, 30000);
+    const intervalId = setInterval(() => {
+      if (location.pathname.includes('/admin')) {
+        fetchOrderCounts();
+      }
+    }, 30000);
 
     // Bileşen temizlendiğinde intervali temizle
     return () => clearInterval(intervalId);
-  }, [token, prevOrderCount]);
+  }, [token, prevOrderCount, location.pathname]);
+
+  if (!user || user.role !== 'admin') {
+    return <p>Access denied. Admins only.</p>;
+  }
 
   return (
     <div className="admin-panel">
@@ -95,8 +102,8 @@ const AdminPanel = () => {
         <button className={getActiveClass('/admin/menu-edit')}>
           <Link to="/admin/menu-edit">Menü</Link>
         </button>
-        <button className={getActiveClass('/admin/authorization')}>
-          <Link to="/admin/authorization">Auth</Link>
+        <button className="disabled" disabled>
+          Auth
         </button>
       </nav>
       <div className="admin-content">

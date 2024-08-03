@@ -157,12 +157,27 @@
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  transition: transform 0.3s;
+  transition: transform 0.3s, background-color 0.3s, color 0.3s;
   text-align: center;
+  border: 2px solid #fa7e1e;
+  color: #333;
 }
 
 .store-info .card:hover {
   transform: scale(1.05);
+  background-color: #fa7e1e;
+  color: white;
+  border: 2px solid #fa7e1e;
+}
+
+.store-info .card h3,
+.store-info .card p {
+  margin: 0;
+}
+
+.store-info .card:hover h3,
+.store-info .card:hover p {
+  color: white;
 }
 
 .required {

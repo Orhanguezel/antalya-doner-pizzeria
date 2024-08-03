@@ -4,10 +4,58 @@ const User = require('../models/User');
 const CustomError = require('../utils/CustomError');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to create token
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
+
+// Google Login
+const googleLogin = async (req, res, next) => {
+  const { token } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { name, email, picture } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        username: name,
+        email,
+        profile_image: picture,
+        password: '', // Google hesabıyla kaydolduğu için şifre yok
+        role: 'user',
+      });
+    }
+
+    const authToken = createToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      token: authToken,
+      data: {
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        profile_image: user.profile_image,
+        blocked: user.blocked,
+        _id: user._id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    });
+  } catch (error) {
+    next(new CustomError('Google login failed', 500));
+  }
 };
 
 // Register user
@@ -26,7 +74,7 @@ const register = async (req, res, next) => {
       username,
       email,
       password: hashedPassword,
-      role: role || 'user'
+      role: role || 'user',
     });
 
     const token = createToken(user._id);
@@ -42,34 +90,38 @@ const register = async (req, res, next) => {
         blocked: user.blocked,
         _id: user._id,
         createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-// Login user
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log("Login request received with email:", email); // Debugging
     const user = await User.findOne({ email }).select('+password');
     if (!user || !(await bcrypt.compare(password, user.password))) {
+      console.log("Invalid credentials for email:", email); // Debugging
       return next(new CustomError('Invalid credentials', 400));
     }
 
     if (user.blocked) {
+      console.log("Blocked user tried to login:", email); // Debugging
       return next(new CustomError('Your account has been blocked', 403));
     }
 
     const token = createToken(user._id);
+    console.log("Login successful for email:", email); // Debugging
 
     res.status(200).json({
       success: true,
-      token
+      token,
     });
   } catch (error) {
+    console.error('Login error:', error); // Debugging
     next(error);
   }
 };
@@ -77,10 +129,10 @@ const login = async (req, res, next) => {
 // Get all users
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find({});
     res.status(200).json({
       success: true,
-      data: users
+      data: users // Ensure this is an array
     });
   } catch (error) {
     next(error);
@@ -100,7 +152,7 @@ const blockUser = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -112,7 +164,7 @@ const updateProfile = async (req, res, next) => {
   try {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['username', 'email', 'password', 'profile_image'];
-    const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidOperation) {
       return next(new CustomError('Invalid updates', 400));
@@ -123,7 +175,7 @@ const updateProfile = async (req, res, next) => {
       return next(new CustomError('User not found', 404));
     }
 
-    updates.forEach(update => user[update] = req.body[update]);
+    updates.forEach((update) => (user[update] = req.body[update]));
     if (req.body.password) {
       user.password = await bcrypt.hash(req.body.password, 10);
     }
@@ -132,7 +184,7 @@ const updateProfile = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -152,7 +204,7 @@ const updateUserRole = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -177,7 +229,7 @@ const forgotPassword = async (req, res, next) => {
       await sendEmail({
         email: user.email,
         subject: 'Password reset token',
-        message
+        message,
       });
 
       res.status(200).json({ success: true, data: 'Email sent' });
@@ -199,7 +251,7 @@ const resetPassword = async (req, res, next) => {
   try {
     const user = await User.findOne({
       resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() }
+      resetPasswordExpire: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -215,7 +267,7 @@ const resetPassword = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      token
+      token,
     });
   } catch (error) {
     next(error);
@@ -240,6 +292,7 @@ const deleteAllUsers = async (req, res, next) => {
 module.exports = {
   register,
   login,
+  googleLogin,
   getAllUsers,
   blockUser,
   updateProfile,
