@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.js', // Uygulamanızın giriş noktası
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/', // Public path'i ayarlayın
+    path: path.resolve(__dirname, 'dist'), // Çıktı dizini
+    filename: 'bundle.js', // Çıktı dosyasının adı
+    publicPath: '/', // Tüm dosya yolları için kök URL
   },
   module: {
     rules: [
@@ -15,32 +15,34 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[path][name].[ext]',
+              name: '[path][name].[ext]', // Dosya adlandırma şeması
             },
           },
         ],
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'], // CSS dosyalarını yüklemek için loader'lar
       },
     ],
   },
   devServer: {
-    port: 3000,
-    open: true,
+    port: 3000, // Geliştirme sunucusunun çalışacağı port
+    open: true, // Sunucu başladığında tarayıcıyı otomatik olarak aç
     client: {
-      webSocketURL: 'ws://www.antalya-doner-pizzeria.de:3000/ws', // Canlı ortamda doğru WebSocket URL'sini kullanın
       overlay: {
-        errors: true,
-        warnings: false,
+        errors: true, // Hataları tarayıcıda göster
+        warnings: false, // Uyarıları tarayıcıda gösterme
       },
-      logging: 'none',
-      reconnect: 0,
-      transportMode: 'ws',
+      logging: 'none', // İstemci tarafı logging devre dışı
+      reconnect: 0, // Yeniden bağlanma girişimlerini sınırla
     },
     hot: false, // Hot Module Replacement'ı devre dışı bırak
     liveReload: false, // Live Reloading'i devre dışı bırak
-    publicPath: '/', // Public path'i ayarlayın
+    publicPath: '/', // Tüm dosya yolları için kök URL
+    historyApiFallback: true, // SPA yönlendirmeleri için history API fallback
+    proxy: {
+      '/api': 'http://localhost:5000', // API isteklerini backend'e yönlendir
+    },
   },
 };

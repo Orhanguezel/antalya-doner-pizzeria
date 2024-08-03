@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,15 +8,26 @@ import Menu from './pages/Menu';
 import Warenkorb from './pages/Warenkorb';
 import AuthPage from './pages/AuthPage';
 import AdminPanel from './pages/AdminPanel';
+import Profile from './pages/Profile';
 import LieferungOrders from './pages/LieferungOrders';
 import AbholungOrders from './pages/AbholungOrders';
 import RestaurantOrders from './pages/RestaurantOrders';
 import Analysis from './pages/Analysis';
 import MenuEdit from './pages/MenuEdit';
 import Authorization from './pages/Authorization';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import CartBar from './components/CartBar';
-import ItemDetail from './pages/ItemDetail'; // Yeni sayfa import edildi
+import ItemDetail from './pages/ItemDetail';
+
+const ProtectedRoute = ({ element }) => {
+  const { user } = useAuth();
+  return user ? element : <Navigate to="/auth" />;
+};
+
+const AdminRoute = ({ element }) => {
+  const { user } = useAuth();
+  return user && user.role === 'admin' ? element : <Navigate to="/auth" />;
+};
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -93,16 +104,17 @@ const App = () => {
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/admin/*" element={<AdminPanel />}>
+            <Route path="/admin/*" element={<AdminRoute element={<AdminPanel />} />}>
               <Route path="*" element={<Navigate to="/admin/lieferung-orders" />} />
             </Route>
-            <Route path="/admin/lieferung-orders" element={<LieferungOrders />} />
-            <Route path="/admin/abholung-orders" element={<AbholungOrders />} />
-            <Route path="/admin/restaurant-orders" element={<RestaurantOrders />} />
-            <Route path="/admin/analysis" element={<Analysis />} />
-            <Route path="/admin/menu-edit" element={<MenuEdit />} />
-            <Route path="/admin/authorization" element={<Authorization />} />
-            <Route path="/items/:id" element={<ItemDetail />} /> {/* Yeni rota eklendi */}
+            <Route path="/admin/lieferung-orders" element={<AdminRoute element={<LieferungOrders />} />} />
+            <Route path="/admin/abholung-orders" element={<AdminRoute element={<AbholungOrders />} />} />
+            <Route path="/admin/restaurant-orders" element={<AdminRoute element={<RestaurantOrders />} />} />
+            <Route path="/admin/analysis" element={<AdminRoute element={<Analysis />} />} />
+            <Route path="/admin/menu-edit" element={<AdminRoute element={<MenuEdit />} />} />
+            <Route path="/admin/authorization" element={<AdminRoute element={<Authorization />} />} />
+            <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+            <Route path="/items/:id" element={<ItemDetail />} />
           </Routes>
         </main>
         <Footer />

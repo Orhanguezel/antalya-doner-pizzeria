@@ -2,6 +2,7 @@ const express = require('express');
 const {
   register,
   login,
+  googleLogin,
   getAllUsers,
   blockUser,
   updateProfile,
@@ -17,6 +18,7 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/google', googleLogin);
 router.get('/users', protect, authorize('admin'), getAllUsers);
 router.put('/users/block/:id', protect, authorize('admin'), blockUser);
 router.put('/users/role/:id', protect, authorize('admin'), updateUserRole);

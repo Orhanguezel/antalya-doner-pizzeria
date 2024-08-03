@@ -3,14 +3,13 @@ import { useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import './Menu.css';
 import { zusatztoffeMap, allergeneMap } from '../constants';
-import api from '../api/axios';
+import api from '../api/axiosInstance';
 
 Modal.setAppElement('#root');
 
 const Menu = ({ onAddToCart, cart = [] }) => {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('');
-  // const [activeSubcategory, setActiveSubcategory] = useState(''); // Kullanılmadığı için kaldırıldı
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [extras, setExtras] = useState([]);
@@ -28,23 +27,28 @@ const Menu = ({ onAddToCart, cart = [] }) => {
 
         const data = response.data;
         console.log('Fetched data:', data);
-        setCategories(data);
 
-        if (categoryId) {
-          setActiveCategory(categoryId);
-          if (subcategoryId) {
-            // setActiveSubcategory(subcategoryId); // Kullanılmadığı için kaldırıldı
-          } else {
-            const category = data.find(cat => cat._id === categoryId);
-            if (category && category.subcategories.length > 0) {
-              // setActiveSubcategory(category.subcategories[0]._id); // Kullanılmadığı için kaldırıldı
+        if (Array.isArray(data)) {
+          setCategories(data);
+
+          if (categoryId) {
+            setActiveCategory(categoryId);
+            if (subcategoryId) {
+              // setActiveSubcategory(subcategoryId); // Kullanılmadığı için kaldırıldı
+            } else {
+              const category = data.find(cat => cat._id === categoryId);
+              if (category && Array.isArray(category.subcategories) && category.subcategories.length > 0) {
+                // setActiveSubcategory(category.subcategories[0]._id); // Kullanılmadığı için kaldırıldı
+              }
+            }
+          } else if (data.length > 0) {
+            setActiveCategory(data[0]._id);
+            if (Array.isArray(data[0].subcategories) && data[0].subcategories.length > 0) {
+              // setActiveSubcategory(data[0].subcategories[0]._id); // Kullanılmadığı için kaldırıldı
             }
           }
-        } else if (data.length > 0) {
-          setActiveCategory(data[0]._id);
-          if (data[0].subcategories.length > 0) {
-            // setActiveSubcategory(data[0].subcategories[0]._id); // Kullanılmadığı için kaldırıldı
-          }
+        } else {
+          console.error('Error: Fetched data is not an array');
         }
       } catch (error) {
         console.error('Error fetching categories:', error);

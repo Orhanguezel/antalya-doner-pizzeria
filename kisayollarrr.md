@@ -40,6 +40,8 @@ python3 test_karsilatirma.py
 
 python3 manage_user.py
 
+python3 test_auth.py
+
 
 cd ~/Desktop/antalya-doner-pizzeria/backend
 python3 test_get_categories_and_items.py
@@ -70,8 +72,14 @@ Alle Dosen Getränke + 0,25€ Pfand  sepette, eve sipariste bu ilave edilecek.
 curl http://127.0.0.1:5000/api/categories
 
 
+sudo nano /etc/nginx/sites-enabled/antalya-doner-pizzeria.de
+
+
+
 pm2 stop all
 pm2 start all
+
+sudo lsof -i :5000
 
 
 
@@ -160,6 +168,9 @@ pm2 save
 
 
 cd antalya-doner-pizzeria
+
+
+use antalya-doner-pizzeria
 
 
 

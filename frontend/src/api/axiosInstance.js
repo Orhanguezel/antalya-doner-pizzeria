@@ -1,18 +1,19 @@
 import axios from 'axios';
 
-const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
-instance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    console.log('Request URL:', config.url);  // İsteğin URL'sini loglayın
     return config;
   },
   (error) => {
@@ -20,4 +21,4 @@ instance.interceptors.request.use(
   }
 );
 
-export default instance;
+export default api;
