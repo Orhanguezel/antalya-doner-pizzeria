@@ -82,10 +82,12 @@ const AuthPage = () => {
           {error && <p className="error">{error}</p>}
           <button type="submit">{isRegister ? 'Registrieren' : 'Login'}</button>
         </form>
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginError}
-        />
+        <div className="google-login">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
+        </div>
         <p className="info-note">Hinweis: Unser Mitgliedschaftssystem ist derzeit nicht aktiv.</p>
         <p>
           {isRegister ? 'Bereits ein Konto?' : 'Noch kein Konto?'}{' '}

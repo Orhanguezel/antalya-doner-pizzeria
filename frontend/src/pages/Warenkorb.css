@@ -142,15 +142,6 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
-
-.store-info {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
-
 .store-info .card {
   flex: 1 1 100%;
   background: white;
@@ -164,10 +155,10 @@
 }
 
 .store-info .card:hover {
-  transform: scale(1.05);
-  background-color: #fa7e1e;
-  color: white;
-  border: 2px solid #fa7e1e;
+  transform: scale(1.05) !important;
+  background-color: #333 !important; /* Darker background color for higher contrast */
+  color: white !important;
+  border: 2px solid #fa7e1e !important;
 }
 
 .store-info .card h3,
@@ -177,13 +168,5 @@
 
 .store-info .card:hover h3,
 .store-info .card:hover p {
-  color: white;
-}
-
-.required {
-  color: red;
-}
-
-.missing-field {
-  border: 1px solid red;
+  color: white !important;
 }

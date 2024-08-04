@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
 const User = require('./models/User'); // Kullanıcı modeli
 
 // Load environment variables from .env file
@@ -89,8 +90,13 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    // Successful authentication, redirect to the home page or dashboard
-    res.redirect('/'); // or any other page you want to redirect to
+    // Successful authentication, generate JWT and send to client
+    const token = jwt.sign({ id: req.user.id, role: req.user.role }, process.env.JWT_SECRET, {
+      expiresIn: '1h'
+    });
+
+    // Send token to client
+    res.redirect(`${process.env.CLIENT_URL}/auth?token=${token}`);
   }
 );
 
