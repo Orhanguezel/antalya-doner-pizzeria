@@ -1,3 +1,5 @@
+  GNU nano 7.2                                           /etc/nginx/sites-enabled/antalya-doner-pizzeria.de                                                    
+
 server {
     listen 80;
     server_name www.antalya-doner-pizzeria.de;

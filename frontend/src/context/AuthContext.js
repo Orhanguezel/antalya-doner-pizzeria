@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
+import * as jwt_decode from 'jwt-decode'; // Değişiklik burada: jwt-decode'u named import olarak import edin.
 
 const AuthContext = createContext();
 
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      const decoded = jwt_decode(token);
+      const decoded = jwt_decode.default(token); // Burada jwt_decode.default olarak kullanın
       setUser(decoded);
     }
   }, [token]);

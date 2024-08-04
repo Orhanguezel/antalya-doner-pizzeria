@@ -72,6 +72,12 @@ Alle Dosen Getränke + 0,25€ Pfand  sepette, eve sipariste bu ilave edilecek.
 curl http://127.0.0.1:5000/api/categories
 
 
+npm run build
+sudo cp -r build/* /var/www/antalya-doner-pizzeria/
+sudo systemctl restart nginx
+
+
+
 sudo nano /etc/nginx/sites-enabled/antalya-doner-pizzeria.de
 
 
