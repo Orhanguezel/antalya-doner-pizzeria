@@ -1,0 +1,27 @@
+.admin-profile-page {
+    margin-top: 50px;
+}
+
+.admin-info-card {
+    padding: 20px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-info-card h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.admin-links {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.admin-link-btn {
+    width: 45%;
+    font-size: 1.2rem;
+}

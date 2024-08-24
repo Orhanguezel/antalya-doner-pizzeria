@@ -1,0 +1,84 @@
+.contact-page {
+    background: var(--white-color); /* Sayfa arka plan rengi */
+    padding: 40px 0;
+    color: var(--text-color); /* Genel metin rengi */
+}
+
+.contact-page h2 {
+    color: var(--h1h2-color); /* Başlık rengi */
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.contact-page p {
+    color: var(--text-color); /* Genel metin rengi */
+}
+
+.contact-info {
+    background: var(--white-color); /* Bilgi kutusu arka plan rengi */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+    color: var(--text-color); /* Bilgi kutusu metin rengi */
+}
+
+.contact-info h4 {
+    color: var(--h1h2-color); /* Bilgi kutusu başlık rengi */
+    margin-bottom: 10px;
+}
+
+.contact-info p {
+    color: var(--text-color); /* Bilgi kutusu metin rengi */
+    font-size: 1.5rem;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+}
+
+.social-links li {
+    margin: 10px 0;
+}
+
+.social-links a {
+    color: var(--primary-color); /* Sosyal bağlantı link rengi */
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    color: var(--secondary-color); /* Hover durumunda sosyal bağlantı link rengi */
+}
+
+.social-links a svg {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    color: var(--primary-color); /* Sosyal ikon rengi */
+}
+
+.contact-form .form-label {
+    font-size: 1.2rem; /* Label alanları için font boyutu */
+}
+
+.contact-form .form-control {
+    font-size: 1rem; /* Giriş alanları için font boyutu */
+    padding: 10px; /* Giriş alanları için padding */
+}
+
+.contact-form .btn {
+    cursor: pointer;
+    font-size: 1.2rem; /* Buton için font boyutu */
+    padding: 10px 20px; /* Buton için padding */
+}
+
+/* Styling for response messages */
+.text-danger {
+    color: red;
+}
+
+.text-success {
+    color: green;
+}

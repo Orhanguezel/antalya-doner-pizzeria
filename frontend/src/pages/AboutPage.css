@@ -1,0 +1,70 @@
+.auth-page {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-page h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--primary-color);
+  }
+  
+  .auth-page .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .auth-page .form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+  }
+  
+  .auth-page .btn-primary {
+    width: 100%;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 10px;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-page .btn-primary:hover {
+    background-color: var(--primary-color);
+  }
+  
+  .auth-page .toggle-btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .auth-page .toggle-btn-group button {
+    flex: 1;
+    border-radius: 5px;
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-page .toggle-btn-group button.active {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+  }
+  
+  .auth-page .error {
+    color: red;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  

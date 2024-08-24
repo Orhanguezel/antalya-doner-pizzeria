@@ -1,0 +1,266 @@
+:root {
+  --primary-color: #68E1FD;
+  --secondary-color: #0B181B;
+  --h1h2-color: #000F37;
+  --text-color: #4F4F4F;
+  --white-color: #ffffff;
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--white-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+.navbar {
+  background-color: var(--white-color);
+  color: var(--text-color);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero {
+  background-image: url('../assets/wep Developer.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--white-color);
+  padding: 20% 0;
+  text-align: center;
+  position: relative;
+  margin-top: 0;
+  height: auto;
+  min-height: 300px;
+}
+
+.hero h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--h1h2-color);
+}
+
+.hero p {
+  font-size: 3rem;
+  margin: 20px 0;
+  color: var(--text-color);
+}
+
+.hero .hero-btn {
+  font-size: 2rem;
+  padding: 10px 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white-color);
+  border: none;
+  display: none;
+}
+
+.summary-sections {
+  margin-top: 50px;
+  background-color: var(--white-color);
+  padding: 20px;
+}
+
+.summary-card {
+  margin-bottom: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.summary-card:hover {
+  transform: scale(1.05);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.summary-card .card-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--h1h2-color);
+}
+
+.summary-card .card-text {
+  text-align: center;
+}
+
+.blog-section {
+  margin-top: 50px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 20px;
+}
+
+.blog-section h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--h1h2-color);
+}
+
+.blog-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.blog-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  background-color: var(--white-color);
+  color: var(--text-color);
+}
+
+.blog-card .card-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--h1h2-color);
+}
+
+.blog-card .card-text {
+  text-align: center;
+}
+
+.technology-section {
+  margin-top: 50px;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  padding: 20px;
+}
+
+.technology-section h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--h1h2-color);
+}
+
+.technology-section p {
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+  color: var(--text-color);
+}
+
+.tech-icon {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  transition: transform 0.3s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tech-icon:hover {
+  transform: scale(1.1);
+}
+
+.technology-section h4 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: var(--h1h2-color);
+}
+
+.projects-section {
+  margin-top: 50px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 20px;
+}
+.project-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--white-color); /* Kart arka plan rengi */
+  color: var(--text-color); /* Kart metin rengi */
+  margin: auto;
+  margin-top: 20px;
+  max-width: 350px; /* Kartların maksimum genişliği küçültüldü */
+}
+
+.project-card img {
+  border: none;
+  object-fit: cover;
+  width: 100%;
+  height: 250px; /* Yükseklik sabitlendi, daha düzenli görüntü */
+}
+
+.project-card:hover {
+  transform: scale(1.02); /* Hover'da hafif bir büyütme */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-card .card-title {
+  font-size: 1.6rem; /* Kart başlık boyutu küçültüldü */
+  font-weight: 600;
+  text-align: center;
+  color: var(--h1h2-color);
+}
+
+.project-card .card-text {
+  font-size: 1.4rem; /* Kart metin boyutu küçültüldü */
+  text-align: center;
+  color: var(--text-color);
+}
+
+.project-card .card-link {
+  display: block;
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.project-card .card-link:hover {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+/* Responsive stiller */
+@media (max-width: 768px) {
+  .project-card .card-title {
+      font-size: 1.2rem;
+  }
+
+  .project-card .card-text {
+      font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .project-card .card-title {
+      font-size: 1.5rem;
+  }
+
+  .project-card .card-text {
+      font-size: 1.2rem;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
