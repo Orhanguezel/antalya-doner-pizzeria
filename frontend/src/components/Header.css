@@ -1,104 +1,69 @@
 /* Header.css */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 1rem;
-  background-color: #E65C00;
-  color: white;
+
+/* Ensure the header is fixed at the top and the content doesn't overlap it */
+body {
+    padding-top: 70px; /* Adjust according to the height of the navbar */
 }
 
-.logo img {
-  max-height: 80px;
-}
-
+/* Navbar Styles */
 .navbar {
-  display: flex;
-  gap: 1.5rem;
+    background-color: #f8f9fa; /* Light background color */
+    height: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
 }
 
-.navbar a, .nav-user {
-  display: flex;
-  align-items: center;
-  color: white;
-  text-decoration: none;
-  font-size: 1.2rem;
-  position: relative;
-  transition: color 0.3s ease, background-color 0.3s ease; /* Transition effect added */
+.navbar-brand {
+    font-weight: bold;
+    color: #007bff; /* Custom brand color */
 }
 
-.navbar a:hover, .nav-user:hover {
-  color: #ffcc80; /* Change text color on hover */
-  background-color: rgba(255, 255, 255, 0.1); /* Change background color on hover */
+.navbar-brand:hover {
+    color: #0056b3; /* Slightly darker color on hover */
 }
 
-.nav-link-text {
-  margin-left: 0.5rem;
+.navbar-nav .nav-link {
+    font-size: 1.8rem; /* Adjust font size */
+    color: #333; /* Dark text color for links */
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-.cart-count {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 0.2rem 0.5rem;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 0.8rem;
+.navbar-nav .nav-link:hover {
+    color: #007bff; /* Link color on hover */
 }
 
-.nav-user {
-  position: relative;
-  cursor: pointer;
+.navbar-nav .active {
+    font-weight: bold;
+    color: #007bff; /* Active link color */
 }
 
-.user-dropdown {
-  display: none;
-  position: absolute;
-  top: 2rem;
-  right: 0;
-  background-color: white;
-  color: black;
-  border-radius: 5px;
-  padding: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.navbar-toggler {
+    border-color:var(--primary-color); /* Toggle button border color */
 }
 
-.nav-user:hover .user-dropdown {
-  display: block;
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%280, 123, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-.user-dropdown a, .user-dropdown button {
-  display: block;
-  padding: 0.5rem;
-  color: black;
-  text-decoration: none;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Transition effect added */
+/* Header.css */
+.header-logo {
+    max-width: 50px;
+    height: auto;
+    margin-right: 10px;
 }
 
-.user-dropdown button:hover, .user-dropdown a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-  .navbar {
-    gap: 1rem;
-  }
-
-  .nav-link-text {
-    display: none;
-  }
-
-  .navbar a {
+.navbar-brand span {
     font-size: 1.5rem;
-  }
+    font-weight: bold;
+    color: var(--primary-color);
+}
 
-  .logo img {
-    max-height: 70px;
-  }
+.navbar-nav .nav-link {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-left: 10px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--primary-color);
 }

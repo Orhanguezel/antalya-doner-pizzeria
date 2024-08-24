@@ -1,66 +1,69 @@
-.auth-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+.auth-page {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #f8f9fa; /* Hafif gri arka plan */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
 }
 
-.auth-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.auth-page h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #007bff; /* Başlık rengi */
 }
 
-.input-group {
-  margin-bottom: 15px;
+.auth-page .form-group {
+    margin-bottom: 15px;
 }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
+.auth-page .form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da; /* Form kontrol sınır rengi */
 }
 
-.input-group input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.auth-page .btn-primary {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #007bff; /* Buton arka plan rengi */
+    color: #ffffff; /* Buton metin rengi */
+    border: none;
+    padding: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.auth-page .btn-primary:hover {
+    background-color: #0056b3; /* Hover durumu için daha koyu mavi */
 }
 
-button:hover {
-  background-color: #0056b3;
+.auth-page .toggle-btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.error-message {
-  color: red;
-  margin-bottom: 10px;
-  text-align: center;
+.auth-page .toggle-btn-group button {
+    flex: 1;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    background-color: transparent;
+    color: #007bff;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.google-login {
-  margin-top: 10px;
-  text-align: center;
+.auth-page .toggle-btn-group button.active {
+    background-color: #007bff;
+    color: #ffffff;
 }
 
-.info-note {
-  margin-top: 15px;
-  font-size: 12px;
-  text-align: center;
-}
-
-p {
-  text-align: center;
-  margin-top: 10px;
+.auth-page .error {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 15px;
 }

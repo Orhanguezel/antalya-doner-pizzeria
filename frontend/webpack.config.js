@@ -1,48 +1,55 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const webpack = require('webpack');
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  entry: './src/index.js', // Uygulamanızın giriş noktası
+  mode: isDevelopment ? 'development' : 'production',
+  entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'), // Çıktı dizini
-    filename: 'bundle.js', // Çıktı dosyasının adı
-    publicPath: '/', // Tüm dosya yolları için kök URL
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]', // Dosya adlandırma şeması
-            },
-          },
-        ],
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
       },
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'], // CSS dosyalarını yüklemek için loader'lar
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/,
+        type: 'asset/resource',
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html',  // Burada templateContent yerine public/index.html kullanılıyor
+    }),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api'),
+    }),
+  ].filter(Boolean),
   devServer: {
-    port: 3000, // Geliştirme sunucusunun çalışacağı port
-    open: true, // Sunucu başladığında tarayıcıyı otomatik olarak aç
-    client: {
-      overlay: {
-        errors: true, // Hataları tarayıcıda göster
-        warnings: false, // Uyarıları tarayıcıda gösterme
-      },
-      logging: 'none', // İstemci tarafı logging devre dışı
-      reconnect: 0, // Yeniden bağlanma girişimlerini sınırla
+    static: {
+      directory: path.join(__dirname, 'public'),  // public klasörünü static dosyalar için kullanıyoruz
     },
-    hot: false, // Hot Module Replacement'ı devre dışı bırak
-    liveReload: false, // Live Reloading'i devre dışı bırak
-    publicPath: '/', // Tüm dosya yolları için kök URL
-    historyApiFallback: true, // SPA yönlendirmeleri için history API fallback
-    proxy: {
-      '/api': 'http://localhost:5000', // API isteklerini backend'e yönlendir
-    },
+    hot: true,
+    historyApiFallback: true,
+    port: 3001,
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
 };

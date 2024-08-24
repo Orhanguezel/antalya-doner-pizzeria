@@ -1,49 +1,66 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUtensils, faShoppingCart, faPhone, faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../context/AuthContext';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import './Header.css';
+import logo from '../assets/web-Logo.png';
 
-const Header = ({ cart }) => {
-  const { token, logout } = useAuth();
+function Header({ userInfo }) {
+  const logoutHandler = () => {
+    localStorage.removeItem('userInfo');
+    window.location.href = '/auth';
+  };
 
   return (
-    <header className="header">
-      <div className="logo">
-        <img src="/assets/logo/1.png" alt="Logo" />
-      </div>
-      <nav className="navbar">
-        <Link to="/" aria-label="Home">
-          <FontAwesomeIcon icon={faHome} /> <span className="nav-link-text">Home</span>
-        </Link>
-        <Link to="/menu" aria-label="Menu">
-          <FontAwesomeIcon icon={faUtensils} /> <span className="nav-link-text">Menu</span>
-        </Link>
-        <Link to="/warenkorb" aria-label="Warenkorb">
-          <FontAwesomeIcon icon={faShoppingCart} />
-          <span className="nav-link-text">Warenkorb</span>
-          {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
-        </Link>
-        <Link to="/kontakt" aria-label="Kontakt">
-          <FontAwesomeIcon icon={faPhone} /> <span className="nav-link-text">Kontakt</span>
-        </Link>
-        {token ? (
-          <div className="nav-user">
-            <FontAwesomeIcon icon={faUser} aria-label="User" /> 
-            <div className="user-dropdown">
-              <Link to="/profile" aria-label="Profile">Profil</Link>
-              <button onClick={logout} aria-label="Logout">Logout</button>
-            </div>
-          </div>
-        ) : (
-          <Link to="/auth" aria-label="Register or Login">
-            <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
-          </Link>
-        )}
-      </nav>
+    <header>
+      <Navbar bg="light" variant="light" expand="lg" fixed="top">
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand className="d-flex align-items-center">
+              <img
+                src={logo}
+                alt="Guezel Webdesign Logo"
+                className="header-logo"
+              />
+              <span className="ml-2">Guezel Webdesign</span>
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <LinkContainer to="/">
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/projects">
+                <Nav.Link>Projects</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/contact">
+                <Nav.Link>Contact</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/about">
+                <Nav.Link>Über mich</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/blog">
+                <Nav.Link>Blog</Nav.Link>
+              </LinkContainer>
+              {userInfo ? (
+                <NavDropdown title={userInfo.username} id="username">
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/auth">
+                  <Nav.Link>Login/Register</Nav.Link>
+                </LinkContainer>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </header>
   );
-};
+}
 
 export default Header;

@@ -1,68 +1,51 @@
-import React from "react";
-import "./Footer.css";
+import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { FaEnvelope, FaLinkedin, FaGithub, FaFacebook, FaInstagram } from 'react-icons/fa';
+import './Footer.css';
+import logo from '../assets/web-Logo.png';
 
-const Footer = () => {
+function Footer() {
   return (
-    <footer className="footer-section">
-      <div className="navbar-logo">
-        <img src="/assets/logo/1.png" alt="Logo" />
-      </div>
-      <h2 className="foot-title margin-top">ANTALYA Döner & Pizzeria</h2>
-      <p className="foot-p">Kapellenplatz 1, 52457 Aldenhoven</p>
-      <div className="social">
-        <a
-          className="foot-terms-link"
-          href="https://www.facebook.com/profile.php?id=100063527353789"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i className="fab fa-facebook"></i>
-        </a>
-        <a
-          className="foot-terms-link"
-          href="https://www.instagram.com/antalya_doner_pizzeria/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i className="fab fa-instagram"></i>
-        </a>
-      </div>
-      <p className="foot-terms">
-        <a
-          className="foot-terms-link"
-          href="https://policies.google.com/privacy?hl=en-US"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Privacy & Terms
-        </a>
-      </p>
-      <p className="copyright">
-        © Copyright - All Rights Reserved to ANTALYA Döner & Pizzeria
-      </p>
-      <p className="new-version-note">
-        Diese Website befindet sich in der Testphase und wird regelmäßig
-        aktualisiert.
-      </p>
-      <p>
-        <button
-          className="foot-terms-link"
-          onClick={() =>
-            window.open("https://www.guezelwebdesign.com", "_blank")
-          }
-          style={{
-            background: "none",
-            border: "none",
-            color: "inherit",
-            padding: 0,
-            cursor: "pointer",
-          }}
-        >
-          Designed by OG
-        </button>
-      </p>
+    <footer className="footer">
+      <Container>
+        <Row>
+          <Col md={4} className="footer-col">
+            <img
+              src={logo}
+              alt="Guezel Webdesign Logo"
+              className="footer-logo"
+            />
+            <h5>Guezel Webdesign</h5>
+            <p>Ihr Partner für professionelle Webentwicklung und Design.</p>
+          </Col>
+          <Col md={4} className="footer-col">
+            <h5>Links</h5>
+            <ul className="list-unstyled">
+              <li><a href="/">Startseite</a></li>
+              <li><a href="/projects">Projekte</a></li>
+              <li><a href="/contact">Kontakt</a></li>
+              <li><a href="/about">Über mich</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/auth">Login/Register</a></li>
+            </ul>
+          </Col>
+          <Col md={4} className="footer-col">
+            <h5>Kontakt</h5>
+            <ul className="list-unstyled">
+              <li><FaEnvelope /> orhanguzell@gmail.com</li>
+              <li><FaLinkedin /> <a href="https://www.linkedin.com/in/orhan-güzel-53b47b11a" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><FaGithub /> <a href="https://github.com/Orhanguezel" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><FaFacebook /> <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+              <li><FaInstagram /> <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+          </Col>
+        </Row>
+        <div className="text-center mt-4">
+          <span className="text-muted">&copy; 2024 Guezel Webdesign Alle Rechte vorbehalten.</span>
+        </div>
+      </Container>
     </footer>
   );
-};
+}
 
 export default Footer;

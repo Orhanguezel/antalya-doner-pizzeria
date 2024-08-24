@@ -1,0 +1,64 @@
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--h1h2-color); /* Başlık rengi */
+}
+
+.blog-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background-color: var(--white-color); /* Kart arka plan rengi */
+    color: var(--text-color); /* Kart metin rengi */
+}
+
+.blog-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.blog-card .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--h1h2-color); /* Kart başlık rengi */
+}
+
+.blog-card .card-text {
+    font-size: 1rem;
+    text-align: center;
+    color: var(--text-color); /* Kart metin rengi */
+}
+
+.blog-card .card-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: var(--primary-color); /* Link rengi */
+}
+
+.blog-card .card-link:hover {
+    text-decoration: underline;
+    color: var(--secondary-color); /* Hover durumunda link rengi */
+}
+
+.rating span {
+    cursor: pointer;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    color: var(--secondary-color); /* Değerlendirme rengi */
+}
+
+.blogUser {
+    margin-top: 10px;
+    color: var(--text-color); /* Kullanıcı adı metin rengi */
+}

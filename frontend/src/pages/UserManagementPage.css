@@ -1,0 +1,74 @@
+/* Genel stil */
+.container {
+    margin-top: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Tablo stili */
+.table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background-color: #007bff; /* Bootstrap'in birincil rengini kullanıyoruz */
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+}
+
+.table tbody td {
+    padding: 10px;
+    text-align: center;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Her ikinci satır için açık gri arka plan */
+}
+
+/* Buton stili */
+.btn-warning {
+    margin-right: 10px;
+    color: white;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+.btn-danger {
+    color: white;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* Hata mesajı */
+.error-message {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
