@@ -1,5 +1,3 @@
-// src/pages/ProfilePage.js
-
 import React, { useEffect, useState } from 'react';
 import { Container, Card } from 'react-bootstrap';
 import axios from '../axios';
@@ -35,13 +33,13 @@ const ProfilePage = ({ userInfo }) => {
                 <Card.Body>
                     <Card.Title>Benutzerinformationen</Card.Title>
                     <Card.Text>
-                        <strong>Benutzername:</strong> {profileData?.username || 'Bilinmiyor'}
+                        <strong>Benutzername:</strong> {profileData?.username || userInfo.username}
                     </Card.Text>
                     <Card.Text>
-                        <strong>Email:</strong> {profileData?.email || 'Bilinmiyor'}
+                        <strong>Email:</strong> {profileData?.email || userInfo.email}
                     </Card.Text>
                     <Card.Text>
-                        <strong>Rolle:</strong> {profileData?.role || 'Bilinmiyor'}
+                        <strong>Rolle:</strong> {profileData?.role || userInfo.role}
                     </Card.Text>
                 </Card.Body>
             </Card>
