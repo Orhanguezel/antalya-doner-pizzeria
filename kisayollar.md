@@ -1,26 +1,13 @@
-cd client
 
-
-
-cd server
 
 python3 test_register.py
 
 python3 test_login.py
 
-python3 test_blog_api.py
-
-python3 test_category.py
-
-python3 test_blog_delete.py
+python3 category_api_test.py
 
 
-cd ~/Desktop/personal-website/server
-node server.js
 
-
-cd ~/Desktop/personal-website/client
-npm start
 
 
 mongo
