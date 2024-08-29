@@ -1,0 +1,228 @@
+.warenkorb-container {
+  width: 90%;
+  max-width: 900px;
+  background: var(--white-color);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  transition: transform 0.3s ease;
+}
+
+.warenkorb-container:hover {
+  transform: scale(1.02);
+}
+
+.warenkorb-title {
+  margin-bottom: 20px;
+  font-size: 3.2rem;
+  color: var(--h1h2-color);
+  text-align: center;
+  font-weight: bold;
+}
+
+.warenkorb-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.warenkorb-item {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.warenkorb-item-name {
+  font-size: 1.8rem;
+  color: var(--text-color);
+}
+
+.warenkorb-item-extras-title {
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: var(--text-color);
+}
+
+.warenkorb-item-extras-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+
+.warenkorb-item-extra {
+  margin: 5px 0;
+  font-size: 1.4rem;
+  color: var(--text-color);
+}
+
+.warenkorb-item-total {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: var(--text-color);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quantity-button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.quantity-button:hover {
+  background-color: var(--contrast-color);
+  transform: scale(1.1);
+}
+
+.quantity-display {
+  font-size: 1.6rem;
+  color: var(--text-color);
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: var(--danger-color);
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+
+.order-type {
+  margin-top: 30px;
+}
+
+.order-type h3 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--h1h2-color);
+}
+
+.order-type-option {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  display: block;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.customer-info {
+  margin-top: 30px;
+}
+
+.customer-info h3 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--h1h2-color);
+}
+
+.customer-info-label {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  display: block;
+  color: var(--text-color);
+}
+
+.customer-info-input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.6rem;
+  transition: border-color 0.3s ease;
+}
+
+.customer-info-input:focus {
+  border-color: var(--contrast-color);
+}
+
+.error-message {
+  color: var(--white-color);
+  margin-top: 10px;
+  font-size: 1.4rem;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.order-success {
+  color: var(--success-color);
+  margin-top: 10px;
+  font-size: 1.4rem;
+  text-align: center;
+  padding: 8px;
+  background-color: var(--success-hover-color);
+  border-radius: 8px;
+}
+
+.checkout-button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.8rem;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.checkout-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.checkout-button:hover:not(:disabled) {
+  background-color: var(--contrast-color);
+  transform: scale(1.05);
+}
+
+.store-info {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.store-info-card {
+  flex: 1 1 100%;
+  background: var(--white-color);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s;
+  text-align: center;
+}
+
+.store-info-card:hover {
+  transform: scale(1.05);
+}
+
+.required {
+  color: var(--danger-color);
+}
+
+.missing-field {
+  border: 1px solid var(--danger-color);
+}
+
+.delivery-fee {
+  color: var(--text-color);
+  margin-top: 10px;
+  font-size: 1.4rem;
+  text-align: center;
+}

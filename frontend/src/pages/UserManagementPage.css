@@ -1,20 +1,24 @@
 /* Genel stil */
 .container {
     margin-top: 20px;
+    padding: 20px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
 }
 
 h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.5rem;
-    color: #333;
+    color: var(--primary-color); /* Ana renk (örneğin, turuncu) */
 }
 
 p {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1.2rem;
-    color: #555;
+    color: var(--text-color); /* Genel metin rengi */
 }
 
 /* Tablo stili */
@@ -25,8 +29,8 @@ p {
 }
 
 .table thead th {
-    background-color: #007bff; /* Bootstrap'in birincil rengini kullanıyoruz */
-    color: white;
+    background-color: var(--primary-color); /* Ana renk (örneğin, turuncu) */
+    color: var(--white-color); /* Beyaz metin rengi */
     font-weight: bold;
     padding: 10px;
     text-align: center;
@@ -35,40 +39,57 @@ p {
 .table tbody td {
     padding: 10px;
     text-align: center;
+    color: var(--text-color); /* Genel metin rengi */
 }
 
 .table tbody tr:nth-child(even) {
     background-color: #f2f2f2; /* Her ikinci satır için açık gri arka plan */
 }
 
+.table tbody tr:nth-child(odd) {
+    background-color: var(--light-gray); /* Alternatif satır rengi */
+}
+
 /* Buton stili */
 .btn-warning {
     margin-right: 10px;
-    color: white;
-    background-color: #ffc107;
-    border-color: #ffc107;
+    color: var(--white-color);
+    background-color: var(--warning-color); /* Uyarı rengi (örneğin, sarı-turuncu) */
+    border-color: var(--warning-color);
 }
 
 .btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
+    background-color: var(--warning-color-dark); /* Daha koyu uyarı rengi */
+    border-color: var(--warning-color-dark);
 }
 
 .btn-danger {
-    color: white;
-    background-color: #dc3545;
-    border-color: #dc3545;
+    color: var(--white-color);
+    background-color: var(--danger-color); /* Tehlike rengi (örneğin, kırmızı) */
+    border-color: var(--danger-color);
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
+    background-color: var(--danger-color-dark); /* Daha koyu tehlike rengi */
+    border-color: var(--danger-color-dark);
 }
 
 /* Hata mesajı */
 .error-message {
-    color: red;
+    color: var(--danger-color); /* Tehlike rengi (örneğin, kırmızı) */
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
+}
+
+/* Modal başlığı */
+.modal-title {
+    font-size: 1.5rem;
+    color: var(--primary-color); /* Ana renk */
+}
+
+/* Modal footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
 }

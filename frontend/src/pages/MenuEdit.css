@@ -1,0 +1,93 @@
+.menu-edit {
+    padding: 20px;
+  }
+  
+  .category-select,
+  .subcategory-select {
+    margin-bottom: 20px;
+  }
+  
+  .items-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .item-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .edit-button,
+  .delete-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+  }
+  
+  .edit-button:hover,
+  .delete-button:hover {
+    opacity: 0.8;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .modal input {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .save-button,
+  .cancel-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .cancel-button {
+    background-color: #dc3545;
+  }
+  
+  .save-button:hover,
+  .cancel-button:hover {
+    opacity: 0.8;
+  }
+  

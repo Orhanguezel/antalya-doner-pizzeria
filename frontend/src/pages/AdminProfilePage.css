@@ -1,27 +1,70 @@
-.admin-profile-page {
-    margin-top: 50px;
+
+
+/* Admin Panel CSS */
+.admin-panel {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: var(--white-color); /* Beyaz arka plan rengi */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+  margin-top: 20px;
 }
 
-.admin-info-card {
-    padding: 20px;
-    background-color: var(--white-color);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.admin-panel h2 {
+  font-size: 3rem;
+  color: var(--h1h2-color); /* Başlık rengi */
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.admin-info-card h1 {
-    margin-bottom: 20px;
-    text-align: center;
-    color: var(--primary-color);
+.admin-panel .table {
+  background-color: var(--white-color); /* Tablo arka planı */
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.admin-links {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+.admin-panel .table th, 
+.admin-panel .table td {
+  vertical-align: middle;
+  text-align: center;
 }
 
-.admin-link-btn {
-    width: 45%;
-    font-size: 1.2rem;
+.admin-panel .table th {
+  background-color: var(--primary-color); /* Tablo başlık rengi */
+  color: var(--white-color); /* Başlık metin rengi */
+  font-weight: bold;
+}
+
+.admin-panel .table tbody tr:hover {
+  background-color: var(--secondary-color); /* Hover rengi */
+}
+
+.admin-panel .form-select {
+  width: auto;
+  margin: 0 auto;
+}
+
+.admin-panel button {
+  font-size: 1.4rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.admin-panel button.btn-danger {
+  background-color: var(--danger-color); /* Silme butonu rengi */
+  border: none;
+}
+
+.admin-panel button.btn-danger:hover {
+  background-color: var(--danger-hover-color); /* Hover durumu için silme butonu rengi */
+}
+
+.admin-panel button.btn-info {
+  background-color: var(--info-color); /* Düzenle butonu rengi */
+  border: none;
+  margin-right: 10px;
+}
+
+.admin-panel button.btn-info:hover {
+  background-color: var(--info-hover-color); /* Hover durumu için düzenle butonu rengi */
 }

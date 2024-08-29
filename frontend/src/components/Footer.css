@@ -1,109 +1,108 @@
-/* Footer.css */
-
-.footer {
-  background-color: var(--secondary-color); /* Footer arka plan rengi */
-  color: var(--white-color); /* Footer metin rengi */
-  padding: 40px 0; /* Üst ve alt padding */
-  text-align: left;
-  margin-top: 50px;
-}
-
-.footer-col {
-  margin-bottom: 20px;
-}
-
-.footer h5 {
-  color: var(--white-color); /* Footer başlık rengi */
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.footer p {
-  font-size: 1.2rem; /* Footer metin boyutu */
-  color: var(--white-color); /* Footer metin rengi */
-}
-
-.footer a {
-  color: var(--primary-color); /* Footer link rengi */
-  text-decoration: none;
-  font-size: 1.2rem;
-}
-
-.footer a:hover {
-  color: var(--white-color); /* Hover durumunda link rengi */
-  text-decoration: underline;
-}
-
-.footer .list-unstyled {
-  padding-left: 0;
-  list-style-type: none;
-}
-
-.footer .list-unstyled li {
-  margin-bottom: 10px;
-}
-
-.footer .list-unstyled li a {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 1.2rem;
-  margin-left: 10px; /* İkon ile metin arasında boşluk bırak */
-}
-
-.footer .list-unstyled li svg {
-  vertical-align: middle;
-  font-size: 1.5rem; /* İkon boyutu */
-}
-
-.footer-logo {
-  width: 60px; /* Logo genişliği */
-  height: auto; /* Yüksekliği orantılı olarak ayarla */
-  margin-bottom: 20px; /* Logonun altına boşluk bırak */
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.footer .text-center {
+/* Footer Section */
+.footer-section {
+  background-color: var(--text-color);
+  color: var(--white-color);
   text-align: center;
-  margin-top: 40px;
-  font-size: 1.2rem;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.footer .text-muted {
-  color: #6c757d !important; /* Footer alt metin rengi */
+.navbar-logo img {
+  max-width: 150px;  /* Ensure the logo is not too large */
+  height: auto;
 }
 
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.foot-title {
+  margin-top: 10px;
+  font-size: 2.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--white-color);
+}
+
+.foot-p {
+  margin: 5px 0;
+  font-size: 1.6rem;
+  color: var(--white-color);
+}
+
+.social {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.social a {
+  color: var(--white-color);
+  font-size: 2.4rem;
+  transition: color 0.3s ease;
+}
+
+.social a:hover {
+  color: var(--contrast-color);
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 1.4rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: var(--white-color);
+}
+
+.foot-terms-link {
+  color: var(--white-color);
+  transition: color 0.3s ease;
+}
+
+.foot-terms-link:hover {
+  color: var(--contrast-color);
+}
+
+.footer-design button {
+  background: none;
+  border: none;
+  color: var(--white-color);
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.footer-design button:hover {
+  color: var(--contrast-color);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .footer {
-    text-align: center;
+  .footer-content {
+    flex-direction: column;
   }
 
-  .footer-col {
-    margin-bottom: 40px;
-  }
-
-  .footer .text-center {
+  .social {
     margin-top: 20px;
-  }
-}
-
-@media (max-width: 576px) {
-  .footer h5 {
-    font-size: 1.6rem;
-  }
-
-  .footer p,
-  .footer a {
-    font-size: 1.1rem;
-  }
-
-  .footer .list-unstyled li svg {
-    font-size: 1.4rem;
-  }
-
-  .footer .text-center {
-    font-size: 1.1rem;
   }
 }

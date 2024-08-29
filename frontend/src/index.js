@@ -6,7 +6,7 @@ import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root')); // createRoot kullanılıyor
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>  // Bunu kaldırarak StrictMode'u devre dışı bırakıyoruz
     <App />
-  </React.StrictMode>
+  // </React.StrictMode>  // Bunu kaldırarak StrictMode'u devre dışı bırakıyoruz
 );

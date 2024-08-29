@@ -4,7 +4,7 @@ import axios from '../axios';
 import './AuthPage.css';
 
 const AuthPage = ({ setUserInfo }) => {
-    const [isLogin, setIsLogin] = useState(true); // Giriş mi yoksa kayıt mı olduğunu kontrol eder
+    const [isLogin, setIsLogin] = useState(true);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,21 +17,24 @@ const AuthPage = ({ setUserInfo }) => {
             let data;
             if (isLogin) {
                 const response = await axios.post('/users/login', { email, password });
+                console.log('Login API Response:', response.data);
                 data = response.data;
             } else {
                 const response = await axios.post('/users/register', { username, email, password });
+                console.log('Register API Response:', response.data);
                 data = response.data;
             }
-
+    
             localStorage.setItem('userInfo', JSON.stringify(data));
             setUserInfo(data);
-
+    
             if (data.role === 'admin') {
                 navigate('/admin');
             } else {
                 navigate('/profile');
             }
         } catch (error) {
+            console.error('Error during authentication:', error.response ? error.response.data : error.message);
             setError(error.response ? error.response.data.message : error.message);
         }
     };

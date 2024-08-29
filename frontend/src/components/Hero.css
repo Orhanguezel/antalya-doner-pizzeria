@@ -1,0 +1,113 @@
+.hero-section {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--white-color);
+  text-align: center;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  min-height: 500px;
+  opacity: 0;
+  animation: hero-fadeIn 2s forwards;
+  background-color: var(--secondary-color); /* Yedek renk */
+  padding: 20px;
+}
+
+.hero-section-content {
+  background-color: rgba(0, 0, 0, 0.5); /* Siyah şeffaf arka plan */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  animation: hero-slideIn 1s forwards;
+  max-width: 80%;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Gölge efekti */
+}
+
+.hero-section h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: var(--contrast-color); /* Kontrast renk */
+}
+
+.hero-section p {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--white-color); /* Beyaz renk */
+}
+
+.hero-cta-button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.8rem;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.hero-cta-button:hover {
+  background-color: var(--contrast-color);
+  transform: scale(1.05);
+  color: var(--white-color);
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .hero-section-content {
+    padding: 15px;
+  }
+
+  .hero-section h1 {
+    font-size: 3rem;
+  }
+
+  .hero-section p {
+    font-size: 1.6rem;
+  }
+
+  .hero-cta-button {
+    padding: 12px 24px;
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section-content {
+    padding: 10px;
+  }
+
+  .hero-section h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero-section p {
+    font-size: 1.4rem;
+  }
+
+  .hero-cta-button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+  }
+}
+
+@keyframes hero-fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

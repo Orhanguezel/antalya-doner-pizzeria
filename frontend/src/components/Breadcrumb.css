@@ -1,0 +1,47 @@
+.breadcrumb-container {
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.breadcrumb {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem; /* Daha büyük ve okunabilir font boyutu */
+  color: var(--primary-color);
+}
+
+.breadcrumb-link {
+  color: var(--primary-color); /* Ana renk */
+  text-decoration: none;
+  font-weight: 500; /* Orta kalınlık */
+  padding: 5px 10px;
+  transition: color 0.3s ease, background-color 0.3s ease; /* Yumuşak geçiş efektleri */
+  border-radius: 4px;
+}
+
+.breadcrumb-link:hover {
+  color: var(--contrast-color); /* Kontrast renk (daha parlak turuncu) */
+  background-color: rgba(0, 0, 0, 0.05); /* Hafif bir arka plan rengi */
+}
+
+.breadcrumb-active {
+  color: var(--text-color); /* Pasif metin rengi */
+  font-weight: 600; /* Biraz daha kalın */
+  padding: 5px 10px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›"; /* Daha modern bir ok simgesi */
+  color: var(--text-color); /* Ok simgesi rengi */
+  padding: 0 8px;
+  font-size: 1.4rem;
+}

@@ -1,0 +1,287 @@
+.menu-page {
+  padding: 20px;
+}
+
+.menu-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.menu-title {
+  font-size: 3.2rem;
+  color: var(--h1h2-color); /* Başlık rengi */
+  margin: 10px 0;
+}
+
+.categories-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--white-color);
+  z-index: 10;
+  padding: 10px 0;
+}
+
+.category-button {
+  padding: 10px 15px;
+  font-size: 1.4rem;
+  background-color: var(--secondary-color);
+  color: var(--contrast-color);
+  border: 1px solid var(--contrast-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s ease;
+  margin: 8px;
+  position: relative;
+}
+
+.category-button:hover {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+}
+
+.category-button.active {
+  transform: scale(1.05);
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+}
+
+.category-button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 0;
+  height: 4px;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.9);
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.5s ease-in-out;
+}
+
+.category-button.active::after {
+  width: 80%;
+  transform: translateX(-50%);
+}
+
+.category-button:not(.active)::after {
+  transition: none;
+  width: 0;
+}
+
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  flex: 1 1 300px;
+  max-width: 400px;
+  min-height: 100px;
+  background: var(--white-color);
+  opacity: 1;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: var(--text-color); /* Başlık ve metin rengi */
+}
+
+.card-header h4,
+.card-header p {
+  margin: 0;
+}
+
+.info-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--info-color);
+  border: none;
+  color: var(--white-color);
+  font-size: 12px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 5px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button:hover,
+.info-button:hover {
+  opacity: 0.8;
+}
+
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999; /* Daha yüksek bir değer verin */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  width: 80%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 10000; /* Daha yüksek bir değer verin */
+}
+
+.extras-container {
+  margin-top: 5px;
+}
+
+.extras-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 1.4rem;
+  color: var(--text-color);
+}
+
+.extra-item {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.extra-item input {
+  margin-right: 5px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.quantity-controls button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quantity-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.quantity-controls span {
+  margin: 0 5px;
+}
+
+.add-to-cart-button {
+  background-color: var(--success-color);
+  color: var(--white-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+  background-color: var(--success-hover-color);
+}
+
+.close-button {
+  background-color: var(--danger-color);
+  color: var(--white-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: var(--danger-hover-color);
+}
+
+@media (max-width: 600px) {
+  .card {
+    flex: 1 1 100%;
+    margin: 10px 0;
+  }
+
+  .category-button {
+    flex: 1 1 auto;
+    margin: 5px;
+  }
+}
+
+.subcategory-images {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.subcategory-images img {
+  width: calc(50% - 10px);
+  max-width: 450px;
+  border-radius: 5px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.subcategory-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
