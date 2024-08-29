@@ -1,0 +1,96 @@
+/* Services Section */
+.services {
+  text-align: center;
+  padding: 30px 15px;
+  background-color: var(--secondary-color); /* Background updated */
+  border-radius: 10px;
+}
+
+.services h1 {
+  font-size: 3.2rem; /* Başlık font büyüklüğü */
+  margin-bottom: 20px;
+  color: var(--h1h2-color); /* Başlık rengi */
+}
+
+.service-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px; /* Increased spacing for modern look */
+}
+
+.service {
+  flex: 1 1 300px;
+  background: var(--white-color);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Softer shadow for modern feel */
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s; /* Added box-shadow transition */
+  margin: 10px;
+  color: var(--text-color);
+  cursor: pointer; /* Makes the whole card clickable */
+}
+
+.service img {
+  width: 100%; /* Make the image fully responsive */
+  height: auto;
+  border-radius: 10px 10px 0 0; /* Rounded corners only on the top */
+}
+
+.service h3 {
+  margin-top: 15px;
+  font-size: 2.4rem; /* Font size aligned with the overall design */
+  color: var(--h1h2-color);
+}
+
+.service p {
+  margin-top: 10px;
+  font-size: 1.6rem; /* Consistent font size */
+  color: var(--text-color);
+}
+
+.service:hover {
+  transform: scale(1.05); /* Slight zoom for hover effect */
+  background-color: var(--secondary-color);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+
+.service:hover h3,
+.service:hover p {
+  color: var(--text-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .service-container {
+    flex-direction: column;
+    gap: 20px; /* Increased spacing for better readability */
+  }
+
+  .service {
+    margin: 0 auto;
+    max-width: 90%; /* Makes the service cards adapt better to smaller screens */
+  }
+
+  .service h3 {
+    font-size: 2rem;
+  }
+
+  .service p {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-container {
+    gap: 15px; /* Adjusting spacing for smaller screens */
+  }
+
+  .service h3 {
+    font-size: 1.8rem;
+  }
+
+  .service p {
+    font-size: 1.2rem;
+  }
+}

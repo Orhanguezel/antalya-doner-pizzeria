@@ -1,69 +1,157 @@
+/* Auth Page Styles */
 .auth-page {
     max-width: 400px;
     margin: 50px auto;
-    padding: 20px;
-    background: #f8f9fa; /* Hafif gri arka plan */
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+    padding: 30px 25px;
+    background: var(--secondary-color);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.auth-page:hover {
+    transform: scale(1.02);
 }
 
 .auth-page h2 {
     margin-bottom: 20px;
     text-align: center;
-    color: #007bff; /* Başlık rengi */
+    color: var(--primary-color);
+    font-size: 3.2rem;
+    letter-spacing: 0.05rem;
 }
 
 .auth-page .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
-.auth-page .form-control {
-    border-radius: 5px;
-    border: 1px solid #ced4da; /* Form kontrol sınır rengi */
+.auth-page .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-size: 1.4rem;
+}
+
+.auth-page .form-group .form-control {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--h1h2-color);
+    padding: 12px;
+    background: var(--white-color);
+    color: var(--text-color);
+    font-size: 1.6rem;
+    transition: border-color 0.3s ease;
+}
+
+.auth-page .form-group .form-control:focus {
+    border-color: var(--contrast-color);
+    outline: none;
 }
 
 .auth-page .btn-primary {
     width: 100%;
-    border-radius: 5px;
-    background-color: #007bff; /* Buton arka plan rengi */
-    color: #ffffff; /* Buton metin rengi */
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
     border: none;
-    padding: 10px;
-    font-size: 1.2rem;
+    padding: 12px 0;
+    font-size: 1.6rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .auth-page .btn-primary:hover {
-    background-color: #0056b3; /* Hover durumu için daha koyu mavi */
+    background-color: var(--contrast-color);
+    transform: scale(1.05);
 }
 
 .auth-page .toggle-btn-group {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 25px;
 }
 
 .auth-page .toggle-btn-group button {
     flex: 1;
-    border-radius: 5px;
-    border: 1px solid #007bff;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
     background-color: transparent;
-    color: #007bff;
+    color: var(--primary-color);
     padding: 10px;
-    font-size: 1rem;
+    font-size: 1.4rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0 5px;
 }
 
 .auth-page .toggle-btn-group button.active {
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: var(--primary-color);
+    color: var(--white-color);
 }
 
 .auth-page .error {
-    color: red;
-    font-size: 0.9rem;
+    color: var(--white-color);
+    font-size: 1.4rem;
     text-align: center;
     margin-bottom: 15px;
+    padding: 8px;
+    background-color: var(--danger-hover-color);
+    border-radius: 8px;
+    width: 100%;
+}
+
+.auth-page .register-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.auth-page .register-link a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.auth-page .register-link a:hover {
+    color: var(--contrast-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .auth-page {
+        padding: 20px;
+    }
+
+    .auth-page h2 {
+        font-size: 2rem;
+    }
+
+    .auth-page .form-group .form-control {
+        font-size: 1.4rem;
+    }
+
+    .auth-page .btn-primary {
+        padding: 10px;
+        font-size: 1.4rem;
+    }
+
+    .auth-page .toggle-btn-group button {
+        font-size: 1.2rem;
+        padding: 8px;
+    }
+
+    .auth-page .error {
+        font-size: 1.2rem;
+    }
+
+    .auth-page .register-link {
+        font-size: 1.2rem;
+    }
 }

@@ -1,162 +1,111 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Form, Table } from 'react-bootstrap';
-import axios from '../axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import LieferungOrders from './LieferungOrders';
+import AbholungOrders from './AbholungOrders';
+import RestaurantOrders from './RestaurantOrders';
+import Analysis from './Analysis';
+import MenuEdit from './MenuEdit';
+import UserManagementPage from './UserManagementPage'; // Doğru bileşeni import edin
+import Breadcrumb from '../components/Breadcrumb';
+import { useAuth } from '../context/AuthContext';
+import './AdminProfilePage.css'; // Doğru CSS dosyasını import edin
 
-const AdminProfilePage = ({ userInfo }) => {
-    const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
-    const [profileData, setProfileData] = useState({});
-    const [profileImage, setProfileImage] = useState(null);
-    const [loading, setLoading] = useState(true);
+const AdminProfilePage = () => {
+  const location = useLocation();
+  const { token } = useAuth();
+  const [orderCounts, setOrderCounts] = useState({
+    lieferung: 0,
+    abholung: 0,
+    restaurant: 0,
+  });
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const { data } = await axios.get('/users/profile');
-                setProfileData(data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching profile data:', error);
-                setLoading(false);
-            }
-        };
+  const getActiveClass = (path) => (location.pathname === path ? 'active' : '');
 
-        const fetchUsers = async () => {
-            try {
-                const { data } = await axios.get('/users');
-                setUsers(data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
+  const [prevOrderCount, setPrevOrderCount] = useState(0);
 
-        fetchProfile();
-        fetchUsers();
-    }, []);
-
-    const handleProfileUpdate = async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.append('username', profileData.username);
-        formData.append('email', profileData.email);
-        if (profileImage) {
-            formData.append('profileImage', profileImage);
-        }
-
-        try {
-            const { data } = await axios.put('/users/profile', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setProfileData(data);
-            alert('Profil güncellendi');
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            alert('Profil güncellenemedi');
-        }
-    };
-
-    const handleDeleteUser = async (userId) => {
-        try {
-            await axios.delete(`/users/${userId}`);
-            setUsers(users.filter(user => user._id !== userId));
-        } catch (error) {
-            console.error('Error deleting user:', error);
-        }
-    };
-
-    const handleRoleChange = async (userId, newRole) => {
-        try {
-            await axios.put(`/users/${userId}/role`, { role: newRole });
-            setUsers(users.map(user => user._id === userId ? { ...user, role: newRole } : user));
-        } catch (error) {
-            console.error('Error changing user role:', error);
-        }
-    };
-
-    if (loading) {
-        return <p>Yükleniyor...</p>;
+  useEffect(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
     }
+  }, []);
 
-    return (
-        <Container className="admin-profile-page">
-            <h1>Admin Profil Sayfası</h1>
-            <Card className="admin-info-card">
-                <Card.Body>
-                    <Card.Title>Admin Bilgileri</Card.Title>
-                    <Card.Text>
-                        <strong>Kullanıcı Adı:</strong> {profileData.username}
-                    </Card.Text>
-                    <Card.Text>
-                        <strong>Email:</strong> {profileData.email}
-                    </Card.Text>
-                    <Form onSubmit={handleProfileUpdate}>
-                        <Form.Group>
-                            <Form.Label>Kullanıcı Adı</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={profileData.username}
-                                onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type="email"
-                                value={profileData.email}
-                                onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Profil Resmi</Form.Label>
-                            <Form.Control
-                                type="file"
-                                onChange={(e) => setProfileImage(e.target.files[0])}
-                            />
-                        </Form.Group>
-                        <Button type="submit">Profili Güncelle</Button>
-                    </Form>
-                </Card.Body>
-            </Card>
+  useEffect(() => {
+    const fetchOrderCounts = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-            <h2>Kullanıcı Yönetimi</h2>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Kullanıcı Adı</th>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(user => (
-                        <tr key={user._id}>
-                            <td>{user.username}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <Form.Select 
-                                    value={user.role}
-                                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                                >
-                                    <option value="user">User</option>
-                                    <option value="admin">Admin</option>
-                                </Form.Select>
-                            </td>
-                            <td>
-                                <Button variant="danger" onClick={() => handleDeleteUser(user._id)}>
-                                    Kullanıcıyı Sil
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-        </Container>
-    );
+        const orders = response.data;
+        const newOrderCount = orders.length;
+
+        if (newOrderCount > prevOrderCount) {
+          if (Notification.permission === "granted") {
+            new Notification("Yeni Sipariş!", {
+              body: "Yeni bir sipariş geldi.",
+            });
+          }
+        }
+        setPrevOrderCount(newOrderCount);
+
+        const lieferungCount = orders.filter(order => order.orderType === 'delivery' && !order.archived).length;
+        const abholungCount = orders.filter(order => order.orderType === 'pickup' && !order.archived).length;
+        const restaurantCount = orders.filter(order => order.orderType === 'dinein' && !order.archived).length;
+
+        setOrderCounts({
+          lieferung: lieferungCount,
+          abholung: abholungCount,
+          restaurant: restaurantCount,
+        });
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    const intervalId = setInterval(fetchOrderCounts, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [token, prevOrderCount]);
+
+  return (
+    <div className="admin-panel">
+      <h2>Admin Profil Sayfası</h2>
+      <Breadcrumb />
+      <nav className="admin-nav">
+        <button className={getActiveClass('/admin/lieferung-orders')}>
+          <Link to="/admin/lieferung-orders">Lieferung ({orderCounts.lieferung})</Link>
+        </button>
+        <button className={getActiveClass('/admin/abholung-orders')}>
+          <Link to="/admin/abholung-orders">Abholung ({orderCounts.abholung})</Link>
+        </button>
+        <button className={getActiveClass('/admin/restaurant-orders')}>
+          <Link to="/admin/restaurant-orders">Im Restaurant ({orderCounts.restaurant})</Link>
+        </button>
+        <button className={getActiveClass('/admin/analysis')}>
+          <Link to="/admin/analysis">Analiz</Link>
+        </button>
+        <button className={getActiveClass('/admin/menu-edit')}>
+          <Link to="/admin/menu-edit">Menü</Link>
+        </button>
+        <button className={getActiveClass('/admin/user-management')}>
+          <Link to="/admin/user-management">Kullanıcı Yönetimi</Link>
+        </button>
+      </nav>
+      <div className="admin-content">
+        <Routes>
+          <Route path="/lieferung-orders" element={<LieferungOrders />} />
+          <Route path="/abholung-orders" element={<AbholungOrders />} />
+          <Route path="/restaurant-orders" element={<RestaurantOrders />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/menu-edit" element={<MenuEdit />} />
+          <Route path="/user-management" element={<UserManagementPage />} /> {/* Kullanıcı Yönetimi rotası tanımlandı */}
+        </Routes>
+      </div>
+    </div>
+  );
 };
 
 export default AdminProfilePage;

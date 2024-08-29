@@ -1,0 +1,119 @@
+.kontakt-container {
+  text-align: center;
+  padding: 30px 20px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.kontakt-container h1 {
+  font-size: 3.2rem;
+  margin-bottom: 20px;
+  color: var(--h1h2-color);
+}
+
+.kontakt-container p {
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+  color: var(--text-color);
+}
+
+.contact-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.contact-phone {
+  font-size: 1.6rem;
+  margin-top: 10px;
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.contact-phone:hover {
+  color: var(--success-color);
+}
+
+.kontakt-card {
+  flex: 1 1 300px;
+  max-width: 300px;
+  background: var(--white-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s, background-color 0.3s, color 0.3s;
+  margin: 10px;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  min-width: 280px;
+  min-height: 300px;
+}
+
+.kontakt-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.kontakt-card:hover {
+  transform: scale(1.05);
+  background-color: var(--secondary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.kontakt-card h2 {
+  margin-top: 10px;
+  font-size: 2.4rem;
+}
+
+.kontakt-card p {
+  margin-top: 10px;
+  font-size: 1.6rem;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.responsive-map {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.overlay-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kontakt-card {
+    flex: 1 1 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  iframe {
+    margin-top: 20px;
+  }
+}

@@ -75,11 +75,11 @@ pm2 start npm --name frontend -- run start
 sudo nano /etc/nginx/sites-available/default
 
 
-
+use antalya_doner_pizzeria
 
 
 mongosh
-use antalya-doner-pizzeria
+
 db.users.find().pretty()
 
 

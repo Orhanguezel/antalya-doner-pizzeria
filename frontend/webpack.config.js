@@ -1,7 +1,7 @@
-const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const webpack = require('webpack');
+const path = require('path');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -18,9 +18,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        use: 'babel-loader',
       },
       {
         test: /\.css$/,
@@ -34,16 +32,17 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',  // Burada templateContent yerine public/index.html kullanılıyor
+      template: './public/index.html',
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin({
-      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api'),
+      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
   ].filter(Boolean),
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public'),  // public klasörünü static dosyalar için kullanıyoruz
+      directory: path.join(__dirname, 'public'),
     },
     hot: true,
     historyApiFallback: true,

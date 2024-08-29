@@ -17,7 +17,7 @@ const itemSchema = new Schema({
     großeSchale: Number
   },
   extras: { type: Schema.Types.Mixed, default: null }, // Extras are optional
-}, { timestamps: true }); // Automatically manage createdAt and updatedAt fields
+}, { timestamps: true });
 
 const Item = mongoose.model('Item', itemSchema);
 module.exports = Item;

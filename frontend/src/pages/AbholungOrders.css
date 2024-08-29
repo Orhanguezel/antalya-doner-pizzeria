@@ -1,0 +1,80 @@
+.abholung-orders {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .order-status-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Flex kutuların sarılmasını sağla */
+    gap: 10px; /* Kutular arasında boşluk */
+    justify-content: center; /* Kutuları yatayda ortala */
+    margin-bottom: 20px;
+  }
+  
+  .order-status-buttons button {
+    padding: 5px 10px; /* Küçük düğme boyutu */
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-family: inherit;
+    flex: 1; /* Esnek büyüme sağlar */
+    max-width: 100px; /* Maksimum genişlik */
+  }
+  
+  .order-status-buttons button.active {
+    background-color: #0056b3;
+  }
+  
+  .order-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-card {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .order-card h4 {
+    margin: 10px 0;
+  }
+  
+  .order-card ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-actions {
+    display: flex;
+    flex-wrap: wrap; /* Flex kutuların sarılmasını sağla */
+    gap: 10px; /* Kutular arasında boşluk */
+    justify-content: center; /* Kutuları yatayda ortala */
+  }
+  
+  .order-actions button {
+    padding: 5px 10px; /* Küçük düğme boyutu */
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-family: inherit;
+    flex: 1; /* Esnek büyüme sağlar */
+    max-width: 100px; /* Maksimum genişlik */
+  }
+  
+  .order-actions button:hover {
+    background-color: #0056b3;
+  }
+  
+  .order-actions button.active {
+    background-color: #0056b3;
+  }
+  
