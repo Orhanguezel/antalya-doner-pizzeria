@@ -29,8 +29,14 @@ def get_subcategories_and_items(category_id):
             if items_response.status_code == 200:
                 items = items_response.json()
                 if len(items) > 0:
-                    first_item = items[0]
-                    print(f"    * First Item: {first_item['name']} (Price: {first_item['prices']})")
+                    for item in items:
+                        print(f"    * Item: {item['name']} (Price: {item['prices']})")
+                        if 'extras' in item and item['extras']:
+                            print(f"      Extras available for {item['name']}:")
+                            for extra, price in item['extras'].items():
+                                print(f"        - {extra}: {price} €")
+                        else:
+                            print(f"      No extras available for {item['name']}.")
                 else:
                     print("    * No items found in this subcategory.")
             else:

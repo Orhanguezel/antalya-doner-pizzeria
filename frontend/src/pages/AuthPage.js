@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
+import { useAuth } from '../context/AuthContext';
 import './AuthPage.css';
 
-const AuthPage = ({ setUserInfo }) => {
+const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { setUserInfo } = useAuth(); // setUserInfo fonksiyonunu kullanıyoruz
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,11 +19,9 @@ const AuthPage = ({ setUserInfo }) => {
             let data;
             if (isLogin) {
                 const response = await axios.post('/users/login', { email, password });
-                console.log('Login API Response:', response.data);
                 data = response.data;
             } else {
                 const response = await axios.post('/users/register', { username, email, password });
-                console.log('Register API Response:', response.data);
                 data = response.data;
             }
     

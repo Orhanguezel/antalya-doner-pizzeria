@@ -4,12 +4,10 @@ import './Breadcrumb.css';
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((item) => item);
+  const pathnames = location.pathname.split('/').filter((item) => item && item !== 'admin'); // "admin" tekrarını engeller
 
   const formatPathname = (name) => {
     switch (name) {
-      case 'admin':
-        return 'Admin Panel';
       case 'lieferung-orders':
         return 'Lieferung';
       case 'abholung-orders':
@@ -17,11 +15,11 @@ const Breadcrumb = () => {
       case 'restaurant-orders':
         return 'Im Restaurant';
       case 'analysis':
-        return 'Analiz';
+        return 'Analyse';
       case 'menu-edit':
         return 'Menü';
-      case 'authorization':
-        return 'Auth';
+      case 'user-management':
+        return 'Benutzerverwaltung';
       default:
         return name.charAt(0).toUpperCase() + name.slice(1);
     }

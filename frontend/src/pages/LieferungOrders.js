@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Breadcrumb from '../components/Breadcrumb';
 import './LieferungOrders.css';
+import { useAuth } from '../context/AuthContext'; // useAuth hook'unu kullanmak için import edin
 
 const LieferungOrders = () => {
-  const { token } = useAuth();
+  const { token } = useAuth(); // Tokeni almak için useAuth hook'unu kullanıyoruz
   const [orders, setOrders] = useState([]);
-  const [filter, setFilter] = useState('Gelen Siparişler');
+  const [filter, setFilter] = useState('Eingehende Bestellungen');
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setOrders(response.data);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-      }
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setOrders(response.data); // Gelen veriyi state'e kaydediyoruz
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Bestellungen:', error);
+        }
     };
 
     fetchOrders();
@@ -35,7 +35,7 @@ const LieferungOrders = () => {
       });
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error('Fehler beim Aktualisieren des Bestellstatus:', error);
     }
   };
 
@@ -48,7 +48,7 @@ const LieferungOrders = () => {
       });
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
-      console.error('Error deleting order:', error);
+      console.error('Fehler beim Löschen der Bestellung:', error);
     }
   };
 
@@ -61,7 +61,7 @@ const LieferungOrders = () => {
       });
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
     } catch (error) {
-      console.error('Error archiving order:', error);
+      console.error('Fehler beim Archivieren der Bestellung:', error);
     }
   };
 
@@ -81,12 +81,12 @@ const LieferungOrders = () => {
   };
 
   const filteredOrders = orders
-    .filter(order => order.orderType === 'delivery')
+    .filter(order => order.orderType === 'Lieferung') // Almanca teslimat türü için kontrol
     .filter(order => {
-      if (filter === 'Gelen Siparişler') return order.status === 'Gelen Siparişler';
-      if (filter === 'Hazırlanan Siparişler') return order.status === 'Hazırlanan Siparişler';
-      if (filter === 'Taşınan Siparişler') return order.status === 'Taşınan Siparişler';
-      if (filter === 'Teslim Edilen Siparişler') return order.status === 'Teslim Edilen Siparişler';
+      if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
+      if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
+      if (filter === 'Bestellungen werden geliefert') return order.status === 'Bestellungen werden geliefert';
+      if (filter === 'Gelieferte Bestellungen') return order.status === 'Gelieferte Bestellungen';
       return false;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -99,13 +99,32 @@ const LieferungOrders = () => {
 
   return (
     <div className="lieferung-orders">
-      <Breadcrumb />
       <h3>Lieferung Bestellungen</h3>
       <div className="order-status-buttons">
-        <button onClick={() => filterOrders('Gelen Siparişler')} className={filter === 'Gelen Siparişler' ? 'active' : ''}>Eingegangene</button>
-        <button onClick={() => filterOrders('Hazırlanan Siparişler')} className={filter === 'Hazırlanan Siparişler' ? 'active' : ''}>Vorbereitete</button>
-        <button onClick={() => filterOrders('Taşınan Siparişler')} className={filter === 'Taşınan Siparişler' ? 'active' : ''}>Liefernde</button>
-        <button onClick={() => filterOrders('Teslim Edilen Siparişler')} className={filter === 'Teslim Edilen Siparişler' ? 'active' : ''}>Gelieferte</button>
+        <button 
+          onClick={() => filterOrders('Eingehende Bestellungen')} 
+          className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
+        >
+          Eingehende
+        </button>
+        <button 
+          onClick={() => filterOrders('Bestellungen in Vorbereitung')} 
+          className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}
+        >
+          Vorbereitete
+        </button>
+        <button 
+          onClick={() => filterOrders('Bestellungen werden geliefert')} 
+          className={filter === 'Bestellungen werden geliefert' ? 'active' : ''}
+        >
+          Liefernde
+        </button>
+        <button 
+          onClick={() => filterOrders('Gelieferte Bestellungen')} 
+          className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}
+        >
+          Gelieferte
+        </button>
       </div>
       <ul className="order-list">
         {filteredOrders.map(order => (
@@ -113,13 +132,13 @@ const LieferungOrders = () => {
             <p><strong>Bestell-ID:</strong> {order._id}</p>
             <p><strong>Bestellzeit:</strong> {new Date(order.createdAt).toLocaleString()}</p>
             <p><strong>Kunde:</strong> {order.customerInfo.name} {order.customerInfo.surname}</p>
-            <p><strong>Email:</strong> {order.customerInfo.email}</p>
-            <p><strong>Telefon:</strong> {order.customerInfo.phone}</p>
-            <p><strong>Adresse:</strong> {order.customerInfo.address}</p>
-            <p><strong>Region:</strong> {order.customerInfo.region}</p>
-            <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
+            {order.customerInfo.email && <p><strong>Email:</strong> {order.customerInfo.email}</p>}
+            {order.customerInfo.phone && <p><strong>Telefon:</strong> {order.customerInfo.phone}</p>}
+            {order.customerInfo.address && <p><strong>Adresse:</strong> {order.customerInfo.address}</p>}
+            {order.customerInfo.region && <p><strong>Region:</strong> {order.customerInfo.region}</p>}
+            {order.customerInfo.paymentMethod && <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>}
             <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
-            <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>
+            {order.customerInfo.specialRequest && <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>}
             <h4>Produkte:</h4>
             <ul className="order-items">
               {order.items.map(item => (
@@ -139,27 +158,40 @@ const LieferungOrders = () => {
                 </li>
               ))}
             </ul>
-            {order.orderType === 'delivery' && <p>Lieferungskosten: {order.deliveryFee.toFixed(2)}€</p>}
-            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)).toFixed(2)}€</p>
+            {order.orderType === 'Lieferung' && <p>Lieferungskosten: {order.deliveryFee.toFixed(2)}€</p>}
+            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'Lieferung' ? order.deliveryFee : 0)).toFixed(2)}€</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
-              {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
-              {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Taşınan Siparişler')}>Liefern</button>}
-              {filter === 'Taşınan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Geliefert</button>}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => printOrder(order._id)}>Drucken</button>}
-              {filter === 'Teslim Edilen Siparişler' && (
+              {filter === 'Eingehende Bestellungen' && (
+                <button onClick={() => updateOrderStatus(order._id, 'Bestellungen in Vorbereitung')}>
+                  Vorbereiten
+                </button>
+              )}
+              {filter === 'Bestellungen in Vorbereitung' && (
+                <button onClick={() => updateOrderStatus(order._id, 'Bestellungen werden geliefert')}>
+                  Liefern
+                </button>
+              )}
+              {filter === 'Bestellungen werden geliefert' && (
+                <button onClick={() => updateOrderStatus(order._id, 'Gelieferte Bestellungen')}>
+                  Geliefert
+                </button>
+              )}
+              {filter === 'Gelieferte Bestellungen' && (
                 <>
                   <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
                   <button onClick={() => printOrder(order._id)}>Drucken</button>
                 </>
               )}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>}
+              {filter !== 'Gelieferte Bestellungen' && (
+                <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>
+              )}
             </div>
             {confirmDelete === order._id && (
               <div className="confirm-delete">
-                <p>Gerçekten bu siparişi silmek istiyor musunuz?</p>
-                <button onClick={() => deleteOrder(order._id)}>Evet</button>
-                <button onClick={() => setConfirmDelete(null)}>Hayır</button>
+                <p>Möchten Sie diese Bestellung wirklich löschen?</p>
+                <button onClick={() => deleteOrder(order._id)}>Ja</button>
+                <button onClick={() => setConfirmDelete(null)}>Nein</button>
               </div>
             )}
           </li>

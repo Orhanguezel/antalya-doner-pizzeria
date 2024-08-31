@@ -1,47 +1,39 @@
+.abholung-orders {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
+}
+
 .breadcrumb-container {
-  padding: 10px 20px;
-  background-color: #f8f9fa;
+  background-color: var(--white-color);
+  padding: 10px 15px;
   border-radius: 5px;
   margin-bottom: 20px;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-  font-size: 1.4rem; /* Daha büyük ve okunabilir font boyutu */
-  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .breadcrumb-link {
-  color: var(--primary-color); /* Ana renk */
-  text-decoration: none;
-  font-weight: 500; /* Orta kalınlık */
-  padding: 5px 10px;
-  transition: color 0.3s ease, background-color 0.3s ease; /* Yumuşak geçiş efektleri */
-  border-radius: 4px;
-}
-
-.breadcrumb-link:hover {
-  color: var(--contrast-color); /* Kontrast renk (daha parlak turuncu) */
-  background-color: rgba(0, 0, 0, 0.05); /* Hafif bir arka plan rengi */
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
 .breadcrumb-active {
-  color: var(--text-color); /* Pasif metin rengi */
-  font-weight: 600; /* Biraz daha kalın */
-  padding: 5px 10px;
+  font-size: 1.4rem;
+  color: var(--h1h2-color);
+  font-weight: 600;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
-  content: "›"; /* Daha modern bir ok simgesi */
-  color: var(--text-color); /* Ok simgesi rengi */
-  padding: 0 8px;
+.order-actions button {
+  padding: 8px 12px;
   font-size: 1.4rem;
+}
+
+.order-card {
+  background-color: var(--white-color);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
 }

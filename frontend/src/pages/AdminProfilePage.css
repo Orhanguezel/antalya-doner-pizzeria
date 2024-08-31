@@ -1,24 +1,57 @@
-
-
-/* Admin Panel CSS */
 .admin-panel {
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: var(--white-color); /* Beyaz arka plan rengi */
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
 }
 
 .admin-panel h2 {
   font-size: 3rem;
-  color: var(--h1h2-color); /* Başlık rengi */
+  color: var(--h1h2-color);
   margin-bottom: 20px;
+  margin-top: 50px;
   text-align: center;
 }
 
+.admin-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.nav-links {
+  padding: 8px 8px;
+  font-size: 1.2rem;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-links:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.nav-links.active {
+  background-color: var(--contrast-color);
+  color: var(--white-color);
+}
+
+.admin-content {
+  background-color: var(--white-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 .admin-panel .table {
-  background-color: var(--white-color); /* Tablo arka planı */
+  background-color: var(--white-color);
   border-radius: 5px;
   overflow: hidden;
 }
@@ -27,16 +60,17 @@
 .admin-panel .table td {
   vertical-align: middle;
   text-align: center;
+  padding: 10px;
 }
 
 .admin-panel .table th {
-  background-color: var(--primary-color); /* Tablo başlık rengi */
-  color: var(--white-color); /* Başlık metin rengi */
+  background-color: var(--primary-color);
+  color: var(--white-color);
   font-weight: bold;
 }
 
 .admin-panel .table tbody tr:hover {
-  background-color: var(--secondary-color); /* Hover rengi */
+  background-color: var(--secondary-color);
 }
 
 .admin-panel .form-select {
@@ -48,23 +82,24 @@
   font-size: 1.4rem;
   padding: 5px 10px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .admin-panel button.btn-danger {
-  background-color: var(--danger-color); /* Silme butonu rengi */
+  background-color: var(--danger-color);
   border: none;
 }
 
 .admin-panel button.btn-danger:hover {
-  background-color: var(--danger-hover-color); /* Hover durumu için silme butonu rengi */
+  background-color: var(--danger-hover-color);
 }
 
 .admin-panel button.btn-info {
-  background-color: var(--info-color); /* Düzenle butonu rengi */
+  background-color: var(--info-color);
   border: none;
   margin-right: 10px;
 }
 
 .admin-panel button.btn-info:hover {
-  background-color: var(--info-hover-color); /* Hover durumu için düzenle butonu rengi */
+  background-color: var(--info-hover-color);
 }

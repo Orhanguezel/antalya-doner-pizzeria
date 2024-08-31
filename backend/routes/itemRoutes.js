@@ -5,7 +5,7 @@ const Item = require('../models/Item');
 // Get all items
 router.get('/', async (req, res) => {
   try {
-    const items = await Item.find();
+    const items = await Item.find().lean();  // lean() for performance
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,7 +57,6 @@ router.put('/:id', async (req, res) => {
     }
     res.status(200).json(updatedItem);
   } catch (error) {
-    console.error('Error updating item:', error);
     res.status(500).json({ error: error.message });
   }
 });

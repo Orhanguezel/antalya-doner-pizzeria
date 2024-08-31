@@ -21,6 +21,7 @@
 
 .service {
   flex: 1 1 300px;
+  max-width: 500px;
   background: var(--white-color);
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Softer shadow for modern feel */

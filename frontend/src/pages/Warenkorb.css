@@ -1,7 +1,7 @@
 .warenkorb-container {
   width: 90%;
   max-width: 900px;
-  background: var(--white-color);
+  background-color: var(--secondary-color);
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -15,11 +15,11 @@
 }
 
 .warenkorb-title {
-  margin-bottom: 20px;
   font-size: 3.2rem;
+  margin-bottom: 20px;
+  margin-top: 50px;
   color: var(--h1h2-color);
   text-align: center;
-  font-weight: bold;
 }
 
 .warenkorb-list {

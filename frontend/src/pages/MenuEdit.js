@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import Breadcrumb from '../components/Breadcrumb';
 import './MenuEdit.css';
 
 Modal.setAppElement('#root');
@@ -15,10 +14,13 @@ const MenuEdit = () => {
   const [editedItem, setEditedItem] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
+  // Sabit bir URL tanımlayın, örneğin:
+  const API_URL = 'http://localhost:5000'; // Bu değeri backend API'nizin URL'sine göre değiştirin.
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('/api/categories');
+        const response = await axios.get(`${API_URL}/api/categories`);
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -26,7 +28,7 @@ const MenuEdit = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, [API_URL]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -95,7 +97,7 @@ const MenuEdit = () => {
 
   const handleSaveClick = async () => {
     try {
-      const response = await axios.put(`/api/items/${editedItem._id}`, editedItem);
+      const response = await axios.put(`${API_URL}/api/items/${editedItem._id}`, editedItem);
       setItems((prev) =>
         prev.map((item) => (item._id === response.data._id ? response.data : item))
       );
@@ -108,7 +110,7 @@ const MenuEdit = () => {
   const handleDeleteClick = async (id) => {
     if (window.confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
       try {
-        await axios.delete(`/api/items/${id}`);
+        await axios.delete(`${API_URL}/api/items/${id}`);
         setItems(items.filter((item) => item._id !== id));
       } catch (error) {
         console.error('Error deleting item:', error);
@@ -123,13 +125,12 @@ const MenuEdit = () => {
 
   return (
     <div className="menu-edit">
-      <Breadcrumb />
-      <h3>Menü Düzenleme</h3>
-      <p>Bu bölümde menüyü düzenleyebilirsiniz.</p>
+      <h3>Menü Bearbeiten</h3>
+      <p>Sie können das Menü in diesem Abschnitt bearbeiten.</p>
       <div className="category-select">
-        <label>Kategori Seçin:</label>
+        <label>Kategorie auswählen:</label>
         <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="">Kategori Seçin</option>
+          <option value="">Kategorie auswählen</option>
           {categories.map((category) => (
             <option key={category._id} value={category._id}>
               {category.name}
@@ -139,9 +140,9 @@ const MenuEdit = () => {
       </div>
       {selectedCategory && categories.find(cat => cat._id === selectedCategory) && (
         <div className="subcategory-select">
-          <label>Alt Kategori Seçin:</label>
+          <label>Unterkategorie auswählen:</label>
           <select value={selectedSubcategory} onChange={handleSubcategoryChange}>
-            <option value="">Alt Kategori Seçin</option>
+            <option value="">Unterkategorie auswählen</option>
             {categories
               .find((category) => category._id === selectedCategory)
               .subcategories.map((subcategory) => (
@@ -156,16 +157,16 @@ const MenuEdit = () => {
         {items.map((item) => (
           <div key={item._id} className="item-card">
             <span>{item.nr}. {item.name}</span>
-            <button onClick={() => handleEditClick(item)} className="edit-button">Düzenle</button>
-            <button onClick={() => handleDeleteClick(item._id)} className="delete-button">Sil</button>
+            <button onClick={() => handleEditClick(item)} className="edit-button">Bearbeiten</button>
+            <button onClick={() => handleDeleteClick(item._id)} className="delete-button">Löschen</button>
           </div>
         ))}
       </div>
       {selectedItem && editedItem && (
         <Modal isOpen={modalIsOpen} onRequestClose={handleCancelClick} className="modal">
-          <h4>{selectedItem.name} Düzenleme</h4>
+          <h4>{selectedItem.name} Bearbeiten</h4>
           <label>
-            Adı:
+            Name:
             <input
               type="text"
               name="name"
@@ -174,7 +175,7 @@ const MenuEdit = () => {
             />
           </label>
           <label>
-            Açıklama:
+            Beschreibung:
             <input
               type="text"
               name="description"
@@ -184,7 +185,7 @@ const MenuEdit = () => {
           </label>
           {Object.keys(editedItem.prices || {}).map((priceKey) => (
             <label key={priceKey}>
-              Fiyat ({priceKey}):
+              Preis ({priceKey}):
               <input
                 type="number"
                 name={priceKey}
@@ -193,11 +194,11 @@ const MenuEdit = () => {
               />
             </label>
           ))}
-          <h5>Ekstralar</h5>
+          <h5>Extras</h5>
           {(editedItem.extras || []).map((extra, index) => (
             <div key={index} className="extra-item">
               <label>
-                Ekstra Adı:
+                Extra Name:
                 <input
                   type="text"
                   name="name"
@@ -206,7 +207,7 @@ const MenuEdit = () => {
                 />
               </label>
               <label>
-                Fiyat:
+                Preis:
                 <input
                   type="number"
                   name="price"
@@ -214,12 +215,12 @@ const MenuEdit = () => {
                   onChange={(e) => handleExtraChange(e, index)}
                 />
               </label>
-              <button onClick={() => handleRemoveExtra(index)} className="remove-extra-button">Kaldır</button>
+              <button onClick={() => handleRemoveExtra(index)} className="remove-extra-button">Entfernen</button>
             </div>
           ))}
-          <button onClick={handleAddExtra} className="add-extra-button">Yeni Ekstra Ekle</button>
-          <button onClick={handleSaveClick} className="save-button">Kaydet</button>
-          <button onClick={handleCancelClick} className="cancel-button">İptal</button>
+          <button onClick={handleAddExtra} className="add-extra-button">Neue Extra hinzufügen</button>
+          <button onClick={handleSaveClick} className="save-button">Speichern</button>
+          <button onClick={handleCancelClick} className="cancel-button">Abbrechen</button>
         </Modal>
       )}
     </div>

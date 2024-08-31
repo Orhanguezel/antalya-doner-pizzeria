@@ -1,35 +1,112 @@
 .lieferung-orders {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .order-status-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-  
-  .order-status-buttons button {
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    font-family: inherit;
-    flex: 0 1 200px;
-  }
-  
-  .order-status-buttons button.active {
-    background-color: #0056b3;
-  }
-  
-  .order-list {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-  }
-  
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: var(--white-color); /* Beyaz arka plan rengi */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.lieferung-orders h3{
+  font-size: 2.8rem;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+
+.order-status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.order-status-buttons button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: var(--primary-color); /* Ana renk */
+  color: var(--white-color); /* Beyaz metin rengi */
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  font-family: inherit;
+  flex: 0 1 200px;
+}
+
+.order-status-buttons button.active {
+  background-color: var(--secondary-color); /* İkinci renk */
+  color: var(--primary-color); /* Ana renk */
+}
+
+.order-list {
+  padding: 20px;
+  background-color: var(--secondary-color); /* İkinci renk */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.order-card {
+  background-color: var(--white-color); /* Beyaz arka plan rengi */
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+}
+
+.order-card h4 {
+  margin: 10px 0;
+  color: var(--text-color); /* Genel metin rengi */
+}
+
+.order-card p {
+  color: var(--text-color); /* Genel metin rengi */
+}
+
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.order-actions button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: var(--success-color); /* Onaylama rengi */
+  color: var(--white-color); /* Beyaz metin rengi */
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  font-family: inherit;
+}
+
+.order-actions button:hover {
+  background-color: var(--success-hover-color); /* Onaylama hover rengi */
+}
+
+.order-actions button.archive {
+  background-color: var(--info-color); /* Bilgi rengi */
+}
+
+.order-actions button.archive:hover {
+  background-color: var(--info-hover-color); /* Bilgi hover rengi */
+}
+
+.order-actions button.delete {
+  background-color: var(--danger-color); /* Silme rengi */
+}
+
+.order-actions button.delete:hover {
+  background-color: var(--danger-hover-color); /* Silme hover rengi */
+}
+
+.confirm-delete {
+  background-color: var(--danger-color);
+  color: var(--white-color);
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+}

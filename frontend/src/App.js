@@ -14,13 +14,14 @@ import Analysis from './pages/Analysis';
 import MenuEdit from './pages/MenuEdit';
 import Authorization from './pages/Authorization';
 import ItemDetail from './pages/ItemDetail';
-import CartBar from './components/CartBar'; // CartBar bileşeni eklendi
-import AuthPage from './pages/AuthPage'; // AuthPage import edildi
-import { AuthProvider } from './context/AuthContext';
+import CartBar from './components/CartBar';
+import AuthPage from './pages/AuthPage';
+import ProfilePage from './pages/ProfilePage';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const [cart, setCart] = useState([]);
-  const [userInfo, setUserInfo] = useState(null); // Kullanıcı bilgilerini tutmak için state
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
@@ -93,9 +94,17 @@ const App = () => {
             <Route path="/kontakt" element={<Kontakt />} />
             <Route path="/menu" element={<Menu onAddToCart={onAddToCart} />} />
             <Route path="/warenkorb" element={<Warenkorb cart={cart} updateCartItemQuantity={updateCartItemQuantity} removeCartItem={removeCartItem} clearCart={clearCart} />} />
-            <Route path="/auth" element={<AuthPage setUserInfo={setUserInfo} />} />  {/* setUserInfo prop olarak geçildi */}
-            {/* Admin Panel with Nested Routes */}
-            <Route path="/admin/*" element={<AdminPanel />}>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/login" element={<Navigate to="/auth" />} />
+            <Route 
+              path="/admin/*" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminPanel />
+                </ProtectedRoute>
+              }
+            >
               <Route path="lieferung-orders" element={<LieferungOrders />} />
               <Route path="abholung-orders" element={<AbholungOrders />} />
               <Route path="restaurant-orders" element={<RestaurantOrders />} />

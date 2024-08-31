@@ -1,27 +1,25 @@
-/* Genel stil */
-.container {
+.user-management-container {
     margin-top: 20px;
     padding: 20px;
     background-color: var(--white-color);
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    text-align: center;
+.user-management-container h3 {
+    font-size: 2.8rem;
+    color: var(--text-color);
     margin-bottom: 20px;
-    font-size: 2.5rem;
-    color: var(--primary-color); /* Ana renk (örneğin, turuncu) */
+    text-align: center;
 }
 
 p {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1.2rem;
-    color: var(--text-color); /* Genel metin rengi */
+    color: var(--text-color);
 }
 
-/* Tablo stili */
 .table {
     margin-top: 20px;
     width: 100%;
@@ -29,8 +27,8 @@ p {
 }
 
 .table thead th {
-    background-color: var(--primary-color); /* Ana renk (örneğin, turuncu) */
-    color: var(--white-color); /* Beyaz metin rengi */
+    background-color: var(--primary-color);
+    color: var(--white-color);
     font-weight: bold;
     padding: 10px;
     text-align: center;
@@ -39,57 +37,97 @@ p {
 .table tbody td {
     padding: 10px;
     text-align: center;
-    color: var(--text-color); /* Genel metin rengi */
+    color: var(--text-color);
 }
 
 .table tbody tr:nth-child(even) {
-    background-color: #f2f2f2; /* Her ikinci satır için açık gri arka plan */
+    background-color: #f2f2f2;
 }
 
 .table tbody tr:nth-child(odd) {
-    background-color: var(--light-gray); /* Alternatif satır rengi */
+    background-color: var(--secondary-color);
 }
 
-/* Buton stili */
 .btn-warning {
     margin-right: 10px;
     color: var(--white-color);
-    background-color: var(--warning-color); /* Uyarı rengi (örneğin, sarı-turuncu) */
+    background-color: var(--warning-color);
     border-color: var(--warning-color);
 }
 
 .btn-warning:hover {
-    background-color: var(--warning-color-dark); /* Daha koyu uyarı rengi */
+    background-color: var(--warning-color-dark);
     border-color: var(--warning-color-dark);
 }
 
 .btn-danger {
     color: var(--white-color);
-    background-color: var(--danger-color); /* Tehlike rengi (örneğin, kırmızı) */
+    background-color: var(--danger-color);
     border-color: var(--danger-color);
 }
 
 .btn-danger:hover {
-    background-color: var(--danger-color-dark); /* Daha koyu tehlike rengi */
-    border-color: var(--danger-color-dark);
+    background-color: var(--danger-hover-color);
+    border-color: var(--danger-hover-color);
 }
 
-/* Hata mesajı */
 .error-message {
-    color: var(--danger-color); /* Tehlike rengi (örneğin, kırmızı) */
+    color: var(--danger-color);
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
 }
 
-/* Modal başlığı */
 .modal-title {
     font-size: 1.5rem;
-    color: var(--primary-color); /* Ana renk */
+    color: var(--primary-color);
 }
 
-/* Modal footer */
-.modal-footer {
+.custom-modal-dialog {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1050;
+    overflow: hidden;
 }
+
+.custom-modal-content {
+    width: 100%;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 80vh; /* Modalın yüksekliğini ekranın %80'ine sabitle */
+}
+
+.custom-modal-header, 
+.custom-modal-footer {
+    padding: 10px 20px;
+    border-bottom: 1px solid #e9ecef;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-modal-body {
+    padding: 20px;
+}
+
+/* Mobil uyarlama */
+@media (max-width: 768px) {
+    .custom-modal-dialog {
+        max-width: 90%;
+        max-height: 70vh; /* Küçük ekranlar için yüksekliği ayarlayalım */
+    }
+}
+

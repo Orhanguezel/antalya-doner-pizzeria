@@ -1,6 +1,6 @@
 .kontakt-container {
   text-align: center;
-  padding: 30px 20px;
+  padding: 20px 20px;
   background-color: var(--secondary-color);
   color: var(--text-color);
 }
@@ -8,6 +8,7 @@
 .kontakt-container h1 {
   font-size: 3.2rem;
   margin-bottom: 20px;
+  margin-top: 50px;
   color: var(--h1h2-color);
 }
 

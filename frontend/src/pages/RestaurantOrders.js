@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Breadcrumb from '../components/Breadcrumb';
 import './RestaurantOrders.css';
+import { useAuth } from '../context/AuthContext';
 
 const RestaurantOrders = () => {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
-  const [filter, setFilter] = useState('Gelen Siparişler');
+  const [filter, setFilter] = useState('Eingehende Bestellungen');
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const RestaurantOrders = () => {
         });
         setOrders(response.data);
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
     };
 
@@ -35,7 +35,7 @@ const RestaurantOrders = () => {
       });
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error('Fehler beim Aktualisieren des Bestellstatus:', error);
     }
   };
 
@@ -48,7 +48,7 @@ const RestaurantOrders = () => {
       });
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
-      console.error('Error deleting order:', error);
+      console.error('Fehler beim Löschen der Bestellung:', error);
     }
   };
 
@@ -61,7 +61,7 @@ const RestaurantOrders = () => {
       });
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
     } catch (error) {
-      console.error('Error archiving order:', error);
+      console.error('Fehler beim Archivieren der Bestellung:', error);
     }
   };
 
@@ -83,9 +83,9 @@ const RestaurantOrders = () => {
   const filteredOrders = orders
     .filter(order => order.orderType === 'dinein')
     .filter(order => {
-      if (filter === 'Gelen Siparişler') return order.status === 'Gelen Siparişler';
-      if (filter === 'Hazırlanan Siparişler') return order.status === 'Hazırlanan Siparişler';
-      if (filter === 'Teslim Edilen Siparişler') return order.status === 'Teslim Edilen Siparişler';
+      if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
+      if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
+      if (filter === 'Gelieferte Bestellungen') return order.status === 'Gelieferte Bestellungen';
       return false;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -98,12 +98,26 @@ const RestaurantOrders = () => {
 
   return (
     <div className="restaurant-orders">
-      <Breadcrumb />
-      <h3>Im Restaurant Essen Bestellungen</h3>
+      <h3>Im Restaurant </h3>
       <div className="order-status-buttons">
-        <button onClick={() => filterOrders('Gelen Siparişler')} className={filter === 'Gelen Siparişler' ? 'active' : ''}>Eingegangene</button>
-        <button onClick={() => filterOrders('Hazırlanan Siparişler')} className={filter === 'Hazırlanan Siparişler' ? 'active' : ''}>Vorbereitete</button>
-        <button onClick={() => filterOrders('Teslim Edilen Siparişler')} className={filter === 'Teslim Edilen Siparişler' ? 'active' : ''}>Servis</button>
+        <button 
+          onClick={() => filterOrders('Eingehende Bestellungen')} 
+          className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
+        >
+          Eingegangene
+        </button>
+        <button 
+          onClick={() => filterOrders('Bestellungen in Vorbereitung')} 
+          className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}
+        >
+          Vorbereitete
+        </button>
+        <button 
+          onClick={() => filterOrders('Gelieferte Bestellungen')} 
+          className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}
+        >
+          Serviert
+        </button>
       </div>
       <ul className="order-list">
         {filteredOrders.map(order => (
@@ -111,13 +125,13 @@ const RestaurantOrders = () => {
             <p><strong>Bestell-ID:</strong> {order._id}</p>
             <p><strong>Bestellzeit:</strong> {new Date(order.createdAt).toLocaleString()}</p>
             <p><strong>Kunde:</strong> {order.customerInfo.name} {order.customerInfo.surname}</p>
-            <p><strong>Email:</strong> {order.customerInfo.email}</p>
-            <p><strong>Telefon:</strong> {order.customerInfo.phone}</p>
-            <p><strong>Adresse:</strong> {order.customerInfo.address}</p>
-            <p><strong>Region:</strong> {order.customerInfo.region}</p>
-            <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>
+            {order.customerInfo.email && <p><strong>Email:</strong> {order.customerInfo.email}</p>}
+            {order.customerInfo.phone && <p><strong>Telefon:</strong> {order.customerInfo.phone}</p>}
+            {order.customerInfo.address && <p><strong>Adresse:</strong> {order.customerInfo.address}</p>}
+            {order.customerInfo.region && <p><strong>Region:</strong> {order.customerInfo.region}</p>}
+            {order.customerInfo.paymentMethod && <p><strong>Zahlungsmethode:</strong> {order.customerInfo.paymentMethod}</p>}
             <p><strong>Bestellart:</strong> {orderTypeMap[order.orderType]}</p>
-            <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>
+            {order.customerInfo.specialRequest && <p><strong>Besondere Wünsche:</strong> {order.customerInfo.specialRequest}</p>}
             <h4>Produkte:</h4>
             <ul className="order-items">
               {order.items.map(item => (
@@ -137,24 +151,34 @@ const RestaurantOrders = () => {
                 </li>
               ))}
             </ul>
-            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)).toFixed(2)}€</p>
+            <p><strong>Gesamt:</strong> {order.total.toFixed(2)} €</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
-              {filter === 'Gelen Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Hazırlanan Siparişler')}>Vorbereiten</button>}
-              {filter === 'Hazırlanan Siparişler' && <button onClick={() => updateOrderStatus(order._id, 'Teslim Edilen Siparişler')}>Servis</button>}
-              {filter === 'Teslim Edilen Siparişler' && (
+              {filter === 'Eingehende Bestellungen' && (
+                <button onClick={() => updateOrderStatus(order._id, 'Bestellungen in Vorbereitung')}>
+                  Vorbereiten
+                </button>
+              )}
+              {filter === 'Bestellungen in Vorbereitung' && (
+                <button onClick={() => updateOrderStatus(order._id, 'Gelieferte Bestellungen')}>
+                  Servieren
+                </button>
+              )}
+              {filter === 'Gelieferte Bestellungen' && (
                 <>
                   <button onClick={() => archiveOrder(order._id)}>Archivieren</button>
                   <button onClick={() => printOrder(order._id)}>Drucken</button>
                 </>
               )}
-              {filter !== 'Teslim Edilen Siparişler' && <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>}
+              {filter !== 'Gelieferte Bestellungen' && (
+                <button onClick={() => setConfirmDelete(order._id)}>Löschen</button>
+              )}
             </div>
             {confirmDelete === order._id && (
               <div className="confirm-delete">
-                <p>Gerçekten bu siparişi silmek istiyor musunuz?</p>
-                <button onClick={() => deleteOrder(order._id)}>Evet</button>
-                <button onClick={() => setConfirmDelete(null)}>Hayır</button>
+                <p>Möchten Sie diese Bestellung wirklich löschen?</p>
+                <button onClick={() => deleteOrder(order._id)}>Ja</button>
+                <button onClick={() => setConfirmDelete(null)}>Nein</button>
               </div>
             )}
           </li>

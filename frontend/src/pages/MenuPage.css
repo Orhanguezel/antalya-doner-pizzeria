@@ -9,8 +9,9 @@
 
 .menu-title {
   font-size: 3.2rem;
-  color: var(--h1h2-color); /* Başlık rengi */
-  margin: 10px 0;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  color: var(--h1h2-color);
 }
 
 .categories-container {
@@ -20,7 +21,7 @@
   justify-content: center;
   margin-bottom: 20px;
   position: sticky;
-  top: 0;
+  top: 40px;
   background: var(--white-color);
   z-index: 10;
   padding: 10px 0;
@@ -31,6 +32,7 @@
   font-size: 1.4rem;
   background-color: var(--secondary-color);
   color: var(--contrast-color);
+  font-weight: bold;
   border: 1px solid var(--contrast-color);
   border-radius: 5px;
   cursor: pointer;
@@ -79,7 +81,7 @@
 .items-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
 }
 
@@ -90,9 +92,9 @@
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
-  flex: 1 1 300px;
+  flex: 1 1 320px;
   max-width: 400px;
-  min-height: 100px;
+  min-height: 120px;
   background: var(--white-color);
   opacity: 1;
 }
@@ -106,7 +108,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  color: var(--text-color); /* Başlık ve metin rengi */
+  color: var(--text-color);
 }
 
 .card-header h4,
@@ -161,7 +163,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999; /* Daha yüksek bir değer verin */
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,7 +177,7 @@
   max-width: 600px;
   width: 80%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  z-index: 10000; /* Daha yüksek bir değer verin */
+  z-index: 10000;
 }
 
 .extras-container {

@@ -1,13 +1,14 @@
 
 
-python3 test_register.py
+python3 test_menu.py
 
 python3 test_login.py
 
 python3 category_api_test.py
 
 
-
+node -e "console.log(require('bcryptjs').hashSync('adminpassword', 10));"
+hash olusturma
 
 
 mongo
@@ -32,6 +33,8 @@ db.categories.find().pretty()   kategori kontrol etmek icin.
 
 
 mongosh -u admin -p adminpassword --authenticationDatabase admin
+use antalya_doner_pizzeria
+
 
 show dbs
 

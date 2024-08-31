@@ -1,50 +1,70 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUtensils, faShoppingCart, faPhone, faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo/1.png';  // Logoyu import edin
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import './Header.css';
+import { useAuth } from '../context/AuthContext';  // AuthContext'ten userInfo ve logout'u çekiyoruz
+import logo from '../assets/logo/11.png';
 
-const Header = ({ cart }) => {
-  const { token, logout } = useAuth();
+function Header() {
+  const { userInfo, logout } = useAuth();  // AuthContext'ten userInfo ve logout'u çekiyoruz
 
   return (
-    <header className="header">
-      <div className="logo">
-        <img src={logo} alt="Logo" />  {/* Logoyu burada kullanın */}
-      </div>
-      <nav className="navbar">
-        <Link to="/">
-          <FontAwesomeIcon icon={faHome} /> <span className="nav-link-text">Home</span>
-        </Link>
-        <Link to="/menu">
-          <FontAwesomeIcon icon={faUtensils} /> <span className="nav-link-text">Menu</span>
-        </Link>
-        <Link to="/warenkorb">
-          <FontAwesomeIcon icon={faShoppingCart} />
-          <span className="nav-link-text">Warenkorb</span>
-          {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
-        </Link>
-        <Link to="/kontakt">
-          <FontAwesomeIcon icon={faPhone} /> <span className="nav-link-text">Kontakt</span>
-        </Link>
-        {token ? (
-          <div className="nav-user">
-            <FontAwesomeIcon icon={faUser} />
-            <div className="user-dropdown">
-              <Link to="/profile">Profil</Link>
-              <button onClick={logout}>Logout</button>
-            </div>
-          </div>
-        ) : (
-          <Link to="/auth">
-            <FontAwesomeIcon icon={faSignInAlt} /> <span className="nav-link-text">Register/Login</span>
-          </Link>
-        )}
-      </nav>
+    <header>
+      <Navbar bg="light" variant="light" expand="lg" fixed="top">
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand className="d-flex align-items-center">
+              <img
+                src={logo}
+                alt="Antalya Döner & Pizza Logo"
+                className="header-logo"
+              />
+              <span className="ml-2">Antalya Döner & Pizzaria <span>Aldenhoven</span></span>
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <LinkContainer to="/">
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/menu">
+                <Nav.Link>Menu</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/warenkorb">
+                <Nav.Link>Warenkorb</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/kontakt">
+                <Nav.Link>Kontakt</Nav.Link>
+              </LinkContainer>
+              
+              {userInfo && userInfo.role === 'admin' && (
+                <LinkContainer to="/admin">
+                  <Nav.Link>Panel</Nav.Link>
+                </LinkContainer>
+              )}
+
+              {userInfo ? (
+                <NavDropdown title={userInfo.username} id="username">
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={logout}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/auth">
+                  <Nav.Link>Login/Register</Nav.Link>
+                </LinkContainer>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </header>
   );
-};
+}
 
 export default Header;
