@@ -20,3 +20,4 @@ def register_user(user):
 for user in users:
     register_user(user)
 
+

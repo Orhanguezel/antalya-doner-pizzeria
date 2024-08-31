@@ -1,0 +1,87 @@
+.profile-page {
+    margin-top: 2rem;
+}
+
+.profile-page > h2{
+    font-size: 3.2rem;
+    margin-bottom: 20px;
+    margin-top: 70px;
+    color: var(--h1h2-color);
+    text-align: center;
+}
+
+.loading-message {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.update-message {
+    color: var(--success-color);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-top: 50px;
+}
+
+.card {
+    border: 1px solid var(--contrast-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    color: var(--text-color);
+    font-size: 1.4rem;
+}
+
+.form-control {
+    border: 1px solid var(--contrast-color);
+    border-radius: 4px;
+    padding: 1rem;
+    font-size: 1.4rem;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 0.8rem 1.6rem;
+    font-size: 1.6rem;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: var(--success-hover-color);
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-page .card {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}

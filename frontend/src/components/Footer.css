@@ -93,7 +93,7 @@
 }
 
 .footer-design button:hover {
-  color: var(--contrast-color);
+  color: var(--white-color);
 }
 
 /* Responsive Design */

@@ -4,10 +4,8 @@ import { Chart, registerables } from 'chart.js';
 import { Line as LineChart, Bar as BarChart } from 'react-chartjs-2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Breadcrumb from '../components/Breadcrumb';
 import './Analysis.css';
 
-// Chart.js'nin gerekli bileşenlerini manuel olarak kaydedelim
 Chart.register(...registerables);
 
 const Analysis = () => {
@@ -20,11 +18,12 @@ const Analysis = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const response = await axios.get('/api/orders/archived');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/archived`);
+        console.log('Abgerufene Analysedaten:', response.data); // Gelen veriyi kontrol edin
         setArchivedOrders(response.data);
         processAnalytics(response.data);
       } catch (error) {
-        console.error('Error fetching analytics data:', error);
+        console.error('Fehler beim Abrufen der Analysedaten:', error);
       }
     };
 
@@ -64,7 +63,7 @@ const Analysis = () => {
     labels: dailyOrders.map(order => order.date),
     datasets: [
       {
-        label: 'Günlük Siparişler',
+        label: 'Tägliche Bestellungen',
         data: dailyOrders.map(order => order.count),
         borderColor: 'rgba(75,192,192,1)',
         fill: false,
@@ -76,7 +75,7 @@ const Analysis = () => {
     labels: topProducts.map(product => product.name),
     datasets: [
       {
-        label: 'En Çok Sipariş Edilen Ürünler',
+        label: 'Am häufigsten bestellte Produkte',
         data: topProducts.map(product => product.count),
         backgroundColor: 'rgba(153,102,255,0.6)',
       },
@@ -85,25 +84,24 @@ const Analysis = () => {
 
   return (
     <div className="analysis">
-      <Breadcrumb />
-      <h3>Analiz</h3>
+      <h3>Analyse</h3>
       <div className="date-picker-container">
         <div className="date-picker">
-          <label>Başlangıç Tarihi:</label>
-          <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+          <label>Startdatum:</label>
+          <DatePicker selected={startDate} onChange={date => setStartDate(date)} dateFormat="dd/MM/yyyy" />
         </div>
         <div className="date-picker">
-          <label>Bitiş Tarihi:</label>
-          <DatePicker selected={endDate} onChange={date => setEndDate(date)} />
+          <label>Enddatum:</label>
+          <DatePicker selected={endDate} onChange={date => setEndDate(date)} dateFormat="dd/MM/yyyy" />
         </div>
-        <button className="filter-button" onClick={filterAnalytics}>Filtrele</button>
+        <button className="filter-button" onClick={filterAnalytics}>Filtern</button>
       </div>
       <div className="chart-container">
-        <h4>Günlük Siparişler</h4>
+        <h4>Tägliche Bestellungen</h4>
         <LineChart data={dailyOrdersChartData} />
       </div>
       <div className="chart-container">
-        <h4>En Çok Sipariş Edilen Ürünler</h4>
+        <h4>Am häufigsten bestellte Produkte</h4>
         <BarChart data={topProductsChartData} />
       </div>
     </div>

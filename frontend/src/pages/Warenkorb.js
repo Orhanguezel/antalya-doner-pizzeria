@@ -32,7 +32,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
   const calculateTotal = () => {
     let total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
     if (orderType === 'delivery') {
-      total += 2;
+      total += 2; // Teslimat ücreti
     }
     return total.toFixed(2);
   };
@@ -71,7 +71,7 @@ const Warenkorb = ({ cart, updateCartItemQuantity, removeCartItem, clearCart }) 
       items: cart,
       total,
       orderType,
-      status: 'Gelen Siparişler',
+      status: 'Eingehende Bestellungen',
       deliveryFee: orderType === 'delivery' ? 2 : 0,
       archived: false,
     };

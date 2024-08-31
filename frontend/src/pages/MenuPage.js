@@ -23,16 +23,21 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
     const fetchCategories = async () => {
       try {
         const response = await api.get('/categories');
-        console.log('Gelen Veriler:', response.data); // Gelen veriyi kontrol edin
+        console.log('Gelen Veriler:', JSON.stringify(response.data, null, 2));
         setCategories(response.data);
+
+        if (categoryId) {
+          setActiveCategory(categoryId);
+        } else if (response.data.length > 0) {
+          setActiveCategory(response.data[0]._id);
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
-  
+
     fetchCategories();
   }, [categoryId, subcategoryId]);
-  
 
   const closeModal = () => {
     setSelectedItem(null);
@@ -85,13 +90,6 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
       extras,
       totalPrice,
       quantity,
-      itemDetails: { 
-        name: selectedItem.name,
-        nr: selectedItem.nr,
-        description: selectedItem.description,
-        prices: selectedItem.prices,
-        extras: selectedItem.extras,
-      }
     };
     onAddToCart(newItem);
     closeModal();
@@ -191,18 +189,18 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
           ) : (
             <p>Preis: {selectedPrice.value} €</p>
           )}
-          {selectedItem.extras && Object.keys(selectedItem.extras).length > 0 && (
+          {selectedItem.extras && Array.isArray(selectedItem.extras) && selectedItem.extras.length > 0 && (
             <div className="extras-container">
               <p>Extras:</p>
               <div className="extras-list">
-                {Object.entries(selectedItem.extras).map(([extraName, extraPrice], index) => (
+                {selectedItem.extras.map((extra, index) => (
                   <div key={index} className="extra-item">
                     <input
                       type="checkbox"
-                      id={`extra-${extraName}`}
-                      onChange={(e) => handleExtraChange(extraName, extraPrice, e.target.checked)}
+                      id={`extra-${extra.name}`}
+                      onChange={(e) => handleExtraChange(extra.name, extra.price, e.target.checked)}
                     />
-                    <label htmlFor={`extra-${extraName}`}>{extraName.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extraPrice} €)</label>
+                    <label htmlFor={`extra-${extra.name}`}>{extra.name.replace(/([a-z])([A-Z])/g, '$1 $2')} (+{extra.price.toFixed(2)} €)</label>
                   </div>
                 ))}
               </div>
@@ -253,16 +251,5 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
     </div>
   );
 };
-
-const openModal = (item) => {
-  setSelectedItem(item);
-  setQuantity(1);
-  setTotalPrice(item.prices.small); // Varsayılan fiyat
-};
-
-const closeModal = () => {
-  setSelectedItem(null);
-};
-
 
 export default MenuPage;

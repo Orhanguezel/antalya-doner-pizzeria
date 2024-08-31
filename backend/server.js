@@ -3,25 +3,26 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 
-// .env dosyasını sadece geliştirme ortamında yükleyin
+// Load environment variables from .env
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+// Import routes
 const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
-const itemRoutes = require('./routes/itemRoutes'); // Burada itemRoutes'u eklediğinizden emin olun
+const itemRoutes = require('./routes/itemRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// CORS yapılandırması
+// CORS configuration
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Frontend'in adresini buraya ekleyin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // İzin verilen HTTP metodları
-    credentials: true, // Credential'ları destekleyin (örn. cookie gönderme)
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
     optionsSuccessStatus: 200
 };
 
@@ -29,7 +30,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // MongoDB connection
-const mongoUri = process.env.MONGO_URI;
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/antalya_doner_pizzeria';
 const connectWithRetry = () => {
     mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => {
@@ -47,12 +48,12 @@ connectWithRetry();
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/subcategories', subcategoryRoutes);
-app.use('/api/items', itemRoutes); // Burada itemRoutes'u eklediğinizden emin olun
+app.use('/api/items', itemRoutes);
 app.use('/api/orders', orderRoutes);
 
 // Static file serving
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-app.use(express.static(path.join(__dirname, 'public'))); // Tüm statik dosyalar için servis
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Root route
 app.get('/', (req, res) => {
@@ -68,12 +69,12 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Server başlatma
+// Start server
 app.listen(port, () => {
     console.log(`Server is running on port: ${port} in ${process.env.NODE_ENV} mode`);
 });
 
-// Yüklü route'ları loglama (Sadece geliştirme ortamında)
+// Log loaded routes (only in development)
 if (process.env.NODE_ENV !== 'production') {
     console.log('Loaded Routes:');
     app._router.stack.forEach(function (r) {

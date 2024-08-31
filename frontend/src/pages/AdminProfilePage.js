@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'; // useNavigate'i import ettik
 import axios from 'axios';
 import LieferungOrders from './LieferungOrders';
 import AbholungOrders from './AbholungOrders';
 import RestaurantOrders from './RestaurantOrders';
 import Analysis from './Analysis';
 import MenuEdit from './MenuEdit';
-import UserManagementPage from './UserManagementPage'; // Doğru bileşeni import edin
+import UserManagementPage from './UserManagementPage';
 import Breadcrumb from '../components/Breadcrumb';
 import { useAuth } from '../context/AuthContext';
-import './AdminProfilePage.css'; // Doğru CSS dosyasını import edin
+import './AdminProfilePage.css';
 
 const AdminProfilePage = () => {
   const location = useLocation();
+  const navigate = useNavigate(); // useNavigate hook'unu tanımladık
   const { token } = useAuth();
   const [orderCounts, setOrderCounts] = useState({
     lieferung: 0,
@@ -25,10 +26,15 @@ const AdminProfilePage = () => {
   const [prevOrderCount, setPrevOrderCount] = useState(0);
 
   useEffect(() => {
+    // İlk yüklemede "Lieferung" sekmesine yönlendirme yapıyoruz
+    if (location.pathname === '/admin') {
+      navigate('/admin/lieferung-orders');
+    }
+
     if (Notification.permission !== "granted") {
       Notification.requestPermission();
     }
-  }, []);
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     const fetchOrderCounts = async () => {
@@ -44,8 +50,8 @@ const AdminProfilePage = () => {
 
         if (newOrderCount > prevOrderCount) {
           if (Notification.permission === "granted") {
-            new Notification("Yeni Sipariş!", {
-              body: "Yeni bir sipariş geldi.",
+            new Notification("Neue Bestellung!", {
+              body: "Eine neue Bestellung ist eingegangen.",
             });
           }
         }
@@ -72,27 +78,27 @@ const AdminProfilePage = () => {
 
   return (
     <div className="admin-panel">
-      <h2>Admin Profil Sayfası</h2>
-      <Breadcrumb />
+      <h2>Admin Panel</h2>
+      <Breadcrumb /> {/* Breadcrumb bileşeni burada kalıyor */}
       <nav className="admin-nav">
-        <button className={getActiveClass('/admin/lieferung-orders')}>
-          <Link to="/admin/lieferung-orders">Lieferung ({orderCounts.lieferung})</Link>
-        </button>
-        <button className={getActiveClass('/admin/abholung-orders')}>
-          <Link to="/admin/abholung-orders">Abholung ({orderCounts.abholung})</Link>
-        </button>
-        <button className={getActiveClass('/admin/restaurant-orders')}>
-          <Link to="/admin/restaurant-orders">Im Restaurant ({orderCounts.restaurant})</Link>
-        </button>
-        <button className={getActiveClass('/admin/analysis')}>
-          <Link to="/admin/analysis">Analiz</Link>
-        </button>
-        <button className={getActiveClass('/admin/menu-edit')}>
-          <Link to="/admin/menu-edit">Menü</Link>
-        </button>
-        <button className={getActiveClass('/admin/user-management')}>
-          <Link to="/admin/user-management">Kullanıcı Yönetimi</Link>
-        </button>
+        <Link to="/admin/lieferung-orders" className={`nav-links ${getActiveClass('/admin/lieferung-orders')}`}>
+          Lieferung ({orderCounts.lieferung})
+        </Link>
+        <Link to="/admin/abholung-orders" className={`nav-links ${getActiveClass('/admin/abholung-orders')}`}>
+          Abholung ({orderCounts.abholung})
+        </Link>
+        <Link to="/admin/restaurant-orders" className={`nav-links ${getActiveClass('/admin/restaurant-orders')}`}>
+          Im Restaurant ({orderCounts.restaurant})
+        </Link>
+        <Link to="/admin/analysis" className={`nav-links ${getActiveClass('/admin/analysis')}`}>
+          Analyse
+        </Link>
+        <Link to="/admin/menu-edit" className={`nav-links ${getActiveClass('/admin/menu-edit')}`}>
+          Menü
+        </Link>
+        <Link to="/admin/user-management" className={`nav-links ${getActiveClass('/admin/user-management')}`}>
+          Benutzerverwaltung
+        </Link>
       </nav>
       <div className="admin-content">
         <Routes>
@@ -101,7 +107,7 @@ const AdminProfilePage = () => {
           <Route path="/restaurant-orders" element={<RestaurantOrders />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/menu-edit" element={<MenuEdit />} />
-          <Route path="/user-management" element={<UserManagementPage />} /> {/* Kullanıcı Yönetimi rotası tanımlandı */}
+          <Route path="/user-management" element={<UserManagementPage />} />
         </Routes>
       </div>
     </div>

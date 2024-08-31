@@ -19,6 +19,7 @@
 
 .auth-page h2 {
     margin-bottom: 20px;
+    margin-top: 50px;
     text-align: center;
     color: var(--primary-color);
     font-size: 3.2rem;

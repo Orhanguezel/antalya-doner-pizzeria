@@ -1,108 +1,78 @@
+/* Header.css */
+
+/* Ensure the header is fixed at the top and the content doesn't overlap it */
 body {
-  padding-top: 70px; /* Navbar yüksekliği kadar üst boşluk bırak */
-  margin: 0;
-  padding: 0;
+  padding-top: 190px; /* Increased padding-top from 70px to 90px */
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 1rem;
-  background-color: #E65C00;
-  color: white;
-}
-
-.logo img {
-  max-height: 80px;
-  width: auto;
-}
-
+/* Navbar Styles */
 .navbar {
-  display: flex;
-  gap: 2rem; /* Aralıkları biraz artırdık */
+  background-color: var(--secondary-color); /* Light background color */
+  height: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
 }
 
-.navbar a, .nav-user {
-  display: flex;
-  align-items: center;
-  color: white;
-  text-decoration: none;
-  font-size: 1.8rem; /* Font büyüklüğünü artırdık */
-  position: relative;
+.navbar-brand {
+  font-weight: bold;
+  color: var(--primary-color); /* Custom brand color */
 }
 
-.nav-link-text {
-  margin-left: 0.8rem; /* İkon ile metin arasındaki boşluğu artırdık */
+.navbar-brand:hover {
+  color: var(--h1h2-color); /* Slightly darker color on hover */
 }
 
-.navbar a:hover, .nav-user:hover {
-  color: #ffcc00; /* Hover durumunda rengi değiştirdik */
+.navbar-nav .nav-link {
+  font-size:2.4rem; /* Adjust font size */
+  color: var(--text-color); /* Dark text color for links */
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.cart-count {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 0.3rem 0.6rem;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 1rem; /* Sayı büyüklüğünü de artırdık */
+.navbar-nav .nav-link:hover {
+  color: var(--primary-color); /* Link color on hover */
 }
 
-.nav-user {
-  position: relative;
-  cursor: pointer;
+.navbar-nav .active {
+  font-weight: bold;
+  color: var(--primary-color); /* Active link color */
 }
 
-.user-dropdown {
-  display: none;
-  position: absolute;
-  top: 1.2rem;
-  right: 0;
-  background-color: white;
-  color: black;
-  border-radius: 5px;
-  padding: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Drop-down menünün öne çıkmasını sağlamak için z-index değeri eklendi */
+.navbar-toggler {
+  border-color: var(--primary-color); /* Toggle button border color */
 }
 
-.nav-user:hover .user-dropdown {
-  display: block;
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%280, 123, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-.user-dropdown a, .user-dropdown button {
-  display: block;
-  padding: 0.8rem; /* İçeriği biraz daha büyüttük */
-  color: black;
-  text-decoration: none;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
+/* Header.css */
+.header-logo {
+  max-width: 50px;
+  height: auto;
+  margin-right: 10px;
 }
 
-.user-dropdown button:hover, .user-dropdown a:hover {
-  background-color: #f1f1f1;
+.navbar-brand span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
 }
 
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-  .navbar {
-    gap: 1.5rem; /* Küçük ekranlar için aralıkları azaltın */
-  }
+/* Style for the Aldenhoven text */
+.navbar-brand span span {
+  font-size: 1rem; /* Make the text smaller */
+  font-weight: normal; /* Make the text weight normal */
+  color: var(--text-color); /* Change color to match the standard text color */
+  margin-left: 5px; /* Optional: add a little space before the text */
+}
 
-  .nav-link-text {
-    display: none;
-  }
 
-  .navbar a {
-    font-size: 1.8rem; /* Küçük ekranlar için font büyüklüğünü biraz azaltın */
-  }
+.navbar-nav .nav-link {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-left: 10px;
+}
 
-  .logo img {
-    max-height: 70px;
-  }
+.navbar-nav .nav-link:hover {
+  color: var(--primary-color);
 }

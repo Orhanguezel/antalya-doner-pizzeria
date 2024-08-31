@@ -1,17 +1,28 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
-    const user = JSON.parse(localStorage.getItem('userInfo'));
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { userInfo } = useAuth();
 
-    // Kullanıcı login olmuş mu ve admin mi diye kontrol ediliyor.
-    if (!user || user.role !== 'admin') {
-        // Eğer kullanıcı giriş yapmamışsa ya da admin değilse, login sayfasına yönlendir.
-        return <Navigate to="/login" />;
-    }
+  if (!userInfo) {
+    // Kullanıcı giriş yapmamışsa login sayfasına yönlendir
+    return <Navigate to="/auth" />;
+  }
 
-    // Eğer kullanıcı admin ise, bileşeni render et.
-    return children;
+  if (requiredRole && userInfo.role !== requiredRole) {
+    // Kullanıcının rolü yetkisizse bir mesaj göster ve başka bir sayfaya yönlendir
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <h1>Zugriff verweigert</h1>
+        <p>Sie haben keine Berechtigung, diese Seite zu betreten.</p>
+        <button onClick={() => window.history.back()}>Zurück</button>
+      </div>
+    );
+  }
+
+  // Kullanıcının rolü yetkiliyse sayfayı göster
+  return children;
 };
 
 export default ProtectedRoute;

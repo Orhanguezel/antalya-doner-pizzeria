@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const register = asyncHandler(async (req, res) => {
   const { username, email, password, role } = req.body;
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ $or: [{ email }, { username }] });
   if (userExists) {
     res.status(400);
     throw new Error('Benutzer existiert bereits');
@@ -28,17 +28,27 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
-// Login User
+
+
+// Giriş kontrolü
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
+  if (!user) {
+    console.error('Email not found');
+    res.status(401);
+    throw new Error('Email nicht gefunden');
+  }
 
-  if (user && (await user.matchPassword(password))) {
-    if (user.isBlocked) {
-      res.status(403);
-      throw new Error('Dieser Benutzer ist gesperrt');
-    }
+  const isPasswordMatch = await user.matchPassword(password);
+  if (!isPasswordMatch) {
+    console.error('Password mismatch');
+    res.status(401);
+    throw new Error('Falsches Passwort');
+  }
 
+  if (user && isPasswordMatch) {
     res.json({
       _id: user._id,
       username: user.username,
@@ -51,6 +61,9 @@ const login = asyncHandler(async (req, res) => {
     throw new Error('Ungültige Email oder Passwort');
   }
 });
+
+
+
 
 // Get All Users
 const getAllUsers = asyncHandler(async (req, res) => {
