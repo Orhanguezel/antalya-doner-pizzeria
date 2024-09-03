@@ -28,9 +28,7 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-// Giriş kontrolü
+// Login User
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,12 +60,9 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
 // Get All Users
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}).select('-password'); // Parola hariç tüm kullanıcıları getir
+  const users = await User.find({}).select('-password');
   res.json(users);
 });
 
@@ -93,7 +88,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
 
     if (req.file) {
-      user.profileImage = `/uploads/profiles/${req.file.filename}`; // Profil resmi olarak kaydediyoruz
+      user.profileImage = `/uploads/profiles/${req.file.filename}`;
     }
 
     if (req.body.password) {
@@ -132,26 +127,23 @@ const updateUserRole = asyncHandler(async (req, res) => {
 
 // Forgot Password
 const forgotPassword = asyncHandler(async (req, res) => {
-  // Password reset logic goes here
   res.send('Forgot Password');
 });
 
 // Reset Password
 const resetPassword = asyncHandler(async (req, res) => {
-  // Password reset logic goes here
   res.send('Reset Password');
 });
 
 // Logout User
 const logout = asyncHandler(async (req, res) => {
-  // Optional: Implement token blacklist mechanism to invalidate JWT
   res.json({ message: 'User logged out' });
 });
 
 // Delete All Users
 const deleteAllUsers = asyncHandler(async (req, res) => {
   try {
-    const result = await User.deleteMany({ role: { $ne: 'admin' } }); // Admin haricindeki tüm kullanıcıları siler
+    const result = await User.deleteMany({ role: { $ne: 'admin' } });
     console.log(`Deleted ${result.deletedCount} users`);
     res.json({ message: 'All non-admin users deleted', deletedCount: result.deletedCount });
   } catch (error) {

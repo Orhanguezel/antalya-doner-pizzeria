@@ -11,7 +11,7 @@ function Header() {
   return (
     <header>
       <Navbar bg="light" variant="light" expand="lg" fixed="top">
-        <Container>
+        <Container fluid>
           <LinkContainer to="/">
             <Navbar.Brand className="d-flex align-items-center">
               <img
@@ -19,12 +19,12 @@ function Header() {
                 alt="Antalya Döner & Pizza Logo"
                 className="header-logo"
               />
-              <span className="ml-2">Antalya Döner & Pizzaria <span>Aldenhoven</span></span>
+              <span className="ml-2">Antalya Döner & Pizzaria <span>-Aldenhoven</span></span>
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
+            <Nav className="ml-auto d-flex align-items-center justify-content-end">
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>

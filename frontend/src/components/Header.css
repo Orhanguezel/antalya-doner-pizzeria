@@ -1,8 +1,6 @@
-/* Header.css */
-
-/* Ensure the header is fixed at the top and the content doesn't overlap it */
+/* Genel stiller */
 body {
-  padding-top: 190px; /* Increased padding-top from 70px to 90px */
+  padding-top: 70px; /* Küçük ekranlar için daha az padding */
 }
 
 /* Navbar Styles */
@@ -10,6 +8,7 @@ body {
   background-color: var(--secondary-color); /* Light background color */
   height: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  padding: 0 10px; /* Navbar'ın yatay padding'ini azaltmak için */
 }
 
 .navbar-brand {
@@ -22,10 +21,10 @@ body {
 }
 
 .navbar-nav .nav-link {
-  font-size:2.4rem; /* Adjust font size */
+  font-size: 1.4rem; /* Küçük ekranlar için ayarlanan daha küçük font boyutu */
   color: var(--text-color); /* Dark text color for links */
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .navbar-nav .nav-link:hover {
@@ -45,34 +44,69 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%280, 123, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* Header.css */
+/* Header Logo */
 .header-logo {
-  max-width: 50px;
+  max-width: 30px; /* Daha küçük logo boyutu */
   height: auto;
   margin-right: 10px;
 }
 
+/* Brand Text */
 .navbar-brand span {
-  font-size: 1.5rem;
+  font-size: 1.4rem; /* Daha küçük font boyutu */
   font-weight: bold;
   color: var(--primary-color);
 }
 
-/* Style for the Aldenhoven text */
+/* Aldenhoven Text Style */
 .navbar-brand span span {
-  font-size: 1rem; /* Make the text smaller */
-  font-weight: normal; /* Make the text weight normal */
-  color: var(--text-color); /* Change color to match the standard text color */
-  margin-left: 5px; /* Optional: add a little space before the text */
-}
-
-
-.navbar-nav .nav-link {
-  font-size: 1.2rem;
+  font-size: 1.2rem; /* Daha küçük font boyutu */
+  font-weight: normal;
   color: var(--text-color);
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
-.navbar-nav .nav-link:hover {
-  color: var(--primary-color);
+/* Responsive Design - Büyük Ekranlar İçin */
+@media (min-width: 768px) {
+  body {
+    padding-top: 90px; /* Büyük ekranlar için padding artırıldı */
+  }
+
+  .navbar-nav {
+    margin-left: auto; /* Linklerin sağa yaslanmasını sağlar */
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1.6rem; /* Büyük ekranlar için biraz daha büyük font boyutu */
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .navbar-brand span {
+    font-size: 1.6rem;
+  }
+
+  .navbar-brand span span {
+    font-size: 1.4rem; /* Büyük ekranlar için metin boyutu */
+  }
+
+  .header-logo {
+    max-width: 40px; /* Büyük ekranlar için logo boyutu artırıldı */
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-nav {
+    margin-left: auto; /* Linklerin sağa yaslanmasını sağlar */
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1.8rem; /* Daha büyük ekranlar için daha büyük font boyutu */
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .header-logo {
+    max-width: 50px; /* Daha büyük ekranlar için logo boyutu artırıldı */
+  }
 }

@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, default: 'user' },
-  profileImage: { type: String }, // Profil fotoğrafı için alan
+  profileImage: { type: String },
 }, {
   timestamps: true
 });
