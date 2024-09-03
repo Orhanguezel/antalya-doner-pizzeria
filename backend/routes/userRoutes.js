@@ -12,20 +12,18 @@ const {
   deleteAllUsers,
 } = require('../controllers/userController');
 const { protect, admin } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
-// Public routes
 router.post('/register', register);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 
-// Protected routes (require authentication)
-router.put('/profile', protect, updateProfile);
+router.put('/profile', protect, upload.single('profileImage'), updateProfile);
 router.post('/logout', protect, logout);
 
-// Admin routes (require admin privileges)
 router.get('/', protect, admin, getAllUsers);
 router.put('/:id/role', protect, admin, updateUserRole);
 router.delete('/:id', protect, admin, blockUser);

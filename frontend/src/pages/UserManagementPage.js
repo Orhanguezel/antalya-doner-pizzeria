@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../axios';
-import { Table, Button, Container, Modal, Form } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
+import defaultProfileImage from '../assets/defaultProfileImage.png';
 import './UserManagementPage.css';
 
 const UserManagementPage = () => {
     const [users, setUsers] = useState([]);
-    const [error, setError] = useState('');
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [editUserId, setEditUserId] = useState(null);
     const [role, setRole] = useState('');
+    const [blocked, setBlocked] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [address, setAddress] = useState('');
+    const [photo, setPhoto] = useState(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -22,20 +23,73 @@ const UserManagementPage = () => {
                 });
                 setUsers(data);
             } catch (error) {
-                console.error('Fehler beim Abrufen der Benutzer:', error.message, error.response?.data);
-                setError('Fehler beim Abrufen der Benutzer.');
+                console.error('Fehler beim Abrufen der Benutzer:', error.message);
             }
         };
-
         fetchUsers();
     }, []);
 
     const handleEdit = (user) => {
-        setCurrentUser(user);
-        setUsername(user.username);
-        setEmail(user.email);
+        setEditUserId(user._id);
         setRole(user.role);
-        setShowEditModal(true);
+        setBlocked(user.blocked);
+        setPhoneNumber(user.phoneNumber || '');
+        setAddress(user.address || '');
+        setPhoto(null);
+    };
+
+    const handleSaveChanges = async () => {
+        const formData = new FormData();
+        formData.append('role', role);
+        formData.append('blocked', blocked);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('address', address);
+        if (photo) {
+            formData.append('photo', photo);
+        }
+    
+        try {
+            const response = await axios.put(`/users/${editUserId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            const updatedUsers = users.map(user =>
+                user._id === editUserId
+                    ? {
+                          ...user,
+                          role,
+                          blocked,
+                          phoneNumber,
+                          address,
+                          photo: response.data.photo || user.photo,
+                      }
+                    : user
+            );
+            setUsers(updatedUsers);
+            setEditUserId(null);
+        } catch (error) {
+            console.error('Fehler beim Aktualisieren des Benutzers:', error.message);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    };
+    
+
+    const handleCancelEdit = () => {
+        setEditUserId(null);
     };
 
     const handleDelete = async (userId) => {
@@ -47,118 +101,133 @@ const UserManagementPage = () => {
             });
             setUsers(users.filter(user => user._id !== userId));
         } catch (error) {
-            console.error('Fehler beim Löschen des Benutzers:', error.message, error.response?.data);
-            setError('Fehler beim Löschen des Benutzers.');
+            console.error('Fehler beim Löschen des Benutzers:', error.message);
         }
     };
 
-    const handleSaveChanges = async () => {
-        try {
-            const updatedUser = { username, email, role };
-            await axios.put(`/users/${currentUser._id}`, updatedUser, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            setUsers(users.map(user => user._id === currentUser._id ? { ...user, ...updatedUser } : user));
-            setShowEditModal(false);
-        } catch (error) {
-            console.error('Fehler beim Aktualisieren des Benutzers:', error.message, error.response?.data);
-            setError('Fehler beim Aktualisieren des Benutzers.');
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPhoto(file);
         }
-    };
-
-    const handleCloseModal = () => {
-        setShowEditModal(false);
     };
 
     return (
-        <Container className="user-management-container">
+        <Container className="benutzerverwaltung-container">
             <h3>Benutzerverwaltung</h3>
-            <p>Verwalten Sie hier alle registrierten Benutzer.</p>
-            {error && <p className="error-message">{error}</p>}
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Benutzername</th>
-                        <th>Email</th>
-                        <th>Rolle</th>
-                        <th>Aktionen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.length > 0 ? (
-                        users.map(user => (
-                            <tr key={user._id}>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.role}</td>
-                                <td>
-                                    <Button variant="warning" onClick={() => handleEdit(user)}>Bearbeiten</Button>
-                                    <Button variant="danger" onClick={() => handleDelete(user._id)}>Löschen</Button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4" className="text-center">Keine Benutzer gefunden.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-
-            <Modal
-    dialogClassName="custom-modal-dialog"
-    contentClassName="custom-modal-content"
-    show={showEditModal}
-    onHide={handleCloseModal}
-    centered
->
-    <Modal.Header className="custom-modal-header" closeButton>
-        <Modal.Title>Benutzer bearbeiten</Modal.Title>
-    </Modal.Header>
-    <Modal.Body className="custom-modal-body">
-        <Form>
-            <Form.Group controlId="formUsername">
-                <Form.Label>Benutzername</Form.Label>
-                <Form.Control
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </Form.Group>
-            <Form.Group controlId="formEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </Form.Group>
-            <Form.Group controlId="formRole">
-                <Form.Label>Rolle</Form.Label>
-                <Form.Control
-                    as="select"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </Form.Control>
-            </Form.Group>
-        </Form>
-    </Modal.Body>
-    <Modal.Footer className="custom-modal-footer">
-        <Button variant="secondary" onClick={handleCloseModal}>
-            Schließen
-        </Button>
-        <Button variant="primary" onClick={handleSaveChanges}>
-            Änderungen speichern
-        </Button>
-    </Modal.Footer>
-</Modal>
-
-
+            <p>Verwalten Sie alle registrierten Benutzer hier.</p>
+            {users.length > 0 ? (
+                users.map(user => (
+                    <div key={user._id} className="user-info-container">
+                        <table className="table">
+                            <tbody>
+                                <tr>
+                                    <td data-label="Benutzername">Benutzername</td>
+                                    <td>{user.username}</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Email">Email</td>
+                                    <td>{user.email}</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Rolle">Rolle</td>
+                                    <td>
+                                        {editUserId === user._id ? (
+                                            <Form.Control
+                                                as="select"
+                                                value={role}
+                                                onChange={(e) => setRole(e.target.value)}
+                                            >
+                                                <option value="user">User</option>
+                                                <option value="admin">Admin</option>
+                                            </Form.Control>
+                                        ) : (
+                                            user.role
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Blockiert">Blockiert</td>
+                                    <td>
+                                        {editUserId === user._id ? (
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={blocked}
+                                                onChange={(e) => setBlocked(e.target.checked)}
+                                                label="Blockiert"
+                                            />
+                                        ) : (
+                                            user.blocked ? "Ja" : "Nein"
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Telefonnummer">Telefonnummer</td>
+                                    <td>
+                                        {editUserId === user._id ? (
+                                            <Form.Control
+                                                type="text"
+                                                value={phoneNumber}
+                                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                            />
+                                        ) : (
+                                            user.phoneNumber || "N/A"
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Adresse">Adresse</td>
+                                    <td>
+                                        {editUserId === user._id ? (
+                                            <Form.Control
+                                                type="text"
+                                                value={address}
+                                                onChange={(e) => setAddress(e.target.value)}
+                                            />
+                                        ) : (
+                                            user.address || "N/A"
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Foto">Foto</td>
+                                    <td>
+                                        <div className="user-photo">
+                                            <img
+                                                src={user.photo ? user.photo : defaultProfileImage}
+                                                alt="Benutzer Foto"
+                                            />
+                                            {editUserId === user._id && (
+                                                <Form.Group controlId="formFile">
+                                                    <Form.Label>Foto ändern</Form.Label>
+                                                    <Form.Control type="file" onChange={handleFileChange} />
+                                                </Form.Group>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="2">
+                                        {editUserId === user._id ? (
+                                            <>
+                                                <Button variant="primary" onClick={handleSaveChanges}>Speichern</Button>
+                                                <Button variant="secondary" onClick={handleCancelEdit}>Abbrechen</Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button variant="warning" onClick={() => handleEdit(user)}>Bearbeiten</Button>
+                                                <Button variant="danger" onClick={() => handleDelete(user._id)}>Löschen</Button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                ))
+            ) : (
+                <p className="text-center">Keine Benutzer gefunden.</p>
+            )}
         </Container>
     );
 };

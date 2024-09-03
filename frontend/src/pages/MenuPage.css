@@ -1,10 +1,12 @@
 .menu-page {
   padding: 20px;
+  z-index: 1;
 }
 
 .menu-header {
   text-align: center;
   margin-bottom: 20px;
+  z-index: 2;
 }
 
 .menu-title {
@@ -12,23 +14,24 @@
   margin-bottom: 20px;
   margin-top: 50px;
   color: var(--h1h2-color);
+  z-index: 3;
 }
 
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   justify-content: center;
   margin-bottom: 20px;
   position: sticky;
   top: 40px;
   background: var(--white-color);
   z-index: 10;
-  padding: 10px 0;
+  padding: 6px 0;
 }
 
 .category-button {
-  padding: 10px 15px;
+  padding: 5px 5px;
   font-size: 1.4rem;
   background-color: var(--secondary-color);
   color: var(--contrast-color);
@@ -37,8 +40,9 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, transform 0.3s ease;
-  margin: 8px;
+  margin: 4px;
   position: relative;
+  z-index: 5;
 }
 
 .category-button:hover {
@@ -83,6 +87,7 @@
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
+  z-index: 4;
 }
 
 .card {
@@ -97,6 +102,7 @@
   min-height: 120px;
   background: var(--white-color);
   opacity: 1;
+  z-index: 3;
 }
 
 .card:hover {
@@ -109,6 +115,7 @@
   align-items: center;
   margin-bottom: 10px;
   color: var(--text-color);
+  z-index: 2;
 }
 
 .card-header h4,
@@ -131,6 +138,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 }
 
 .add-button {
@@ -149,6 +157,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 }
 
 .add-button:hover,
@@ -163,10 +172,11 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto; /* İçeriğin ekranı taşması durumunda kaydırma özelliği eklemek için */
 }
 
 .modal {
@@ -175,31 +185,37 @@
   border-radius: 10px;
   padding: 20px;
   max-width: 600px;
+  min-width: 300px;
   width: 80%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
+  z-index: 1000;
+  overflow: auto; /* İçeriğin modal boyutlarını aşması durumunda kaydırma çubukları eklemek için */
 }
 
 .extras-container {
   margin-top: 5px;
+  z-index: 3;
 }
 
 .extras-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
   font-size: 1.4rem;
   color: var(--text-color);
+  z-index: 3;
 }
 
 .extra-item {
   display: inline-flex;
   align-items: center;
   margin-right: 5px;
+  z-index: 3;
 }
 
 .extra-item input {
   margin-right: 5px;
+  z-index: 3;
 }
 
 .quantity-controls {
@@ -207,6 +223,7 @@
   align-items: center;
   gap: 5px;
   margin-top: 15px;
+  z-index: 3;
 }
 
 .quantity-controls button {
@@ -216,15 +233,18 @@
   padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
+  z-index: 3;
 }
 
 .quantity-controls button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  z-index: 3;
 }
 
 .quantity-controls span {
   margin: 0 5px;
+  z-index: 3;
 }
 
 .add-to-cart-button {
@@ -236,6 +256,7 @@
   cursor: pointer;
   margin-top: 15px;
   transition: background-color 0.3s ease;
+  z-index: 3;
 }
 
 .add-to-cart-button:hover {
@@ -252,28 +273,19 @@
   margin-top: 15px;
   margin-left: 10px;
   transition: background-color 0.3s ease;
+  z-index: 3;
 }
 
 .close-button:hover {
   background-color: var(--danger-hover-color);
 }
 
-@media (max-width: 600px) {
-  .card {
-    flex: 1 1 100%;
-    margin: 10px 0;
-  }
-
-  .category-button {
-    flex: 1 1 auto;
-    margin: 5px;
-  }
-}
 
 .subcategory-images {
   display: flex;
   justify-content: center;
   gap: 10px;
+  z-index: 3;
 }
 
 .subcategory-images img {
@@ -281,9 +293,23 @@
   max-width: 450px;
   border-radius: 5px;
   transition: transform 0.3s, box-shadow 0.3s;
+  z-index: 3;
 }
 
 .subcategory-images img:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* Responsive Design - Büyük Ekranlar İçin */
+@media (min-width: 960px) {
+  .category-button {
+    padding: 8px 10px; /* Büyük ekranlarda padding artışı */
+    font-size: 1.7rem; /* Yazı boyutu artışı */
+  }
+
+  .modal {
+    max-width: 80%; /* Büyük ekranlarda modal genişliğini artırmak için */
+  }
 }

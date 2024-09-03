@@ -12,12 +12,12 @@ import AbholungOrders from './pages/AbholungOrders';
 import RestaurantOrders from './pages/RestaurantOrders';
 import Analysis from './pages/Analysis';
 import MenuEdit from './pages/MenuEdit';
-import Authorization from './pages/Authorization';
 import ItemDetail from './pages/ItemDetail';
 import CartBar from './components/CartBar';
 import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import UserManagementPage from './pages/UserManagementPage'; // Yeni eklenen bileşen
+import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -110,7 +110,7 @@ const App = () => {
               <Route path="restaurant-orders" element={<RestaurantOrders />} />
               <Route path="analysis" element={<Analysis />} />
               <Route path="menu-edit" element={<MenuEdit />} />
-              <Route path="authorization" element={<Authorization />} />
+              <Route path="user-management" element={<UserManagementPage />} /> {/* Buraya yeni bileşen eklendi */}
               <Route path="*" element={<Navigate to="lieferung-orders" />} />
             </Route>
             <Route path="/items/:id" element={<ItemDetail />} />

@@ -5,38 +5,35 @@ const User = require('../models/User');
 const protect = asyncHandler(async (req, res, next) => {
     let token;
 
-    // Bearer token kontrolü
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            token = req.headers.authorization.split(' ')[1];  // "Bearer <token>" şeklindeki header'dan token'ı alıyoruz
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);  // JWT token'ı doğruluyoruz
+            token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            // Kullanıcıyı token'dan alıyoruz
-            req.user = await User.findById(decoded.id).select('-password');  // Kullanıcıyı DB'den alıyoruz, password'u çıkartıyoruz
+            req.user = await User.findById(decoded.id).select('-password');
 
             if (!req.user) {
                 res.status(401);
-                throw new Error('Not authorized, user not found');  // Eğer kullanıcı bulunamazsa hata döndürüyoruz
+                throw new Error('Not authorized, user not found');
             }
 
-            next();  // Eğer her şey doğruysa, sonraki middleware'e geçiyoruz
+            next();
         } catch (error) {
             console.error('Token verification failed:', error);
             res.status(401);
-            throw new Error('Not authorized, token failed');  // Token doğrulama başarısız olursa hata döndürüyoruz
+            throw new Error('Not authorized, token failed');
         }
     } else {
         res.status(401);
-        throw new Error('Not authorized, no token');  // Token yoksa hata döndürüyoruz
+        throw new Error('Not authorized, no token');
     }
 });
 
-// Admin yetkisi kontrolü
 const admin = (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {  // Kullanıcının rolü admin mi kontrol ediyoruz
-        next();  // Eğer adminse, sonraki middleware'e geçiyoruz
+    if (req.user && req.user.role === 'admin') {
+        next();
     } else {
-        res.status(403);  // 403 Forbidden, çünkü kullanıcı var ama yetkisi yok
+        res.status(403);
         throw new Error('Not authorized as an admin');
     }
 };

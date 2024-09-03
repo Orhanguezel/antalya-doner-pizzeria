@@ -1,21 +1,24 @@
-.user-management-container {
+.benutzerverwaltung-container {
     margin-top: 20px;
     padding: 20px;
     background-color: var(--white-color);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.user-management-container h3 {
-    font-size: 2.8rem;
+.benutzerverwaltung-container h3 {
+    font-size: 2.4rem;
     color: var(--text-color);
     margin-bottom: 20px;
     text-align: center;
 }
 
-p {
+.benutzerverwaltung-container p {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     font-size: 1.2rem;
     color: var(--text-color);
 }
@@ -26,18 +29,19 @@ p {
     border-collapse: collapse;
 }
 
-.table thead th {
-    background-color: var(--primary-color);
-    color: var(--white-color);
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
+.table tbody td {
+    padding: 15px;
+    color: var(--text-color);
+    vertical-align: middle;
+    position: relative;
+    text-align: left;
 }
 
-.table tbody td {
-    padding: 10px;
-    text-align: center;
-    color: var(--text-color);
+.table tbody td img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
 }
 
 .table tbody tr:nth-child(even) {
@@ -48,86 +52,61 @@ p {
     background-color: var(--secondary-color);
 }
 
-.btn-warning {
+.btn-primary {
     margin-right: 10px;
     color: var(--white-color);
-    background-color: var(--warning-color);
-    border-color: var(--warning-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
-.btn-warning:hover {
-    background-color: var(--warning-color-dark);
-    border-color: var(--warning-color-dark);
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
 }
 
-.btn-danger {
+.btn-secondary {
     color: var(--white-color);
-    background-color: var(--danger-color);
-    border-color: var(--danger-color);
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
-.btn-danger:hover {
-    background-color: var(--danger-hover-color);
-    border-color: var(--danger-hover-color);
+.btn-secondary:hover {
+    background-color: var(--secondary-hover-color);
+    border-color: var(--secondary-hover-color);
 }
 
-.error-message {
-    color: var(--danger-color);
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.modal-title {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-}
-
-.custom-modal-dialog {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 500px;
-    background-color: var(--white-color);
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1050;
-    overflow: hidden;
-}
-
-.custom-modal-content {
-    width: 100%;
-    background-color: var(--white-color);
-    border-radius: 10px;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 80vh; /* Modalın yüksekliğini ekranın %80'ine sabitle */
-}
-
-.custom-modal-header, 
-.custom-modal-footer {
-    padding: 10px 20px;
-    border-bottom: 1px solid #e9ecef;
-    border-top: 1px solid #e9ecef;
+.table tbody td[data-label] {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.custom-modal-body {
-    padding: 20px;
-}
-
 /* Mobil uyarlama */
 @media (max-width: 768px) {
-    .custom-modal-dialog {
-        max-width: 90%;
-        max-height: 70vh; /* Küçük ekranlar için yüksekliği ayarlayalım */
+    .table thead {
+        display: none;
+    }
+
+    .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+
+    .table tbody td {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: left;
+    }
+
+    .table tbody td[data-label]::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 10px;
+        color: var(--text-color-dark);
+    }
+
+    .benutzerverwaltung-container {
+        padding: 10px;
     }
 }
-
