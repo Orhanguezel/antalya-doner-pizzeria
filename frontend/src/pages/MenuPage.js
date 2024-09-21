@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { zusatztoffeMap, allergeneMap } from "../constants";
 import Modal from "react-modal";
 import "./MenuPage.css";
 import api from "../axios";
@@ -229,41 +230,44 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
                     checked={selectedPrice.key === key}
                     onChange={() => handlePriceChange(key, value)}
                   />
-                  <label htmlFor={`price-${key}`}>{key}: {value} €</label>
+                  <label htmlFor={`price-${key}`}>
+                    {key}: {value} €
+                  </label>
                 </div>
               ))}
             </div>
           ) : (
             <p>Preis: {selectedPrice.value} €</p>
           )}
-          {selectedItem.extras && Object.keys(selectedItem.extras).length > 0 && (
-            <div className="extras-container">
-              <p>Ekstralar:</p>
-              <div className="extras-list">
-                {Object.entries(selectedItem.extras).map(
-                  ([extraName, extraPrice], index) => (
-                    <div key={index}>
-                      <input
-                        type="checkbox"
-                        id={`extra-${extraName}`}
-                        onChange={(e) =>
-                          handleExtraChange(
-                            extraName,
-                            extraPrice,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      <label htmlFor={`extra-${extraName}`}>
-                        {extraName.replace(/([a-z])([A-Z])/g, "$1 $2")} (+{" "}
-                        {extraPrice} €)
-                      </label>
-                    </div>
-                  )
-                )}
+          {selectedItem.extras &&
+            Object.keys(selectedItem.extras).length > 0 && (
+              <div className="extras-container">
+                <p>Ekstralar:</p>
+                <div className="extras-list">
+                  {Object.entries(selectedItem.extras).map(
+                    ([extraName, extraPrice], index) => (
+                      <div key={index}>
+                        <input
+                          type="checkbox"
+                          id={`extra-${extraName}`}
+                          onChange={(e) =>
+                            handleExtraChange(
+                              extraName,
+                              extraPrice,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <label htmlFor={`extra-${extraName}`}>
+                          {extraName.replace(/([a-z])([A-Z])/g, "$1 $2")} (+{" "}
+                          {extraPrice} €)
+                        </label>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <div className="quantity-controls">
             <button onClick={decreaseQuantity} disabled={quantity <= 1}>
               -
@@ -286,6 +290,31 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
             {infoItem.nr}. {infoItem.name}
           </h2>
           <p>{infoItem.description}</p>
+
+          {/* Zusatzstoffe Bilgilerini Göster */}
+          {infoItem.zusatztoffe && infoItem.zusatztoffe.length > 0 && (
+            <div>
+              <p>Zusatzstoffe:</p>
+              <ul>
+                {infoItem.zusatztoffe.map((code) => (
+                  <li key={code}>{zusatztoffeMap[code]}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Allergene Bilgilerini Göster */}
+          {infoItem.allergene && infoItem.allergene.length > 0 && (
+            <div>
+              <p>Allergene:</p>
+              <ul>
+                {infoItem.allergene.map((code) => (
+                  <li key={code}>{allergeneMap[code]}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <button onClick={() => setInfoItem(null)}>Schließen</button>
         </Modal>
       )}
