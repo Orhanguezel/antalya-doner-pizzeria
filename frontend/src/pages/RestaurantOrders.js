@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../axios'; // axios instance'ı kullanıyoruz
 import './RestaurantOrders.css';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,12 +12,13 @@ const RestaurantOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
+        // api instance'ı üzerinden GET isteği yapıyoruz
+        const response = await api.get('/orders', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
-        setOrders(response.data);
+        setOrders(response.data); // Gelen veriyi state'e kaydediyoruz
       } catch (error) {
         console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
@@ -28,9 +29,9 @@ const RestaurantOrders = () => {
 
   const updateOrderStatus = async (orderId, status) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/status`, { status }, {
+      const response = await api.put(`/orders/${orderId}/status`, { status }, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
@@ -41,9 +42,9 @@ const RestaurantOrders = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/orders/${orderId}`, {
+      await api.delete(`/orders/${orderId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
       setOrders(orders.filter(order => order._id !== orderId));
@@ -54,9 +55,9 @@ const RestaurantOrders = () => {
 
   const archiveOrder = async (orderId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/archive`, null, {
+      const response = await api.put(`/orders/${orderId}/archive`, null, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
@@ -81,7 +82,7 @@ const RestaurantOrders = () => {
   };
 
   const filteredOrders = orders
-    .filter(order => order.orderType === 'dinein')
+    .filter(order => order.orderType === 'dinein') // 'Im Restaurant essen' olan siparişleri filtreliyoruz
     .filter(order => {
       if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
       if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
@@ -98,13 +99,13 @@ const RestaurantOrders = () => {
 
   return (
     <div className="restaurant-orders">
-      <h3>Im Restaurant </h3>
+      <h3>Im Restaurant Bestellungen</h3>
       <div className="order-status-buttons">
         <button 
           onClick={() => filterOrders('Eingehende Bestellungen')} 
           className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
         >
-          Eingegangene
+          Eingehende
         </button>
         <button 
           onClick={() => filterOrders('Bestellungen in Vorbereitung')} 

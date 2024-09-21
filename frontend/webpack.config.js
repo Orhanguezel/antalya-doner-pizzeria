@@ -2,6 +2,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const path = require('path');
+const dotenv = require('dotenv');
+
+// .env dosyasını yükle
+dotenv.config();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -36,9 +40,9 @@ module.exports = {
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin({
-      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api'),
     }),
+    
     
   ].filter(Boolean),
   devServer: {

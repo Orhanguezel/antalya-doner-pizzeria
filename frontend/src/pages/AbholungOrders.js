@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../axios';  // axios'u api instance olarak import ediyoruz
 import './AbholungOrders.css';
 import { useAuth } from '../context/AuthContext'; // useAuth hook'unu kullanmak için import edin
 
@@ -12,12 +12,13 @@ const AbholungOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
+        // api instance'ı üzerinden GET isteği yapıyoruz
+        const response = await api.get('/orders', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
-        setOrders(response.data);
+        setOrders(response.data); // Siparişleri state'e kaydet
       } catch (error) {
         console.error('Error fetching orders:', error);
       }
@@ -28,11 +29,12 @@ const AbholungOrders = () => {
 
   const updateOrderStatus = async (orderId, status) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/status`, { status }, {
+      const response = await api.put(`/orders/${orderId}/status`, { status }, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişin durumunu güncelle
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -41,11 +43,12 @@ const AbholungOrders = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/orders/${orderId}`, {
+      await api.delete(`/orders/${orderId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişi listeden kaldır
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
       console.error('Error deleting order:', error);
@@ -54,11 +57,12 @@ const AbholungOrders = () => {
 
   const archiveOrder = async (orderId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/orders/${orderId}/archive`, null, {
+      const response = await api.put(`/orders/${orderId}/archive`, null, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişi arşivle
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
     } catch (error) {
       console.error('Error archiving order:', error);
@@ -81,7 +85,7 @@ const AbholungOrders = () => {
   };
 
   const filteredOrders = orders
-    .filter(order => order.orderType === 'pickup')
+    .filter(order => order.orderType === 'pickup') // Sadece 'pickup' siparişlerini filtrele
     .filter(order => {
       if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
       if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
@@ -167,9 +171,9 @@ const AbholungOrders = () => {
             </div>
             {confirmDelete === order._id && (
               <div className="confirm-delete">
-                <p>Are you sure you want to delete this order?</p>
-                <button onClick={() => deleteOrder(order._id)}>Yes</button>
-                <button onClick={() => setConfirmDelete(null)}>No</button>
+                <p>Möchten Sie diese Bestellung wirklich löschen?</p>
+                <button onClick={() => deleteOrder(order._id)}>Ja</button>
+                <button onClick={() => setConfirmDelete(null)}>Nein</button>
               </div>
             )}
           </li>
