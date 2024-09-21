@@ -9,6 +9,14 @@ const LieferungOrders = () => {
   const [filter, setFilter] = useState('Eingehende Bestellungen');
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  // Durum sayıları için state ekliyoruz
+  const [statusCounts, setStatusCounts] = useState({
+    eingehende: 0,
+    vorbereitete: 0,
+    liefernde: 0,
+    gelieferte: 0,
+  });
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -18,7 +26,24 @@ const LieferungOrders = () => {
             Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
-        setOrders(response.data); // Gelen veriyi state'e kaydediyoruz
+        const fetchedOrders = response.data;
+
+        // Siparişleri state'e kaydediyoruz
+        setOrders(fetchedOrders);
+
+        // Durumlara göre sipariş sayısını hesaplıyoruz
+        const eingehendeCount = fetchedOrders.filter(order => order.status === 'Eingehende Bestellungen' && order.orderType === 'delivery').length;
+        const vorbereiteteCount = fetchedOrders.filter(order => order.status === 'Bestellungen in Vorbereitung' && order.orderType === 'delivery').length;
+        const lieferndeCount = fetchedOrders.filter(order => order.status === 'Bestellungen werden geliefert' && order.orderType === 'delivery').length;
+        const gelieferteCount = fetchedOrders.filter(order => order.status === 'Gelieferte Bestellungen' && order.orderType === 'delivery').length;
+
+        // Durum sayıları state'ini güncelliyoruz
+        setStatusCounts({
+          eingehende: eingehendeCount,
+          vorbereitete: vorbereiteteCount,
+          liefernde: lieferndeCount,
+          gelieferte: gelieferteCount,
+        });
       } catch (error) {
         console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
@@ -109,25 +134,25 @@ const LieferungOrders = () => {
           onClick={() => filterOrders('Eingehende Bestellungen')} 
           className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
         >
-          Eingehende
+          Eingehende ({statusCounts.eingehende})
         </button>
         <button 
           onClick={() => filterOrders('Bestellungen in Vorbereitung')} 
           className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}
         >
-          Vorbereitete
+          Vorbereitete ({statusCounts.vorbereitete})
         </button>
         <button 
           onClick={() => filterOrders('Bestellungen werden geliefert')} 
           className={filter === 'Bestellungen werden geliefert' ? 'active' : ''}
         >
-          Liefernde
+          Liefernde ({statusCounts.liefernde})
         </button>
         <button 
           onClick={() => filterOrders('Gelieferte Bestellungen')} 
           className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}
         >
-          Gelieferte
+          Gelieferte ({statusCounts.gelieferte})
         </button>
       </div>
       <ul className="order-list">
