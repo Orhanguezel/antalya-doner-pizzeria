@@ -4,10 +4,10 @@ const CustomError = require('../utils/CustomError');
 // Sipariş durumu için geçerli durumlar
 const ORDER_STATUSES = [
   'Eingehende Bestellungen',
-  'Bestellungen in Vorbereitung', // 'Preparing' in German
-  'Bestellungen werden geliefert', // 'Out for Delivery' in German
-  'Gelieferte Bestellungen', // 'Delivered' in German
-  'Abgeschlossen' // 'Completed' in German
+  'Bestellungen in Vorbereitung',
+  'Bestellungen werden geliefert',
+  'Gelieferte Bestellungen',
+  'Abgeschlossen'
 ];
 
 // Yeni bir sipariş oluşturma

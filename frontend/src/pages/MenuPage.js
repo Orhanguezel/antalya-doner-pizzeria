@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { zusatztoffeMap, allergeneMap } from "../constants";
 import Modal from "react-modal";
 import "./MenuPage.css";
-import api from "../axios";
+import api from "../axios";  // Axios instance'ı import ettik
 
 Modal.setAppElement("#root");
 
@@ -17,17 +17,14 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
 
+  // Kategorileri axios üzerinden çekiyoruz
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/categories");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setCategories(data);
-        if (data.length > 0) {
-          setActiveCategory(data[0]._id);
+        const response = await api.get("/categories");
+        setCategories(response.data);
+        if (response.data.length > 0) {
+          setActiveCategory(response.data[0]._id);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);

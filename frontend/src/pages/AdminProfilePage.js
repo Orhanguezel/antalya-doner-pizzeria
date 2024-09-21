@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'; // useNavigate'i import ettik
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LieferungOrders from './LieferungOrders';
 import AbholungOrders from './AbholungOrders';
@@ -13,7 +13,7 @@ import './AdminProfilePage.css';
 
 const AdminProfilePage = () => {
   const location = useLocation();
-  const navigate = useNavigate(); // useNavigate hook'unu tanımladık
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [orderCounts, setOrderCounts] = useState({
     lieferung: 0,
@@ -25,61 +25,95 @@ const AdminProfilePage = () => {
 
   const [prevOrderCount, setPrevOrderCount] = useState(0);
 
+  // İlk yüklemede yönlendirme ve izin isteği
   useEffect(() => {
     // İlk yüklemede "Lieferung" sekmesine yönlendirme yapıyoruz
     if (location.pathname === '/admin') {
+      console.log("Navigating to Lieferung Orders");
       navigate('/admin/lieferung-orders');
     }
 
     if (Notification.permission !== "granted") {
+      console.log("Requesting notification permission...");
       Notification.requestPermission();
     }
   }, [location.pathname, navigate]);
 
-  useEffect(() => {
-    const fetchOrderCounts = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+  // Bildirim sesi çalma fonksiyonu
+  const playNotificationSound = () => {
+    const audio = new Audio('/assets/sounds/notification.mp3'); // Doğru yol
+    audio.play()
+      .then(() => {
+        console.log('Bildirim sesi başarıyla çalındı.');
+      })
+      .catch(error => console.error("Ses çalma başarısız oldu:", error));
+  };
 
-        const orders = response.data;
-        const newOrderCount = orders.length;
+  // Sipariş sayısını çekmek için fonksiyon
+  const fetchOrderCounts = async () => {
+    try {
+      console.log('Fetching orders...');
+      
+      const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';  // Doğru tanımlama
+      console.log('API URL:', apiUrl);
+  
+      const response = await axios.get(`${apiUrl}/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const orders = response.data;
+      console.log('Fetched Orders:', orders);  // Sipariş verilerini kontrol edin
 
-        if (newOrderCount > prevOrderCount) {
-          if (Notification.permission === "granted") {
-            new Notification("Neue Bestellung!", {
-              body: "Eine neue Bestellung ist eingegangen.",
-            });
-          }
+      const newOrderCount = orders.length;
+      console.log('Yeni sipariş sayısı:', newOrderCount);
+
+      // Yeni sipariş varsa bildirim gönder
+      if (newOrderCount > prevOrderCount) {
+        if (Notification.permission === "granted") {
+          console.log("Bildirim gönderiliyor...");
+          new Notification("Neue Bestellung!", {
+            body: "Eine neue Bestellung ist eingegangen.",
+          });
+          playNotificationSound(); // Bildirimle birlikte sesi çal
         }
-        setPrevOrderCount(newOrderCount);
-
-        const lieferungCount = orders.filter(order => order.orderType === 'delivery' && !order.archived).length;
-        const abholungCount = orders.filter(order => order.orderType === 'pickup' && !order.archived).length;
-        const restaurantCount = orders.filter(order => order.orderType === 'dinein' && !order.archived).length;
-
-        setOrderCounts({
-          lieferung: lieferungCount,
-          abholung: abholungCount,
-          restaurant: restaurantCount,
-        });
-      } catch (error) {
-        console.error('Error fetching orders:', error);
       }
-    };
 
-    const intervalId = setInterval(fetchOrderCounts, 30000);
+      setPrevOrderCount(newOrderCount);
 
-    return () => clearInterval(intervalId);
+      // Sipariş sayısını güncelleme (archived olmayanları say)
+      const lieferungCount = orders.filter(order => order.orderType === 'delivery' && !order.archived).length;
+      const abholungCount = orders.filter(order => order.orderType === 'pickup' && !order.archived).length;
+      const restaurantCount = orders.filter(order => order.orderType === 'dinein' && !order.archived).length;
+
+      console.log('Lieferung sayısı:', lieferungCount);
+      console.log('Abholung sayısı:', abholungCount);
+      console.log('Restoran sayısı:', restaurantCount);
+
+      setOrderCounts({
+        lieferung: lieferungCount,
+        abholung: abholungCount,
+        restaurant: restaurantCount,
+      });
+
+    } catch (error) {
+      console.error('Siparişler çekilirken hata oluştu:', error);
+    }
+  };
+
+  // Her 30 saniyede bir siparişleri kontrol et
+  useEffect(() => {
+    fetchOrderCounts(); // İlk yüklemede siparişleri çek
+
+    const intervalId = setInterval(fetchOrderCounts, 30000); // 30 saniyede bir tekrar kontrol et
+    return () => clearInterval(intervalId); // Temizlik için intervali kaldır
   }, [token, prevOrderCount]);
 
   return (
     <div className="admin-panel">
       <h2>Admin Panel</h2>
-      <Breadcrumb /> {/* Breadcrumb bileşeni burada kalıyor */}
+      <Breadcrumb />
       <nav className="admin-nav">
         <Link to="/admin/lieferung-orders" className={`nav-links ${getActiveClass('/admin/lieferung-orders')}`}>
           Lieferung ({orderCounts.lieferung})

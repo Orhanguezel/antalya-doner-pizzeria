@@ -2,8 +2,6 @@
 
 python3 test_menu.py
 
-python3 test_login.py
-
 python3 category_api_test.py
 
 
