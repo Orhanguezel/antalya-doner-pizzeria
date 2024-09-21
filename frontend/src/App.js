@@ -16,7 +16,7 @@ import ItemDetail from './pages/ItemDetail';
 import CartBar from './components/CartBar';
 import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
-import UserManagementPage from './pages/UserManagementPage'; // Yeni eklenen bileşen
+import UserManagementPage from './pages/UserManagementPage'; 
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 

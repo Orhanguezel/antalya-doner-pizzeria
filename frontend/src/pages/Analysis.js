@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
-import { Line as LineChart, Bar as BarChart } from 'react-chartjs-2';
+import { Line as LineChart, Bar as BarChart, Doughnut as DoughnutChart } from 'react-chartjs-2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Analysis.css';
@@ -19,7 +19,7 @@ const Analysis = () => {
     const fetchAnalytics = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/archived`);
-        console.log('Abgerufene Analysedaten:', response.data); // Gelen veriyi kontrol edin
+        console.log('Abgerufene Analysedaten:', response.data);
         setArchivedOrders(response.data);
         processAnalytics(response.data);
       } catch (error) {
@@ -45,9 +45,10 @@ const Analysis = () => {
 
     const dailyOrdersData = Array.from(dailyOrdersMap.entries()).map(([date, count]) => ({ date, count }));
     const topProductsData = Array.from(productCounts.entries()).map(([name, count]) => ({ name, count }));
+    topProductsData.sort((a, b) => b.count - a.count);
 
     setDailyOrders(dailyOrdersData);
-    setTopProducts(topProductsData);
+    setTopProducts(topProductsData.slice(0, 10));  // En çok sipariş edilen ilk 10 ürünü al
   };
 
   const filterAnalytics = () => {
@@ -82,6 +83,27 @@ const Analysis = () => {
     ],
   };
 
+  const topProductsDoughnutData = {
+    labels: topProducts.map(product => product.name),
+    datasets: [
+      {
+        data: topProducts.map(product => product.count),
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+          '#FF9F40',
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="analysis">
       <h3>Analyse</h3>
@@ -103,6 +125,10 @@ const Analysis = () => {
       <div className="chart-container">
         <h4>Am häufigsten bestellte Produkte</h4>
         <BarChart data={topProductsChartData} />
+      </div>
+      <div className="chart-container">
+        <h4>Top 10 Produkte (Doughnut Chart)</h4>
+        <DoughnutChart data={topProductsDoughnutData} />
       </div>
     </div>
   );

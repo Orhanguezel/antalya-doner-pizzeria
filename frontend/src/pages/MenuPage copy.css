@@ -1,3 +1,4 @@
+/* Genel Sayfa Stilleri */
 .menu-page {
   padding: 20px;
   z-index: 1;
@@ -17,6 +18,7 @@
   z-index: 3;
 }
 
+/* Kategori Butonları */
 .categories-container {
   display: flex;
   flex-wrap: wrap;
@@ -31,7 +33,7 @@
 }
 
 .category-button {
-  padding: 5px 5px;
+  padding: 8px 10px;
   font-size: 1.4rem;
   background-color: var(--secondary-color);
   color: var(--contrast-color);
@@ -76,6 +78,7 @@
   width: 80%;
 }
 
+/* Ürün Kartları */
 .items-container {
   display: flex;
   flex-wrap: wrap;
@@ -116,33 +119,15 @@
   margin: 0;
 }
 
-.info-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: var(--info-color);
-  border: none;
-  color: var(--white-color);
-  font-size: 12px;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-}
-
+.info-button,
 .add-button {
   position: absolute;
   bottom: 10px;
-  left: 10px;
   background: var(--primary-color);
   color: var(--white-color);
   border: none;
   font-size: 14px;
-  border-radius: 5px;
+  border-radius: 50%;
   padding: 5px;
   width: 24px;
   height: 24px;
@@ -153,11 +138,21 @@
   z-index: 3;
 }
 
+.info-button {
+  right: 10px;
+  background-color: var(--info-color);
+}
+
+.add-button {
+  left: 10px;
+}
+
 .add-button:hover,
 .info-button:hover {
   opacity: 0.8;
 }
 
+/* Modal Overlay ve İçerik */
 .ReactModal__Overlay {
   position: fixed;
   top: 0;
@@ -165,73 +160,51 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .ReactModal__Content {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 10001 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-  background-color: white;
-  padding: 20px !important;
-  width: 80% !important;
-  max-width: 600px !important;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal {
   position: relative;
-  background: #fff;
-  border-radius: 10px;
+  background-color: white;
   padding: 20px;
+  border-radius: 10px;
   max-width: 600px;
-  min-width: 300px;
-  width: 80%;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
   z-index: 10000;
 }
 
+
 .extras-container {
   margin-top: 5px;
-  z-index: 3;
 }
 
 .extras-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  font-size: 1.4rem;
+  gap: 10px;
+  font-size: 1.2rem;
   color: var(--text-color);
-  z-index: 3;
 }
 
 .extra-item {
   display: inline-flex;
   align-items: center;
-  margin-right: 5px;
-  z-index: 3;
+  margin-right: 10px;
 }
 
 .extra-item input {
   margin-right: 5px;
-  z-index: 3;
 }
 
+
+/* Miktar Kontrolleri */
 .quantity-controls {
   display: flex;
   align-items: center;
   gap: 5px;
   margin-top: 15px;
-  z-index: 3;
 }
 
 .quantity-controls button {
@@ -241,7 +214,6 @@
   padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 3;
 }
 
 .quantity-controls button:disabled {
@@ -249,6 +221,7 @@
   cursor: not-allowed;
 }
 
+/* Sepete Ekleme ve Modal Kapatma Butonları */
 .add-to-cart-button {
   background-color: var(--success-color);
   color: var(--white-color);
@@ -258,7 +231,6 @@
   cursor: pointer;
   margin-top: 15px;
   transition: background-color 0.3s ease;
-  z-index: 3;
 }
 
 .add-to-cart-button:hover {
@@ -275,53 +247,13 @@
   margin-top: 15px;
   margin-left: 10px;
   transition: background-color 0.3s ease;
-  z-index: 3;
 }
 
 .close-button:hover {
   background-color: var(--danger-hover-color);
 }
 
-.subcategory-group {
-  margin-bottom: 80px;
-}
-
-.subcategory-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--primary-color);
-  margin-top: 40px;
-  margin-bottom: 10px;
-}
-
-.subcategory-description {
-  font-size: 1.4rem;
-  color: var(--text-color);
-  margin-bottom: 20px;
-}
-
-.subcategory-images {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  z-index: 3;
-  margin-bottom: 20px;
-}
-
-.subcategory-images img {
-  width: calc(50% - 10px);
-  max-width: 450px;
-  border-radius: 5px;
-  transition: transform 0.3s, box-shadow 0.3s;
-  z-index: 3;
-}
-
-.subcategory-images img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Design - Büyük Ekranlar İçin */
+/* Responsive Tasarım */
 @media (min-width: 960px) {
   .categories-container {
     top: 45px;

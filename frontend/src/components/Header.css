@@ -1,6 +1,6 @@
 /* Genel stiller */
 body {
-  padding-top: 70px; /* Küçük ekranlar için daha az padding */
+  padding-top: 90px; /* Küçük ekranlar için daha az padding */
 }
 
 /* Navbar Styles */
@@ -9,6 +9,7 @@ body {
   height: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
   padding: 0 10px; /* Navbar'ın yatay padding'ini azaltmak için */
+  z-index: 50;
 }
 
 .navbar-brand {

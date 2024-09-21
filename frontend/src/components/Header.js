@@ -10,7 +10,7 @@ function Header() {
 
   return (
     <header>
-      <Navbar bg="light" variant="light" expand="lg" fixed="top">
+      <Navbar bg="light" variant="light" expand="lg">
         <Container fluid>
           <LinkContainer to="/">
             <Navbar.Brand className="d-flex align-items-center">
