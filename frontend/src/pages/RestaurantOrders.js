@@ -9,6 +9,13 @@ const RestaurantOrders = () => {
   const [filter, setFilter] = useState('Eingehende Bestellungen');
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  // Durum sayıları için state ekliyoruz
+  const [statusCounts, setStatusCounts] = useState({
+    eingehende: 0,
+    vorbereitete: 0,
+    gelieferte: 0,
+  });
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -18,7 +25,23 @@ const RestaurantOrders = () => {
             Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
-        setOrders(response.data); // Gelen veriyi state'e kaydediyoruz
+
+        const fetchedOrders = response.data;
+
+        // Siparişleri state'e kaydediyoruz
+        setOrders(fetchedOrders);
+
+        // Durumlara göre sipariş sayısını hesaplıyoruz
+        const eingehendeCount = fetchedOrders.filter(order => order.status === 'Eingehende Bestellungen' && order.orderType === 'dinein').length;
+        const vorbereiteteCount = fetchedOrders.filter(order => order.status === 'Bestellungen in Vorbereitung' && order.orderType === 'dinein').length;
+        const gelieferteCount = fetchedOrders.filter(order => order.status === 'Gelieferte Bestellungen' && order.orderType === 'dinein').length;
+
+        // Durum sayıları state'ini güncelliyoruz
+        setStatusCounts({
+          eingehende: eingehendeCount,
+          vorbereitete: vorbereiteteCount,
+          gelieferte: gelieferteCount,
+        });
       } catch (error) {
         console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
@@ -105,19 +128,19 @@ const RestaurantOrders = () => {
           onClick={() => filterOrders('Eingehende Bestellungen')} 
           className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
         >
-          Eingehende
+          Eingehende ({statusCounts.eingehende})
         </button>
         <button 
           onClick={() => filterOrders('Bestellungen in Vorbereitung')} 
           className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}
         >
-          Vorbereitete
+          Vorbereitete ({statusCounts.vorbereitete})
         </button>
         <button 
           onClick={() => filterOrders('Gelieferte Bestellungen')} 
           className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}
         >
-          Serviert
+          Serviert ({statusCounts.gelieferte})
         </button>
       </div>
       <ul className="order-list">

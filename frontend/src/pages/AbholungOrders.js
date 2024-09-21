@@ -9,6 +9,13 @@ const AbholungOrders = () => {
   const [filter, setFilter] = useState('Eingehende Bestellungen');
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  // Durum sayıları için state ekliyoruz
+  const [statusCounts, setStatusCounts] = useState({
+    eingehende: 0,
+    vorbereitete: 0,
+    gelieferte: 0,
+  });
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -18,7 +25,22 @@ const AbholungOrders = () => {
             Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
-        setOrders(response.data); // Siparişleri state'e kaydet
+        const fetchedOrders = response.data;
+
+        // Siparişleri state'e kaydediyoruz
+        setOrders(fetchedOrders);
+
+        // Durumlara göre sipariş sayısını hesaplıyoruz
+        const eingehendeCount = fetchedOrders.filter(order => order.status === 'Eingehende Bestellungen' && order.orderType === 'pickup').length;
+        const vorbereiteteCount = fetchedOrders.filter(order => order.status === 'Bestellungen in Vorbereitung' && order.orderType === 'pickup').length;
+        const gelieferteCount = fetchedOrders.filter(order => order.status === 'Gelieferte Bestellungen' && order.orderType === 'pickup').length;
+
+        // Durum sayıları state'ini güncelliyoruz
+        setStatusCounts({
+          eingehende: eingehendeCount,
+          vorbereitete: vorbereiteteCount,
+          gelieferte: gelieferteCount,
+        });
       } catch (error) {
         console.error('Error fetching orders:', error);
       }
@@ -105,13 +127,13 @@ const AbholungOrders = () => {
       <h3>Abholung Bestellungen</h3>
       <div className="order-status-buttons">
         <button onClick={() => filterOrders('Eingehende Bestellungen')} className={filter === 'Eingehende Bestellungen' ? 'active' : ''}>
-          Eingehende
+          Eingehende ({statusCounts.eingehende})
         </button>
         <button onClick={() => filterOrders('Bestellungen in Vorbereitung')} className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}>
-          Vorbereitete
+          Vorbereitete ({statusCounts.vorbereitete})
         </button>
         <button onClick={() => filterOrders('Gelieferte Bestellungen')} className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}>
-          Gelieferte
+          Gelieferte ({statusCounts.gelieferte})
         </button>
       </div>
       <ul className="order-list">
