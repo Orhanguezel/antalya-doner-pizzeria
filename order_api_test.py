@@ -75,7 +75,7 @@ order_types = {
 
 created_order_ids = []
 
-# Her sipariş türü için sipariş oluşturma ve statü güncelleme testi
+# Her sipariş türü için sipariş oluşturma, statü güncelleme ve arşivleme testi
 for order_type, order_data in order_types.items():
     response = requests.post(order_url, json=order_data)
     if response.status_code == 201:
@@ -91,18 +91,26 @@ for order_type, order_data in order_types.items():
             print(f"{order_type} order status updated successfully.")
         else:
             print(f"Failed to update {order_type} order status. Response: {response.text}")
-    else:
-        print(f"Failed to create {order_type} order. Response: {response.text}")
+
+       # Order'ı arşivleme
+archive_url = f"{order_url}/{order_id}"
+archive_data = {"archived": True}
+response = requests.patch(archive_url, json=archive_data)
+if response.status_code == 200:
+    print(f"{order_type} order archived successfully.")
+else:
+    print(f"Failed to archive {order_type} order. Response: {response.text}")
+
 
 # Siparişlerin listelenmesi
-response = requests.get(order_url)
+response = requests.get(f"{order_url}/archived")
 if response.status_code == 200:
     orders = response.json()
-    print("Orders retrieved successfully.")
+    print("Archived orders retrieved successfully.")
     for order in orders:
         print(f"Order ID: {order['_id']}, Order Type: {order['orderType']}, Status: {order['status']}")
 else:
-    print(f"Failed to retrieve orders. Response: {response.text}")
+    print(f"Failed to retrieve archived orders. Response: {response.text}")
 
 # Oluşturulan siparişlerin silinmesi
 for order_id in created_order_ids:

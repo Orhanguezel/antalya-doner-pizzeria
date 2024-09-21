@@ -25,7 +25,7 @@ exports.createOrder = async (req, res, next) => {
       items,
       total,
       orderType,
-      status: status || 'Eingehende Bestellungen', // Varsayılan durum Almanca'ya güncellendi
+      status: status || 'Eingehende Bestellungen', // Varsayılan durum
       deliveryFee: deliveryFee || 0,
       archived: false
     });
@@ -94,6 +94,22 @@ exports.updateOrderStatus = async (req, res, next) => {
   }
 };
 
+// Siparişi arşivleme
+exports.archiveOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+    if (!order) {
+      return next(new CustomError('Order nicht gefunden', 404));
+    }
+    order.status = 'Abgeschlossen';  // Enum'da tanımlı geçerli değer
+    order.archived = true;
+    await order.save();
+    res.status(200).json(order);
+  } catch (error) {
+    next(new CustomError(error.message, 400));
+  }
+};
 
 // Siparişi silme
 exports.deleteOrder = async (req, res, next) => {
@@ -104,25 +120,6 @@ exports.deleteOrder = async (req, res, next) => {
       return next(new CustomError('Order nicht gefunden', 404));
     }
     res.status(200).json({ message: 'Order erfolgreich gelöscht' });
-  } catch (error) {
-    next(new CustomError(error.message, 400));
-  }
-};
-
-
-
-// Siparişi arşivleme
-exports.archiveOrder = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const order = await Order.findById(id);
-    if (!order) {
-      return next(new CustomError('Order nicht gefunden', 404));
-    }
-    order.status = 'Completed';
-    order.archived = true;
-    await order.save();
-    res.status(200).json(order);
   } catch (error) {
     next(new CustomError(error.message, 400));
   }

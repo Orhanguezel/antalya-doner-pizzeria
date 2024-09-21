@@ -39,6 +39,7 @@ module.exports = {
       'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL),
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
+    
   ].filter(Boolean),
   devServer: {
     static: {
