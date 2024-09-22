@@ -1,12 +1,44 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Chart, registerables } from "chart.js";
-import { Line as LineChart, Bar as BarChart, Doughnut as DoughnutChart } from "react-chartjs-2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./Analysis.css";
+import axios from "axios";
+import { Line as LineChart, Bar as BarChart, Doughnut as DoughnutChart } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineController,
+  BarController,
+  DoughnutController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'; // Chart.js bileşenlerini doğru şekilde import edelim
 
-Chart.register(...registerables);
+// Chart.js'nin bileşenlerini manuel olarak kaydedelim
+ChartJS.register(
+  LineController,
+  BarController,
+  DoughnutController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+// Haftayı hesaplayan fonksiyon
+const getWeek = (date) => {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+};
 
 const Analysis = () => {
   const [archivedOrders, setArchivedOrders] = useState([]);
@@ -69,13 +101,6 @@ const Analysis = () => {
     setWeeklyOrders(weeklyOrdersData);
     setMonthlyOrders(monthlyOrdersData);
     setTopProducts(topProductsData.slice(0, 10));  // En çok sipariş edilen ilk 10 ürünü al
-  };
-
-  // Haftayı hesaplayan fonksiyon
-  const getWeek = (date) => {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   };
 
   // Tarih aralığına göre siparişleri filtreleme fonksiyonu
