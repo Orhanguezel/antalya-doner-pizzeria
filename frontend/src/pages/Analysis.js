@@ -5,6 +5,7 @@ import axios from "axios";
 import { Line as LineChart, Bar as BarChart, Doughnut as DoughnutChart } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
+  ArcElement,
   LineController,
   BarController,
   DoughnutController,
@@ -16,10 +17,11 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js'; // Chart.js bileşenlerini doğru şekilde import edelim
+} from 'chart.js';
 
 // Chart.js'nin bileşenlerini manuel olarak kaydedelim
 ChartJS.register(
+  ArcElement,
   LineController,
   BarController,
   DoughnutController,
@@ -49,11 +51,14 @@ const Analysis = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
+  // API URL'yi doğrudan tanımlayalım
+  const API_URL = "http://localhost:5000/api"; // .env kullanmadan doğrudan URL
+
   // Verileri çekmek için useEffect içinde tanımlanan fonksiyon
   useEffect(() => {
     const fetchArchivedOrders = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/archived`);
+        const response = await axios.get(`${API_URL}/orders/archived`);
         console.log('Fetched Archived Orders:', response.data);
         setArchivedOrders(response.data);
         processAnalytics(response.data);
@@ -212,27 +217,27 @@ const Analysis = () => {
 
       <div className="chart-container">
         <h4>Tägliche Bestellungen</h4>
-        <LineChart data={dailyOrdersChartData} />
+        {dailyOrders.length > 0 ? <LineChart data={dailyOrdersChartData} /> : <p>Veri bulunamadı</p>}
       </div>
 
       <div className="chart-container">
         <h4>Wöchentliche Bestellungen</h4>
-        <LineChart data={weeklyOrdersChartData} />
+        {weeklyOrders.length > 0 ? <LineChart data={weeklyOrdersChartData} /> : <p>Veri bulunamadı</p>}
       </div>
 
       <div className="chart-container">
         <h4>Monatliche Bestellungen</h4>
-        <LineChart data={monthlyOrdersChartData} />
+        {monthlyOrders.length > 0 ? <LineChart data={monthlyOrdersChartData} /> : <p>Veri bulunamadı</p>}
       </div>
 
       <div className="chart-container">
         <h4>Am häufigsten bestellte Produkte</h4>
-        <BarChart data={topProductsChartData} />
+        {topProducts.length > 0 ? <BarChart data={topProductsChartData} /> : <p>Veri bulunamadı</p>}
       </div>
 
       <div className="chart-container">
         <h4>Top 10 Produkte (Doughnut Chart)</h4>
-        <DoughnutChart data={topProductsDoughnutData} />
+        {topProducts.length > 0 ? <DoughnutChart data={topProductsDoughnutData} /> : <p>Veri bulunamadı</p>}
       </div>
     </div>
   );
