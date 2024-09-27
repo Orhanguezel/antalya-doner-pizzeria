@@ -2,34 +2,27 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import { Line as LineChart, Bar as BarChart, Doughnut as DoughnutChart } from 'react-chartjs-2';
+import {
+  Bar as BarChart,
+  Doughnut as DoughnutChart
+} from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  ArcElement,
-  LineController,
-  BarController,
-  DoughnutController,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
+  ArcElement, // ArcElement'yi ekleyin
   Title,
   Tooltip,
-  Legend,
-} from 'chart.js';
+  Legend
+} from "chart.js";
 
-// Chart.js'nin bileşenlerini manuel olarak kaydedelim
+// ArcElement'i kaydedin
 ChartJS.register(
-  ArcElement,
-  LineController,
-  BarController,
-  DoughnutController,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
+  ArcElement,  // ArcElement'i burada kaydedin
   Title,
   Tooltip,
   Legend
@@ -42,40 +35,63 @@ const getWeek = (date) => {
   return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 };
 
+// Verilerin sıfırlanmasını sağlamak için yardımcı fonksiyon
+const fillMissingData = (dataMap, labels) => {
+  return labels.map((label) => dataMap.get(label) || 0);
+};
+
 const Analysis = () => {
   const [archivedOrders, setArchivedOrders] = useState([]);
-  const [dailyOrders, setDailyOrders] = useState([]);
-  const [weeklyOrders, setWeeklyOrders] = useState([]);
-  const [monthlyOrders, setMonthlyOrders] = useState([]);
+  const [dailyOrders, setDailyOrders] = useState(null);
+  const [weeklyOrders, setWeeklyOrders] = useState(null);
+  const [monthlyOrders, setMonthlyOrders] = useState(null);
   const [topProducts, setTopProducts] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  // API URL'yi doğrudan tanımlayalım
-  const API_URL = "http://localhost:5000/api"; // .env kullanmadan doğrudan URL
-
-  // Verileri çekmek için useEffect içinde tanımlanan fonksiyon
   useEffect(() => {
     const fetchArchivedOrders = async () => {
       try {
-        const response = await axios.get(`${API_URL}/orders/archived`);
-        console.log('Fetched Archived Orders:', response.data);
+        const response = await axios.get("http://localhost:5000/api/orders/archived");
         setArchivedOrders(response.data);
         processAnalytics(response.data);
       } catch (error) {
-        console.error('Error fetching analytics data:', error);
+        console.error("Error fetching analytics data:", error);
       }
     };
 
     fetchArchivedOrders();
-  }, []); // Bu kısımda sadece bileşen yüklendiğinde çalışacak.
+  }, []);
 
-  // Analiz verilerini işlemek için fonksiyon
   const processAnalytics = (orders) => {
+    if (!orders || orders.length === 0) return;
+
     const dailyOrdersMap = new Map();
+    const dailyPriceMap = new Map();
     const weeklyOrdersMap = new Map();
+    const weeklyPriceMap = new Map();
     const monthlyOrdersMap = new Map();
+    const monthlyPriceMap = new Map();
     const productCounts = new Map();
+
+    // Sabit 7 gün, 4 hafta ve 12 aylık zaman dilimlerini belirleme
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      return date.toISOString().split("T")[0];
+    }).reverse();
+
+    const last4Weeks = Array.from({ length: 4 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i * 7);
+      return getWeek(date);
+    }).reverse();
+
+    const last12Months = Array.from({ length: 12 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      return `${date.getFullYear()}-${date.getMonth() + 1}`;
+    }).reverse();
 
     orders.forEach((order) => {
       const date = new Date(order.createdAt);
@@ -83,9 +99,16 @@ const Analysis = () => {
       const week = getWeek(date);
       const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
+      const totalPrice = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
       dailyOrdersMap.set(day, (dailyOrdersMap.get(day) || 0) + 1);
+      dailyPriceMap.set(day, (dailyPriceMap.get(day) || 0) + totalPrice);
+
       weeklyOrdersMap.set(week, (weeklyOrdersMap.get(week) || 0) + 1);
+      weeklyPriceMap.set(week, (weeklyPriceMap.get(week) || 0) + totalPrice);
+
       monthlyOrdersMap.set(month, (monthlyOrdersMap.get(month) || 0) + 1);
+      monthlyPriceMap.set(month, (monthlyPriceMap.get(month) || 0) + totalPrice);
 
       order.items.forEach((item) => {
         productCounts.set(
@@ -95,20 +118,69 @@ const Analysis = () => {
       });
     });
 
-    const dailyOrdersData = Array.from(dailyOrdersMap.entries()).map(([date, count]) => ({ date, count }));
-    const weeklyOrdersData = Array.from(weeklyOrdersMap.entries()).map(([week, count]) => ({ week, count }));
-    const monthlyOrdersData = Array.from(monthlyOrdersMap.entries()).map(([month, count]) => ({ month, count }));
-    const topProductsData = Array.from(productCounts.entries()).map(([name, count]) => ({ name, count }));
+    // Eksik veriler için sıfırlama
+    const dailyOrdersData = fillMissingData(dailyOrdersMap, last7Days);
+    const dailyPriceData = fillMissingData(dailyPriceMap, last7Days);
+    const weeklyOrdersData = fillMissingData(weeklyOrdersMap, last4Weeks);
+    const weeklyPriceData = fillMissingData(weeklyPriceMap, last4Weeks);
+    const monthlyOrdersData = fillMissingData(monthlyOrdersMap, last12Months);
+    const monthlyPriceData = fillMissingData(monthlyPriceMap, last12Months);
 
+    setDailyOrders({
+      labels: last7Days,
+      datasets: [
+        {
+          label: "Tägliche Bestellungen",
+          data: dailyOrdersData,
+          backgroundColor: "rgba(75,192,192,1)",
+        },
+        {
+          label: "Tägliche Gesamtpreis",
+          data: dailyPriceData,
+          backgroundColor: "rgba(255,99,132,1)",
+        },
+      ],
+    });
+
+    setWeeklyOrders({
+      labels: last4Weeks,
+      datasets: [
+        {
+          label: "Wöchentliche Bestellungen",
+          data: weeklyOrdersData,
+          backgroundColor: "rgba(255,159,64,1)",
+        },
+        {
+          label: "Wöchentliche Gesamtpreis",
+          data: weeklyPriceData,
+          backgroundColor: "rgba(153,102,255,1)",
+        },
+      ],
+    });
+
+    setMonthlyOrders({
+      labels: last12Months,
+      datasets: [
+        {
+          label: "Monatliche Bestellungen",
+          data: monthlyOrdersData,
+          backgroundColor: "rgba(54,162,235,1)",
+        },
+        {
+          label: "Monatliche Gesamtpreis",
+          data: monthlyPriceData,
+          backgroundColor: "rgba(255,205,86,1)",
+        },
+      ],
+    });
+
+    const topProductsData = Array.from(productCounts.entries()).map(
+      ([name, count]) => ({ name, count })
+    );
     topProductsData.sort((a, b) => b.count - a.count);
-
-    setDailyOrders(dailyOrdersData);
-    setWeeklyOrders(weeklyOrdersData);
-    setMonthlyOrders(monthlyOrdersData);
-    setTopProducts(topProductsData.slice(0, 10));  // En çok sipariş edilen ilk 10 ürünü al
+    setTopProducts(topProductsData.slice(0, 10));
   };
 
-  // Tarih aralığına göre siparişleri filtreleme fonksiyonu
   const filterAnalytics = () => {
     const filteredOrders = archivedOrders.filter((order) => {
       const orderDate = new Date(order.createdAt);
@@ -116,78 +188,6 @@ const Analysis = () => {
     });
 
     processAnalytics(filteredOrders);
-  };
-
-  // Günlük sipariş verileri için grafiğin veri seti
-  const dailyOrdersChartData = {
-    labels: dailyOrders.map((order) => order.date),
-    datasets: [
-      {
-        label: "Tägliche Bestellungen",
-        data: dailyOrders.map((order) => order.count),
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.4)",
-        fill: false,
-      },
-    ],
-  };
-
-  // Haftalık sipariş verileri için grafiğin veri seti
-  const weeklyOrdersChartData = {
-    labels: weeklyOrders.map((order) => `Woche ${order.week}`),
-    datasets: [
-      {
-        label: "Wöchentliche Bestellungen",
-        data: weeklyOrders.map((order) => order.count),
-        borderColor: "rgba(255,159,64,1)",
-        backgroundColor: "rgba(255,159,64,0.4)",
-        fill: false,
-      },
-    ],
-  };
-
-  // Aylık sipariş verileri için grafiğin veri seti
-  const monthlyOrdersChartData = {
-    labels: monthlyOrders.map((order) => order.month),
-    datasets: [
-      {
-        label: "Monatliche Bestellungen",
-        data: monthlyOrders.map((order) => order.count),
-        borderColor: "rgba(153,102,255,1)",
-        backgroundColor: "rgba(153,102,255,0.4)",
-        fill: false,
-      },
-    ],
-  };
-
-  // Ürün bazında en çok sipariş edilen ürünler için veri seti
-  const topProductsChartData = {
-    labels: topProducts.map((product) => product.name),
-    datasets: [
-      {
-        label: "Am häufigsten bestellte Produkte",
-        data: topProducts.map((product) => product.count),
-        backgroundColor: "rgba(153,102,255,0.6)",
-      },
-    ],
-  };
-
-  // Doughnut Chart veri seti
-  const topProductsDoughnutData = {
-    labels: topProducts.map((product) => product.name),
-    datasets: [
-      {
-        data: topProducts.map((product) => product.count),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-        ],
-      },
-    ],
   };
 
   return (
@@ -215,29 +215,63 @@ const Analysis = () => {
         </button>
       </div>
 
-      <div className="chart-container">
-        <h4>Tägliche Bestellungen</h4>
-        {dailyOrders.length > 0 ? <LineChart data={dailyOrdersChartData} /> : <p>Veri bulunamadı</p>}
-      </div>
+      {dailyOrders && (
+        <div className="chart-container">
+          <h4>Tägliche Bestellungen & Gesamtpreis</h4>
+          <BarChart data={dailyOrders} />
+        </div>
+      )}
 
-      <div className="chart-container">
-        <h4>Wöchentliche Bestellungen</h4>
-        {weeklyOrders.length > 0 ? <LineChart data={weeklyOrdersChartData} /> : <p>Veri bulunamadı</p>}
-      </div>
+      {weeklyOrders && (
+        <div className="chart-container">
+          <h4>Wöchentliche Bestellungen & Gesamtpreis</h4>
+          <BarChart data={weeklyOrders} />
+        </div>
+      )}
 
-      <div className="chart-container">
-        <h4>Monatliche Bestellungen</h4>
-        {monthlyOrders.length > 0 ? <LineChart data={monthlyOrdersChartData} /> : <p>Veri bulunamadı</p>}
-      </div>
+      {monthlyOrders && (
+        <div className="chart-container">
+          <h4>Monatliche Bestellungen & Gesamtpreis</h4>
+          <BarChart data={monthlyOrders} />
+        </div>
+      )}
 
       <div className="chart-container">
         <h4>Am häufigsten bestellte Produkte</h4>
-        {topProducts.length > 0 ? <BarChart data={topProductsChartData} /> : <p>Veri bulunamadı</p>}
+        <BarChart
+          data={{
+            labels: topProducts.map((product) => product.name),
+            datasets: [
+              {
+                label: "Am häufigsten bestellte Produkte",
+                data: topProducts.map((product) => product.count),
+                backgroundColor: "rgba(153,102,255,0.6)",
+              },
+            ],
+          }}
+        />
       </div>
 
       <div className="chart-container">
         <h4>Top 10 Produkte (Doughnut Chart)</h4>
-        {topProducts.length > 0 ? <DoughnutChart data={topProductsDoughnutData} /> : <p>Veri bulunamadı</p>}
+        <DoughnutChart
+          data={{
+            labels: topProducts.map((product) => product.name),
+            datasets: [
+              {
+                data: topProducts.map((product) => product.count),
+                backgroundColor: [
+                  "#FF6384",
+                  "#36A2EB",
+                  "#FFCE56",
+                  "#4BC0C0",
+                  "#9966FF",
+                  "#FF9F40",
+                ],
+              },
+            ],
+          }}
+        />
       </div>
     </div>
   );

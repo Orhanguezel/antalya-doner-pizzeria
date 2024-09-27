@@ -36,7 +36,8 @@
   },
   "scripts": {
     "start": "webpack serve --config webpack.config.js",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+     "dev": "nodemon server.js"
   },
   "browserslist": {
     "production": [

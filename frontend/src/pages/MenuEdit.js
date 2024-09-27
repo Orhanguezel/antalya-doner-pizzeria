@@ -123,6 +123,13 @@ const MenuEdit = () => {
     setEditedItem(null);
   };
 
+  useEffect(() => {
+    if (selectedItem) {
+      console.log("Selected item extras:", selectedItem.extras);
+      setEditedItem({ ...selectedItem, extras: Array.isArray(selectedItem.extras) ? selectedItem.extras : [] });
+    }
+  }, [selectedItem]);
+
   return (
     <div className="menu-edit">
       <h3>Menü Bearbeiten</h3>
@@ -195,29 +202,33 @@ const MenuEdit = () => {
             </label>
           ))}
           <h5>Extras</h5>
-          {(editedItem.extras || []).map((extra, index) => (
-            <div key={index} className="extra-item">
-              <label>
-                Extra Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={extra.name || ''}
-                  onChange={(e) => handleExtraChange(e, index)}
-                />
-              </label>
-              <label>
-                Preis:
-                <input
-                  type="number"
-                  name="price"
-                  value={extra.price || ''}
-                  onChange={(e) => handleExtraChange(e, index)}
-                />
-              </label>
-              <button onClick={() => handleRemoveExtra(index)} className="remove-extra-button">Entfernen</button>
-            </div>
-          ))}
+          {editedItem.extras && editedItem.extras.length > 0 ? (
+            editedItem.extras.map((extra, index) => (
+              <div key={index} className="extra-item">
+                <label>
+                  Extra Name:
+                  <input
+                    type="text"
+                    name="name"
+                    value={extra.name || ''}
+                    onChange={(e) => handleExtraChange(e, index)}
+                  />
+                </label>
+                <label>
+                  Preis:
+                  <input
+                    type="number"
+                    name="price"
+                    value={extra.price || ''}
+                    onChange={(e) => handleExtraChange(e, index)}
+                  />
+                </label>
+                <button onClick={() => handleRemoveExtra(index)} className="remove-extra-button">Entfernen</button>
+              </div>
+            ))
+          ) : (
+            <p>Keine Extras verfügbar</p>
+          )}
           <button onClick={handleAddExtra} className="add-extra-button">Neue Extra hinzufügen</button>
           <button onClick={handleSaveClick} className="save-button">Speichern</button>
           <button onClick={handleCancelClick} className="cancel-button">Abbrechen</button>
