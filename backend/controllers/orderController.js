@@ -141,3 +141,36 @@ exports.updatePreparationTime = async (req, res, next) => {
     next(new CustomError(error.message, 400));
   }
 };
+
+const getOrdersByDateRange = async (req, res, next) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    const orders = await Order.find({
+      createdAt: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      },
+      archived: true,  // Sadece arşivlenmiş siparişler
+    });
+
+    // Günlük bazda siparişleri ve toplam fiyatı toplayan yapı
+    const ordersByDay = {};
+    orders.forEach(order => {
+      const day = new Date(order.createdAt).toISOString().split('T')[0];
+      if (!ordersByDay[day]) {
+        ordersByDay[day] = {
+          totalOrders: 0,
+          totalRevenue: 0,
+        };
+      }
+
+      ordersByDay[day].totalOrders += 1;
+      ordersByDay[day].totalRevenue += order.total;
+    });
+
+    res.status(200).json(ordersByDay);
+  } catch (error) {
+    next(new CustomError(error.message, 400));
+  }
+};

@@ -4,6 +4,8 @@ python3 test_menu.py
 
 python3 category_api_test.py
 
+python3 test_total_price.py
+
 
 node -e "console.log(require('bcryptjs').hashSync('adminpassword', 10));"
 hash olusturma
