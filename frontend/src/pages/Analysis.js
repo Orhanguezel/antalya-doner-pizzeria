@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import {
-  Bar as BarChart,
-  Doughnut as DoughnutChart
-} from "react-chartjs-2";
+import { Bar as BarChart, Doughnut as DoughnutChart } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement, // ArcElement'yi ekleyin
+  ArcElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 } from "chart.js";
+import "./Analysis.css";
 
-// ArcElement'i kaydedin
+// Chart.js bileşenlerini kaydediyoruz
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement,  // ArcElement'i burada kaydedin
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -40,41 +36,52 @@ const fillMissingData = (dataMap, labels) => {
   return labels.map((label) => dataMap.get(label) || 0);
 };
 
+// Tarih formatı ayarlayan fonksiyon
+const formatRangeDisplay = (start, end, rangeType) => {
+  const options = { year: "numeric", month: "short" };
+  if (rangeType === "7 Tage") {
+    return `${start.toLocaleDateString("de-DE")} - ${end.toLocaleDateString("de-DE")}`;
+  }
+  return `${start.toLocaleDateString("de-DE", options)} - ${end.toLocaleDateString("de-DE", options)}`;
+};
+
 const Analysis = () => {
   const [archivedOrders, setArchivedOrders] = useState([]);
-  const [dailyOrders, setDailyOrders] = useState(null);
-  const [weeklyOrders, setWeeklyOrders] = useState(null);
-  const [monthlyOrders, setMonthlyOrders] = useState(null);
+  const [dailyOrders, setDailyOrders] = useState(null); // Bestellmengen
+  const [dailyRevenue, setDailyRevenue] = useState(null); // Einnahmen
   const [topProducts, setTopProducts] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [activeFilter, setActiveFilter] = useState("7 Tage");
+
+  // API URL
+  const apiUrl = process.env.REACT_APP_API_BASE_URL || "https://www.antalya-doner-pizzeria.de/api";
 
   useEffect(() => {
     const fetchArchivedOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/orders/archived");
+        const response = await axios.get(`${apiUrl}/orders/archived`);
         setArchivedOrders(response.data);
         processAnalytics(response.data);
       } catch (error) {
-        console.error("Error fetching analytics data:", error);
+        console.error("Fehler beim Abrufen der Analysedaten:", error);
       }
     };
 
     fetchArchivedOrders();
   }, []);
 
+  // Bestelldaten verarbeiten
   const processAnalytics = (orders) => {
-    if (!orders || orders.length === 0) return;
-
     const dailyOrdersMap = new Map();
-    const dailyPriceMap = new Map();
+    const dailyRevenueMap = new Map(); // Einnahmen-Mapping
     const weeklyOrdersMap = new Map();
-    const weeklyPriceMap = new Map();
     const monthlyOrdersMap = new Map();
-    const monthlyPriceMap = new Map();
+    const yearlyOrdersMap = new Map();
+    const weeklyRevenueMap = new Map(); // Wöchentliche Einnahmen
+    const monthlyRevenueMap = new Map(); // Monatliche Einnahmen
+    const yearlyRevenueMap = new Map(); // Jährliche Einnahmen
     const productCounts = new Map();
 
-    // Sabit 7 gün, 4 hafta ve 12 aylık zaman dilimlerini belirleme
+    // Festgelegte Zeiträume: 7 Tage, 4 Wochen, 6 Monate und 12 Monate
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = new Date();
       date.setDate(date.getDate() - i);
@@ -87,10 +94,16 @@ const Analysis = () => {
       return getWeek(date);
     }).reverse();
 
-    const last12Months = Array.from({ length: 12 }, (_, i) => {
+    const last6Months = Array.from({ length: 6 }, (_, i) => {
       const date = new Date();
       date.setMonth(date.getMonth() - i);
       return `${date.getFullYear()}-${date.getMonth() + 1}`;
+    }).reverse();
+
+    const last12Months = Array.from({ length: 12 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      return `${date.getFullYear()}-${date.getMonth() + 1}`; // Letzte 12 Monate korrekt berechnen
     }).reverse();
 
     orders.forEach((order) => {
@@ -99,16 +112,28 @@ const Analysis = () => {
       const week = getWeek(date);
       const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
-      const totalPrice = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+      // Bestellmengen zählen
       dailyOrdersMap.set(day, (dailyOrdersMap.get(day) || 0) + 1);
-      dailyPriceMap.set(day, (dailyPriceMap.get(day) || 0) + totalPrice);
 
+      // Einnahmen berechnen
+      const totalRevenue = order.items.reduce((sum, item) => {
+        return sum + item.selectedPrice.value * item.quantity; // Preis korrekt berechnen
+      }, 0);
+
+      // Tägliche Einnahmen
+      dailyRevenueMap.set(day, (dailyRevenueMap.get(day) || 0) + totalRevenue);
+
+      // Wöchentliche Einnahmen
+      weeklyRevenueMap.set(week, (weeklyRevenueMap.get(week) || 0) + totalRevenue);
       weeklyOrdersMap.set(week, (weeklyOrdersMap.get(week) || 0) + 1);
-      weeklyPriceMap.set(week, (weeklyPriceMap.get(week) || 0) + totalPrice);
 
+      // Monatliche Einnahmen
+      monthlyRevenueMap.set(month, (monthlyRevenueMap.get(month) || 0) + totalRevenue);
       monthlyOrdersMap.set(month, (monthlyOrdersMap.get(month) || 0) + 1);
-      monthlyPriceMap.set(month, (monthlyPriceMap.get(month) || 0) + totalPrice);
+
+      // Jährliche Einnahmen
+      yearlyRevenueMap.set(month, (yearlyRevenueMap.get(month) || 0) + totalRevenue);
+      yearlyOrdersMap.set(month, (yearlyOrdersMap.get(month) || 0) + 1);
 
       order.items.forEach((item) => {
         productCounts.set(
@@ -118,58 +143,65 @@ const Analysis = () => {
       });
     });
 
-    // Eksik veriler için sıfırlama
+    // Bestellmengen-Daten für den gewählten Zeitraum
     const dailyOrdersData = fillMissingData(dailyOrdersMap, last7Days);
-    const dailyPriceData = fillMissingData(dailyPriceMap, last7Days);
     const weeklyOrdersData = fillMissingData(weeklyOrdersMap, last4Weeks);
-    const weeklyPriceData = fillMissingData(weeklyPriceMap, last4Weeks);
-    const monthlyOrdersData = fillMissingData(monthlyOrdersMap, last12Months);
-    const monthlyPriceData = fillMissingData(monthlyPriceMap, last12Months);
+    const monthlyOrdersData = fillMissingData(monthlyOrdersMap, last6Months);
+    const yearlyOrdersData = fillMissingData(yearlyOrdersMap, last12Months);
 
     setDailyOrders({
-      labels: last7Days,
+      labels:
+        activeFilter === "7 Tage"
+          ? last7Days
+          : activeFilter === "4 Wochen"
+          ? last4Weeks
+          : activeFilter === "6 Monate"
+          ? last6Months
+          : last12Months,
       datasets: [
         {
-          label: "Tägliche Bestellungen",
-          data: dailyOrdersData,
+          label: "Bestellmenge",
+          data:
+            activeFilter === "7 Tage"
+              ? dailyOrdersData
+              : activeFilter === "4 Wochen"
+              ? weeklyOrdersData
+              : activeFilter === "6 Monate"
+              ? monthlyOrdersData
+              : yearlyOrdersData,
           backgroundColor: "rgba(75,192,192,1)",
         },
+      ],
+    });
+
+    // Einnahmen-Daten für den gewählten Zeitraum
+    const dailyRevenueData = fillMissingData(dailyRevenueMap, last7Days);
+    const weeklyRevenueData = fillMissingData(weeklyRevenueMap, last4Weeks);
+    const monthlyRevenueData = fillMissingData(monthlyRevenueMap, last6Months);
+    const yearlyRevenueData = fillMissingData(yearlyRevenueMap, last12Months);
+
+    // Einnahmen-Diagramm
+    setDailyRevenue({
+      labels:
+        activeFilter === "7 Tage"
+          ? last7Days
+          : activeFilter === "4 Wochen"
+          ? last4Weeks
+          : activeFilter === "6 Monate"
+          ? last6Months
+          : last12Months,
+      datasets: [
         {
-          label: "Tägliche Gesamtpreis",
-          data: dailyPriceData,
+          label: "Gesamtumsatz (€)",
+          data:
+            activeFilter === "7 Tage"
+              ? dailyRevenueData
+              : activeFilter === "4 Wochen"
+              ? weeklyRevenueData
+              : activeFilter === "6 Monate"
+              ? monthlyRevenueData
+              : yearlyRevenueData,
           backgroundColor: "rgba(255,99,132,1)",
-        },
-      ],
-    });
-
-    setWeeklyOrders({
-      labels: last4Weeks,
-      datasets: [
-        {
-          label: "Wöchentliche Bestellungen",
-          data: weeklyOrdersData,
-          backgroundColor: "rgba(255,159,64,1)",
-        },
-        {
-          label: "Wöchentliche Gesamtpreis",
-          data: weeklyPriceData,
-          backgroundColor: "rgba(153,102,255,1)",
-        },
-      ],
-    });
-
-    setMonthlyOrders({
-      labels: last12Months,
-      datasets: [
-        {
-          label: "Monatliche Bestellungen",
-          data: monthlyOrdersData,
-          backgroundColor: "rgba(54,162,235,1)",
-        },
-        {
-          label: "Monatliche Gesamtpreis",
-          data: monthlyPriceData,
-          backgroundColor: "rgba(255,205,86,1)",
         },
       ],
     });
@@ -181,69 +213,44 @@ const Analysis = () => {
     setTopProducts(topProductsData.slice(0, 10));
   };
 
-  const filterAnalytics = () => {
-    const filteredOrders = archivedOrders.filter((order) => {
-      const orderDate = new Date(order.createdAt);
-      return orderDate >= startDate && orderDate <= endDate;
-    });
-
-    processAnalytics(filteredOrders);
+  const filterAnalytics = (filter) => {
+    setActiveFilter(filter);
+    processAnalytics(archivedOrders); // Filter anwenden und Analytics neu berechnen
   };
 
   return (
     <div className="analysis">
       <h3>Analyse</h3>
-      <div className="date-picker-container">
-        <div className="date-picker">
-          <label>Startdatum:</label>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            dateFormat="dd/MM/yyyy"
-          />
-        </div>
-        <div className="date-picker">
-          <label>Enddatum:</label>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            dateFormat="dd/MM/yyyy"
-          />
-        </div>
-        <button className="filter-button" onClick={filterAnalytics}>
-          Filtern
-        </button>
+
+      <div className="filter-buttons">
+        <button onClick={() => filterAnalytics("7 Tage")}>7 Tage</button>
+        <button onClick={() => filterAnalytics("4 Wochen")}>4 Wochen</button>
+        <button onClick={() => filterAnalytics("6 Monate")}>6 Monate</button>
+        <button onClick={() => filterAnalytics("1 Jahr")}>1 Jahr</button>
       </div>
 
       {dailyOrders && (
         <div className="chart-container">
-          <h4>Tägliche Bestellungen & Gesamtpreis</h4>
+          <h4>Tägliche Bestellmenge</h4>
           <BarChart data={dailyOrders} />
         </div>
       )}
 
-      {weeklyOrders && (
+      {dailyRevenue && (
         <div className="chart-container">
-          <h4>Wöchentliche Bestellungen & Gesamtpreis</h4>
-          <BarChart data={weeklyOrders} />
-        </div>
-      )}
-
-      {monthlyOrders && (
-        <div className="chart-container">
-          <h4>Monatliche Bestellungen & Gesamtpreis</h4>
-          <BarChart data={monthlyOrders} />
+          <h4>Täglicher Umsatz</h4>
+          <BarChart data={dailyRevenue} />
         </div>
       )}
 
       <div className="chart-container">
-        <h4>Am häufigsten bestellte Produkte</h4>
+        <h4>Top 10 Produkte</h4>
         <BarChart
           data={{
             labels: topProducts.map((product) => product.name),
             datasets: [
               {
-                label: "Am häufigsten bestellte Produkte",
+                label: "Bestellmenge",
                 data: topProducts.map((product) => product.count),
                 backgroundColor: "rgba(153,102,255,0.6)",
               },
@@ -253,7 +260,7 @@ const Analysis = () => {
       </div>
 
       <div className="chart-container">
-        <h4>Top 10 Produkte (Doughnut Chart)</h4>
+        <h4>Top 10 Produkte (Donut-Diagramm)</h4>
         <DoughnutChart
           data={{
             labels: topProducts.map((product) => product.name),

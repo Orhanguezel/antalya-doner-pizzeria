@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Axios instance creation
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'https://www.antalya-doner-pizzeria.de/api',
 });
 
 // Interceptor to add Authorization header if the token exists in localStorage
