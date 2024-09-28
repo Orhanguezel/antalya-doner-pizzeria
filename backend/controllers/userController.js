@@ -34,14 +34,12 @@ const login = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    console.error('Email not found');
     res.status(401);
     throw new Error('Email nicht gefunden');
   }
 
   const isPasswordMatch = await user.matchPassword(password);
   if (!isPasswordMatch) {
-    console.error('Password mismatch');
     res.status(401);
     throw new Error('Falsches Passwort');
   }
@@ -125,6 +123,20 @@ const updateUserRole = asyncHandler(async (req, res) => {
   }
 });
 
+// Delete User
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    await User.deleteOne({ _id: user._id }); // remove yerine deleteOne kullanıyoruz
+    res.json({ message: 'Kullanıcı başarıyla silindi' });
+  } else {
+    res.status(404);
+    throw new Error('Kullanıcı bulunamadı');
+  }
+});
+
+
 // Forgot Password
 const forgotPassword = asyncHandler(async (req, res) => {
   res.send('Forgot Password');
@@ -144,10 +156,8 @@ const logout = asyncHandler(async (req, res) => {
 const deleteAllUsers = asyncHandler(async (req, res) => {
   try {
     const result = await User.deleteMany({ role: { $ne: 'admin' } });
-    console.log(`Deleted ${result.deletedCount} users`);
     res.json({ message: 'All non-admin users deleted', deletedCount: result.deletedCount });
   } catch (error) {
-    console.error('Error deleting users:', error);
     res.status(500).json({ message: 'Failed to delete users' });
   }
 });
@@ -163,4 +173,5 @@ module.exports = {
   resetPassword,
   logout,
   deleteAllUsers,
+  deleteUser, // deleteUser fonksiyonunu doğru şekilde export ediyoruz
 };
