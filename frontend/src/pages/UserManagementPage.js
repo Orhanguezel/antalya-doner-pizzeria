@@ -47,7 +47,7 @@ const UserManagementPage = () => {
         if (photo) {
             formData.append('photo', photo);
         }
-    
+
         try {
             const response = await axios.put(`/users/${editUserId}`, formData, {
                 headers: {
@@ -71,22 +71,8 @@ const UserManagementPage = () => {
             setEditUserId(null);
         } catch (error) {
             console.error('Fehler beim Aktualisieren des Benutzers:', error.message);
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
         }
     };
-    
 
     const handleCancelEdit = () => {
         setEditUserId(null);
@@ -99,6 +85,7 @@ const UserManagementPage = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
+            // Kullanıcı state'ten kaldırılıyor
             setUsers(users.filter(user => user._id !== userId));
         } catch (error) {
             console.error('Fehler beim Löschen des Benutzers:', error.message);
