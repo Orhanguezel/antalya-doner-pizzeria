@@ -20,37 +20,26 @@ const LieferungOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // api instance'ı üzerinden GET isteği yapıyoruz
         const response = await api.get('/orders', {
           headers: {
-            Authorization: `Bearer ${token}` // Token ekleniyor
+            Authorization: `Bearer ${token}`
           }
         });
         const fetchedOrders = response.data;
-
-        // Siparişleri state'e kaydediyoruz
+        
+        console.log(fetchedOrders); // API'den dönen tüm siparişleri kontrol et
+        
         setOrders(fetchedOrders);
-
-        // Durumlara göre sipariş sayısını hesaplıyoruz
-        const eingehendeCount = fetchedOrders.filter(order => order.status === 'Eingehende Bestellungen' && order.orderType === 'delivery').length;
-        const vorbereiteteCount = fetchedOrders.filter(order => order.status === 'Bestellungen in Vorbereitung' && order.orderType === 'delivery').length;
-        const lieferndeCount = fetchedOrders.filter(order => order.status === 'Bestellungen werden geliefert' && order.orderType === 'delivery').length;
-        const gelieferteCount = fetchedOrders.filter(order => order.status === 'Gelieferte Bestellungen' && order.orderType === 'delivery').length;
-
-        // Durum sayıları state'ini güncelliyoruz
-        setStatusCounts({
-          eingehende: eingehendeCount,
-          vorbereitete: vorbereiteteCount,
-          liefernde: lieferndeCount,
-          gelieferte: gelieferteCount,
-        });
+        
+        // Diğer kodlar
       } catch (error) {
         console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
     };
-
+  
     fetchOrders();
   }, [token]);
+  
 
   const updateOrderStatus = async (orderId, status) => {
     try {
@@ -59,7 +48,6 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
-      // Siparişin durumunu güncelle
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
     } catch (error) {
       console.error('Fehler beim Aktualisieren des Bestellstatus:', error);
@@ -73,7 +61,6 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
-      // Siparişi listeden kaldır
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
       console.error('Fehler beim Löschen der Bestellung:', error);
@@ -87,7 +74,6 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
-      // Siparişi arşivle
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
     } catch (error) {
       console.error('Fehler beim Archivieren der Bestellung:', error);
@@ -110,7 +96,7 @@ const LieferungOrders = () => {
   };
 
   const filteredOrders = orders
-    .filter(order => order.orderType === 'delivery') // Teslimat siparişlerini filtreliyoruz
+    .filter(order => order.orderType === 'delivery')
     .filter(order => {
       if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
       if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
@@ -183,12 +169,12 @@ const LieferungOrders = () => {
                       </ul>
                     </>
                   )}
-                  <p>Gesamtpreis: {item.totalPrice.toFixed(2)} €</p>
+                  <p><strong>Gesamtpreis:</strong> {item.totalPrice.toFixed(2)} €</p>
                 </li>
               ))}
             </ul>
-            {order.orderType === 'delivery' && <p>Lieferungskosten: {order.deliveryFee.toFixed(2)}€</p>}
-            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)).toFixed(2)}€</p>
+            <p><strong>Liefergebühr:</strong> 2.00 €</p>
+            <p><strong>Gesamt:</strong> {(order.total).toFixed(2)} €</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
               {filter === 'Eingehende Bestellungen' && (

@@ -28,12 +28,10 @@ const AdminProfilePage = () => {
   // İlk yüklemede yönlendirme ve izin isteği
   useEffect(() => {
     if (location.pathname === "/admin") {
-      console.log("Navigating to Lieferung Orders");
       navigate("/admin/lieferung-orders");
     }
 
     if (Notification.permission !== "granted") {
-      console.log("Requesting notification permission...");
       Notification.requestPermission();
     }
   }, [location.pathname, navigate]);
@@ -41,18 +39,13 @@ const AdminProfilePage = () => {
   // Bildirim sesi çalma fonksiyonu
   const playNotificationSound = () => {
     const audio = new Audio("/assets/sounds/notification.mp3");
-    audio.play().then(() => {
-      console.log("Bildirim sesi başarıyla çalındı.");
-    }).catch((error) => console.error("Ses çalma başarısız oldu:", error));
+    audio.play().catch((error) => console.error("Ses çalma başarısız oldu:", error));
   };
 
   // Sipariş sayısını çekmek için fonksiyon
   const fetchOrderCounts = async () => {
     try {
-      console.log("Fetching orders...");
-
-      const apiUrl = "http://localhost:5000/api"; // Doğrudan API URL
-      console.log("API URL:", apiUrl);
+      const apiUrl = process.env.REACT_APP_API_BASE_URL || "https://www.antalya-doner-pizzeria.de/api";
 
       const response = await axios.get(`${apiUrl}/orders`, {
         headers: {
@@ -61,15 +54,11 @@ const AdminProfilePage = () => {
       });
 
       const orders = response.data;
-      console.log("Fetched Orders:", orders);
-
       const newOrderCount = orders.length;
-      console.log("Yeni sipariş sayısı:", newOrderCount);
 
       // Yeni sipariş varsa bildirim gönder
       if (newOrderCount > prevOrderCount) {
         if (Notification.permission === "granted") {
-          console.log("Bildirim gönderiliyor...");
           new Notification("Neue Bestellung!", {
             body: "Eine neue Bestellung ist eingegangen.",
           });

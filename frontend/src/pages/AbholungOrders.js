@@ -164,11 +164,10 @@ const AbholungOrders = () => {
                       </ul>
                     </>
                   )}
-                  <p>Gesamtpreis: {item.totalPrice.toFixed(2)} €</p>
+                  <p><strong>Gesamtpreis:</strong> {item.totalPrice.toFixed(2)} €</p>
                 </li>
               ))}
             </ul>
-            <p><strong>Gesamt:</strong> {(order.total + (order.orderType === 'delivery' ? order.deliveryFee : 0)).toFixed(2)}€</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">
               {filter === 'Eingehende Bestellungen' && (
