@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const generateToken = require('../utils/generateToken');
-const bcrypt = require('bcryptjs');
 
 // Register User
 const register = asyncHandler(async (req, res) => {
@@ -114,12 +113,12 @@ const updateUserRole = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
-    user.role = req.body.role;
+    user.role = req.body.role || user.role;
     await user.save();
-    res.json({ message: 'User role updated' });
+    res.json({ message: 'Kullanıcı rolü başarıyla güncellendi', role: user.role });
   } else {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error('Kullanıcı bulunamadı');
   }
 });
 
@@ -128,7 +127,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
-    await User.deleteOne({ _id: user._id }); // remove yerine deleteOne kullanıyoruz
+    await User.deleteOne({ _id: user._id });
     res.json({ message: 'Kullanıcı başarıyla silindi' });
   } else {
     res.status(404);
@@ -136,6 +135,38 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Update User by Admin (Admin olarak kullanıcının profilini güncelleme)
+const updateUserByAdmin = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+    user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+    user.address = req.body.address || user.address;
+    user.blocked = req.body.blocked !== undefined ? req.body.blocked : user.blocked;
+
+    if (req.file) {
+      user.profileImage = `/uploads/profiles/${req.file.filename}`;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
+      address: updatedUser.address,
+      blocked: updatedUser.blocked,
+      role: updatedUser.role,
+      profileImage: updatedUser.profileImage,
+    });
+  } else {
+    res.status(404);
+    throw new Error('Kullanıcı bulunamadı');
+  }
+});
 
 // Forgot Password
 const forgotPassword = asyncHandler(async (req, res) => {
@@ -173,5 +204,6 @@ module.exports = {
   resetPassword,
   logout,
   deleteAllUsers,
-  deleteUser, // deleteUser fonksiyonunu doğru şekilde export ediyoruz
+  deleteUser,
+  updateUserByAdmin,
 };

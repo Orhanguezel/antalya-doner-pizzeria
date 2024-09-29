@@ -10,7 +10,8 @@ const {
   resetPassword,
   logout,
   deleteAllUsers,
-  deleteUser, // deleteUser fonksiyonunu içe aktarıyoruz
+  deleteUser,
+  updateUserByAdmin,
 } = require('../controllers/userController');
 const { protect, admin } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -27,6 +28,7 @@ router.post('/logout', protect, logout);
 
 router.get('/', protect, admin, getAllUsers);
 router.put('/:id/role', protect, admin, updateUserRole);
+router.put('/:id', protect, admin, updateUserByAdmin); // Admin tarafından kullanıcı güncelleme
 router.delete('/:id', protect, admin, deleteUser); // Kullanıcı silme route'u
 router.delete('/delete-all', protect, admin, deleteAllUsers);
 
