@@ -39,40 +39,35 @@ const UserManagementPage = () => {
     };
 
     const handleSaveChanges = async () => {
-        const formData = new FormData();
-        formData.append('role', role);
-        formData.append('blocked', blocked);
-        formData.append('phoneNumber', phoneNumber);
-        formData.append('address', address);
-        if (photo) {
-            formData.append('photo', photo);
-        }
+    const formData = new FormData();
+    formData.append('role', role);  // Rol değişikliğini ekliyoruz
+    formData.append('blocked', blocked);
+    formData.append('phoneNumber', phoneNumber);
+    formData.append('address', address);
+    if (photo) {
+        formData.append('photo', photo);
+    }
 
-        try {
-            const response = await axios.put(`/users/${editUserId}`, formData, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            const updatedUsers = users.map(user =>
-                user._id === editUserId
-                    ? {
-                          ...user,
-                          role,
-                          blocked,
-                          phoneNumber,
-                          address,
-                          photo: response.data.photo || user.photo,
-                      }
-                    : user
-            );
-            setUsers(updatedUsers);
-            setEditUserId(null);
-        } catch (error) {
-            console.error('Fehler beim Aktualisieren des Benutzers:', error.message);
-        }
-    };
+    try {
+        const response = await axios.put(`/users/${editUserId}/role`, { role }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'  // application/json olduğundan emin olalım
+            }
+        });
+        
+        const updatedUsers = users.map(user =>
+            user._id === editUserId
+                ? { ...user, role }
+                : user
+        );
+        setUsers(updatedUsers);
+        setEditUserId(null);
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren der Benutzerrolle:', error.message);
+    }
+};
+
 
     const handleCancelEdit = () => {
         setEditUserId(null);

@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import axios from '../axios';
 import './ProfilePage.css';
+import { useAuth } from '../context/AuthContext'; // useAuth ekliyoruz
 import placeholderImage from '../assets/defaultProfileImage.png'; // Placeholder resmi ekleyin
 
-const ProfilePage = ({ userInfo }) => {
+const ProfilePage = () => {
+    const { userInfo } = useAuth(); // AuthContext'ten userInfo'yu alıyoruz
     const [profileData, setProfileData] = useState({
         username: '',
         email: '',
-        address: '', // Adres ekledik
+        address: '',
         password: '',
-        profileImage: placeholderImage, // Varsayılan profil fotoğrafı olarak placeholder
+        profileImage: placeholderImage,
+        profileImageFile: null,
     });
     const [loading, setLoading] = useState(true);
     const [updateMessage, setUpdateMessage] = useState('');
@@ -31,13 +34,13 @@ const ProfilePage = ({ userInfo }) => {
                 });
 
                 const data = response.data;
-                console.log('Profil Daten:', data);
                 setProfileData({
                     username: data.username,
                     email: data.email,
-                    address: data.address || '', // Adres bilgisi
+                    address: data.address || '',
                     password: '',
-                    profileImage: data.profileImage || placeholderImage, // Eğer kullanıcı fotoğrafı varsa göster, yoksa placeholder
+                    profileImage: data.profileImage ? `/uploads/profiles/${data.profileImage}` : placeholderImage,
+                    profileImageFile: null,
                 });
             } catch (error) {
                 console.error('Fehler beim Laden der Profilinformationen:', error.message);
@@ -59,10 +62,14 @@ const ProfilePage = ({ userInfo }) => {
     };
 
     const handleFileChange = (e) => {
-        setProfileData((prevState) => ({
-            ...prevState,
-            profileImage: URL.createObjectURL(e.target.files[0]), // Profil fotoğrafı için URL oluşturuyoruz
-        }));
+        const file = e.target.files[0];
+        if (file) {
+            setProfileData((prevState) => ({
+                ...prevState,
+                profileImageFile: file,
+                profileImage: URL.createObjectURL(file),
+            }));
+        }
     };
 
     const handleFormSubmit = async (e) => {
@@ -71,26 +78,25 @@ const ProfilePage = ({ userInfo }) => {
         const formData = new FormData();
         formData.append('username', profileData.username);
         formData.append('email', profileData.email);
-        formData.append('address', profileData.address); // Adres formdata'ya eklenir
+        formData.append('address', profileData.address);
         if (profileData.password) formData.append('password', profileData.password);
-        if (profileData.profileImage !== placeholderImage) formData.append('profileImage', profileData.profileImage);
+        if (profileData.profileImageFile) {
+            formData.append('profileImage', profileData.profileImageFile);
+        }
 
         try {
-            const response = await axios.put(
-                `/api/users/profile`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${userInfo.token}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
+            const response = await axios.put(`/api/users/profile`, formData, {
+                headers: {
+                    Authorization: `Bearer ${userInfo.token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             setUpdateMessage('Profil erfolgreich aktualisiert.');
             setProfileData({
                 ...profileData,
                 password: '',
+                profileImageFile: null,
             });
         } catch (error) {
             console.error('Fehler beim Aktualisieren des Profils:', error.message);
@@ -102,7 +108,7 @@ const ProfilePage = ({ userInfo }) => {
         setProfileData((prevState) => ({
             ...prevState,
             password: '',
-            profileImage: prevState.profileImage === placeholderImage ? '' : prevState.profileImage, // Eğer placeholder ise boş bırak
+            profileImageFile: null,
         }));
     };
 
