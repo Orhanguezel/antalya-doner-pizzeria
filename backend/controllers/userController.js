@@ -2,9 +2,9 @@ const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const generateToken = require('../utils/generateToken');
 
-// Kullanıcı kaydı
+// Benutzerregistrierung
 const register = asyncHandler(async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, phoneNumber, address } = req.body;
 
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {
@@ -12,13 +12,15 @@ const register = asyncHandler(async (req, res) => {
         throw new Error('Benutzer existiert bereits');
     }
 
-    const user = await User.create({ username, email, password, role });
+    const user = await User.create({ username, email, password, role, phoneNumber, address });
     if (user) {
         res.status(201).json({
             _id: user._id,
             username: user.username,
             email: user.email,
             role: user.role,
+            phoneNumber: user.phoneNumber,
+            address: user.address,
             token: generateToken(user._id),
         });
     } else {
@@ -27,14 +29,14 @@ const register = asyncHandler(async (req, res) => {
     }
 });
 
-// Kullanıcı girişi
+// Benutzer-Login
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
         res.status(401);
-        throw new Error('Email nicht gefunden');
+        throw new Error('E-Mail nicht gefunden');
     }
 
     const isPasswordMatch = await user.matchPassword(password);
@@ -48,52 +50,54 @@ const login = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
         token: generateToken(user._id),
     });
 });
 
-// Kullanıcı profilini getirme
+// Profil abrufen
 const getProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password');
     if (user) {
         res.json(user);
     } else {
         res.status(404);
-        throw new Error('Kullanıcı bulunamadı');
+        throw new Error('Benutzer nicht gefunden');
     }
 });
 
-// Kullanıcı doğrulama (token doğrulama)
+// Token-Verifizierung
 const verifyToken = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password');
     if (user) {
         res.json({ user });
     } else {
         res.status(404);
-        throw new Error('Kullanıcı doğrulanamadı');
+        throw new Error('Benutzer konnte nicht verifiziert werden');
     }
 });
 
-// Tüm kullanıcıları getirme (admin yetkisi gerekli)
+// Alle Benutzer abrufen (Admin-Berechtigung erforderlich)
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find({}).select('-password');
     res.json(users);
 });
 
-// Kullanıcıyı bloklama (admin yetkisi gerekli)
+// Benutzer blockieren (Admin-Berechtigung erforderlich)
 const blockUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
     if (user) {
         user.isBlocked = true;
         await user.save();
-        res.json({ message: 'User blocked' });
+        res.json({ message: 'Benutzer blockiert' });
     } else {
         res.status(404);
-        throw new Error('User not found');
+        throw new Error('Benutzer nicht gefunden');
     }
 });
 
-// Kullanıcı profilini güncelleme
+// Profil aktualisieren
 const updateProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
@@ -101,6 +105,7 @@ const updateProfile = asyncHandler(async (req, res) => {
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
         user.address = req.body.address || user.address;
+        user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
         if (req.file) {
             user.profileImage = `/uploads/profiles/${req.file.filename}`;
@@ -118,62 +123,66 @@ const updateProfile = asyncHandler(async (req, res) => {
             email: updatedUser.email,
             role: updatedUser.role,
             profileImage: updatedUser.profileImage,
+            phoneNumber: updatedUser.phoneNumber,
+            address: updatedUser.address,
             token: generateToken(updatedUser._id),
         });
     } else {
         res.status(404);
-        throw new Error('User not found');
+        throw new Error('Benutzer nicht gefunden');
     }
 });
 
-// Kullanıcı rolünü güncelleme (admin yetkisi gerekli)
+// Benutzerrolle aktualisieren (Admin-Berechtigung erforderlich)
 const updateUserRole = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
     if (user) {
         user.role = req.body.role || user.role;
         await user.save();
-        res.json({ message: 'Kullanıcı rolü başarıyla güncellendi', role: user.role });
+        res.json({ message: 'Benutzerrolle erfolgreich aktualisiert', role: user.role });
     } else {
         res.status(404);
-        throw new Error('Kullanıcı bulunamadı');
+        throw new Error('Benutzer nicht gefunden');
     }
 });
 
-// Şifre sıfırlama
+// Passwort zurücksetzen
 const resetPassword = asyncHandler(async (req, res) => {
     const { email, newPassword } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
         res.status(404);
-        throw new Error('Kullanıcı bulunamadı');
+        throw new Error('Benutzer nicht gefunden');
     }
 
     user.password = newPassword;
     await user.save();
 
-    res.json({ message: 'Şifre başarıyla güncellendi.' });
+    res.json({ message: 'Passwort erfolgreich aktualisiert' });
 });
 
-// Kullanıcı silme (admin yetkisi gerekli)
+// Benutzer löschen (Admin-Berechtigung erforderlich)
 const deleteUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
     if (user) {
         await User.deleteOne({ _id: user._id });
-        res.json({ message: 'Kullanıcı başarıyla silindi' });
+        res.json({ message: 'Benutzer erfolgreich gelöscht' });
     } else {
         res.status(404);
-        throw new Error('Kullanıcı bulunamadı');
+        throw new Error('Benutzer nicht gefunden');
     }
 });
 
-// Admin tarafından kullanıcı güncelleme (admin yetkisi gerekli)
+// Benutzer durch Admin aktualisieren (Admin-Berechtigung erforderlich)
 const updateUserByAdmin = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
     if (user) {
+        console.log('Gelen veriler:', req.body); // Güncellenen veriler
+
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
@@ -202,35 +211,36 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     }
 });
 
-// Şifre unutma
+
+// Passwort vergessen
 const forgotPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
         res.status(404);
-        throw new Error('Kullanıcı bulunamadı');
+        throw new Error('Benutzer nicht gefunden');
     }
 
-    // TODO: Şifre sıfırlama işlemi burada yapılabilir
+    // TODO: Hier sollte die E-Mail zum Zurücksetzen des Passworts gesendet werden.
 
     res.status(200).json({
-        message: 'Şifre sıfırlama talebi alındı. Lütfen emailinizi kontrol edin.',
+        message: 'Anfrage zum Zurücksetzen des Passworts erhalten. Bitte überprüfen Sie Ihre E-Mail.',
     });
 });
 
-// Kullanıcıyı çıkış yaptırma
+// Benutzer ausloggen
 const logout = asyncHandler(async (req, res) => {
-    res.json({ message: 'User logged out' });
+    res.json({ message: 'Benutzer wurde ausgeloggt' });
 });
 
-// Tüm kullanıcıları silme (admin yetkisi gerekli)
+// Alle Benutzer löschen (Admin-Berechtigung erforderlich)
 const deleteAllUsers = asyncHandler(async (req, res) => {
     try {
         const result = await User.deleteMany({ role: { $ne: 'admin' } });
-        res.json({ message: 'All non-admin users deleted', deletedCount: result.deletedCount });
+        res.json({ message: 'Alle nicht-Admin-Benutzer gelöscht', deletedCount: result.deletedCount });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to delete users' });
+        res.status(500).json({ message: 'Benutzer konnten nicht gelöscht werden' });
     }
 });
 
@@ -244,9 +254,9 @@ module.exports = {
     updateProfile,
     updateUserRole,
     resetPassword,
-    logout,
     deleteAllUsers,
     deleteUser,
     updateUserByAdmin,
     forgotPassword,
+    logout,
 };

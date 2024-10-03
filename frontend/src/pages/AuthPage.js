@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';  // AuthContext'ten login fonksiyonunu kullanıyoruz
+import axios from '../axios'; // Axios'u doğru şekilde import ediyoruz
+import { useAuth } from '../context/AuthContext'; // AuthContext'ten login fonksiyonunu kullanıyoruz
 import './AuthPage.css';
 
 const AuthPage = () => {
@@ -11,7 +12,7 @@ const AuthPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     
-    const { login, setUserInfo } = useAuth();  // useAuth ile login ve setUserInfo fonksiyonlarını alıyoruz
+    const { login, setUserInfo } = useAuth(); // useAuth ile login ve setUserInfo fonksiyonlarını alıyoruz
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,15 +21,16 @@ const AuthPage = () => {
             if (isLogin) {
                 // Giriş yapma işlemi (AuthContext'teki login fonksiyonunu kullanıyoruz)
                 await login(email, password);
+                navigate('/profile'); // Başarılı giriş sonrası profile yönlendir
             } else {
                 // Kayıt olma işlemi
                 const response = await axios.post('/users/register', { username, email, password });
                 data = response.data;
 
                 // Yeni kullanıcı kaydı yapıldığında oturum açmak için login fonksiyonunu kullanıyoruz
-                setUserInfo(data);
+                setUserInfo(data); // Eğer `setUserInfo` burada hata veriyorsa, AuthContext'te bu fonksiyonu tanımlamamız gerekiyor
                 localStorage.setItem('userInfo', JSON.stringify(data));
-                navigate('/profile');
+                navigate('/profile'); // Kayıt başarılıysa profile yönlendir
             }
         } catch (error) {
             setError(error.response ? error.response.data.message : error.message);

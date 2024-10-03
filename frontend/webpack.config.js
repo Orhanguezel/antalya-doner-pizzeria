@@ -20,16 +20,16 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: isDevelopment ? 'bundle.[name].js' : 'bundle.[name].[contenthash].js', // Hash'li dosya adları çakışmayı önler
+    filename: isDevelopment ? 'bundle.[name].js' : 'bundle.[name].[contenthash].js',
     publicPath: '/',
-    clean: true, // Eski dosyaların temizlenmesini sağlar
+    clean: true,
   },
   stats: {
-    all: false, // Tüm logları kapatır
-    errors: true, // Sadece hataları gösterir
-    warnings: true, // Sadece uyarıları gösterir
-    assets: true, // Varlıklarla ilgili bilgileri gösterir
-    timings: true, // Derleme sürelerini gösterir
+    all: false,
+    errors: true,
+    warnings: true,
+    assets: true,
+    timings: true,
   },
   module: {
     rules: [
@@ -46,7 +46,7 @@ module.exports = {
         test: /\.(png|svg|jpg|jpeg|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[hash][ext][query]', // Görselleri optimize eder
+          filename: 'images/[hash][ext][query]',
         },
       },
     ],
@@ -71,7 +71,7 @@ module.exports = {
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin({
-      ...envKeys, // Tüm .env değişkenlerini burada ekliyoruz
+      ...envKeys,
       'process.env.REACT_APP_API_BASE_URL': JSON.stringify(
         process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api'
       ),
@@ -85,26 +85,35 @@ module.exports = {
     historyApiFallback: true,
     port: 3001,
     client: {
-      logging: 'error', // Sadece hata loglarını gösterir
+      logging: 'error',
       overlay: {
         errors: true,
-        warnings: false, // Uyarıları kapatır
+        warnings: false,
       },
     },
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    fallback: {
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      url: require.resolve('url/'),
+      assert: require.resolve('assert/'),
+      stream: require.resolve('stream-browserify'),
+      zlib: require.resolve('browserify-zlib'),
+      util: require.resolve('util/'),
+    },
   },
   optimization: {
-    minimize: !isDevelopment, // Üretim modunda kodu küçültür
+    minimize: !isDevelopment,
     splitChunks: {
-      chunks: 'all', // Ortak kodları ayırır ve bundle boyutunu küçültür
+      chunks: 'all',
     },
     runtimeChunk: {
-      name: 'runtime', // Runtime kodunu ayrı bir dosya olarak oluşturur
+      name: 'runtime',
     },
   },
   performance: {
-    hints: false, // Performans ipuçlarını kapatır (örn. bundle boyutuyla ilgili uyarılar)
+    hints: false,
   },
 };

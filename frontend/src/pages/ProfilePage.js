@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import placeholderImage from '../assets/defaultProfileImage.png';
 
 const ProfilePage = () => {
-    const { userInfo } = useAuth(); 
+    const { userInfo, token, logout } = useAuth(); // logout işlemi de eklendi
     const [profileData, setProfileData] = useState({
         username: userInfo?.username || '',
         email: userInfo?.email || '',
@@ -17,10 +17,11 @@ const ProfilePage = () => {
     });
     const [loading, setLoading] = useState(true);
     const [updateMessage, setUpdateMessage] = useState('');
+    const [userBlocked, setUserBlocked] = useState(false); // Kullanıcı engellenme durumu
 
     useEffect(() => {
         const fetchProfile = async () => {
-            if (!userInfo?.token) {
+            if (!token) {
                 setLoading(false);
                 setUpdateMessage('Auf die Benutzerinformationen kann nicht zugegriffen werden.');
                 return;
@@ -29,7 +30,7 @@ const ProfilePage = () => {
             try {
                 const response = await axios.get(`/users/profile`, {
                     headers: {
-                        Authorization: `Bearer ${userInfo.token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
@@ -42,6 +43,7 @@ const ProfilePage = () => {
                     profileImage: data.profileImage ? `/uploads/profiles/${data.profileImage}` : placeholderImage,
                     profileImageFile: null,
                 });
+                setUserBlocked(data.isBlocked); // Kullanıcı engellendi mi kontrol et
             } catch (error) {
                 console.error('Fehler beim Laden der Profilinformationen:', error.message);
                 setUpdateMessage('Profilinformationen konnten nicht geladen werden.');
@@ -51,7 +53,7 @@ const ProfilePage = () => {
         };
 
         fetchProfile();
-    }, [userInfo?.token]);
+    }, [token]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -85,9 +87,9 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await axios.put(`/api/users/profile`, formData, {
+            const response = await axios.put(`/users/profile`, formData, {
                 headers: {
-                    Authorization: `Bearer ${userInfo.token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
@@ -110,6 +112,25 @@ const ProfilePage = () => {
             password: '',
             profileImageFile: null,
         }));
+    };
+
+    const handleLogout = () => {
+        logout(); // Kullanıcıyı çıkış yaptırma
+    };
+
+    const handleBlockUser = async () => {
+        try {
+            const response = await axios.put(`/users/block/${userInfo._id}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setUserBlocked(true);
+            setUpdateMessage('Benutzer wurde blockiert.');
+        } catch (error) {
+            console.error('Fehler beim Blockieren des Benutzers:', error.message);
+            setUpdateMessage('Fehler beim Blockieren des Benutzers.');
+        }
     };
 
     if (loading) {
@@ -153,7 +174,6 @@ const ProfilePage = () => {
                                 name="address"
                                 value={profileData.address}
                                 onChange={handleInputChange}
-                                required
                             />
                         </Form.Group>
 
@@ -192,6 +212,18 @@ const ProfilePage = () => {
                     </Form>
                 </Card.Body>
             </Card>
+
+            {userBlocked ? (
+                <p className="text-danger">Kullanıcı engellendi</p>
+            ) : (
+                <Button variant="danger" onClick={handleBlockUser}>
+                    Benutzer blockieren
+                </Button>
+            )}
+
+            <Button variant="danger" onClick={handleLogout} style={{ marginTop: '10px' }}>
+                Logout
+            </Button>
         </Container>
     );
 };
