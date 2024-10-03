@@ -15,7 +15,7 @@ function Footer() {
               alt="Guezel Webdesign Logo"
               className="footer-logo mb-3"
             />
-            <h5>ANTALYA Döner & Pizzeria</h5>
+            <h5></h5>
             <p>Kapellenplatz 1, 52457 Aldenhoven</p>
           </Col>
           <Col md={4} sm={12} className="footer-col text-center">
