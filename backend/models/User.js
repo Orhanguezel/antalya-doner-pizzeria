@@ -5,23 +5,27 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, default: 'user' },
+  role: { type: String, default: 'user', enum: ['user', 'admin'] }, // user ve admin rollerini belirledik
   profileImage: { type: String },
 }, {
   timestamps: true
 });
 
+// Şifreyi kaydetmeden önce hash'ler
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);  // Hata olursa yakala
+  }
 });
 
+// Şifre karşılaştırma fonksiyonu
 UserSchema.methods.matchPassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };
-
-UserSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', UserSchema);

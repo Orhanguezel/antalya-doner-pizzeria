@@ -8,13 +8,13 @@ import Analysis from "./Analysis";
 import MenuEdit from "./MenuEdit";
 import UserManagementPage from "./UserManagementPage";
 import Breadcrumb from "../components/Breadcrumb";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext"; // AuthContext'ten userInfo'yu alıyoruz
 import "./AdminProfilePage.css";
 
 const AdminProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { userInfo, token } = useAuth(); // userInfo'yu AuthContext'ten düzgün bir şekilde alıyoruz
   const [orderCounts, setOrderCounts] = useState({
     lieferung: 0,
     abholung: 0,
@@ -27,14 +27,16 @@ const AdminProfilePage = () => {
 
   // İlk yüklemede yönlendirme ve izin isteği
   useEffect(() => {
-    if (location.pathname === "/admin") {
-      navigate("/admin/lieferung-orders");
+    if (!userInfo || userInfo.role !== 'admin') {
+      navigate('/auth'); // Eğer admin değilse giriş sayfasına yönlendir
+    } else if (location.pathname === '/admin') {
+      navigate('/admin/lieferung-orders'); // Eğer adminse ve admin ana sayfasına geldiyse, siparişlere yönlendir
     }
 
-    if (Notification.permission !== "granted") {
+    if (Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, userInfo]);
 
   // Bildirim sesi çalma fonksiyonu
   const playNotificationSound = () => {

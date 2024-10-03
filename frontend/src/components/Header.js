@@ -1,12 +1,12 @@
-import React from 'react';
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import './Header.css';
-import { useAuth } from '../context/AuthContext';  // AuthContext'ten userInfo ve logout'u çekiyoruz
-import logo from '../assets/logo/11.png';
+import React from "react";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useAuth } from "../context/AuthContext"; // AuthContext'i kullandığımızdan emin olalım
+import "./Header.css";
+import logo from "../assets/logo/11.png";
 
 function Header() {
-  const { userInfo, logout } = useAuth();  // AuthContext'ten userInfo ve logout'u çekiyoruz
+  const { userInfo, logout } = useAuth(); // userInfo ve logout fonksiyonlarını çekiyoruz
 
   return (
     <header>
@@ -19,7 +19,9 @@ function Header() {
                 alt="Antalya Döner & Pizza Logo"
                 className="header-logo"
               />
-              <span className="ml-2">Antalya Döner & Pizzaria <span>-Aldenhoven</span></span>
+              <span className="ml-2">
+                Antalya Döner & Pizzaria <span>-Aldenhoven</span>
+              </span>
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -37,22 +39,22 @@ function Header() {
               <LinkContainer to="/kontakt">
                 <Nav.Link>Kontakt</Nav.Link>
               </LinkContainer>
-              
-              {userInfo && userInfo.role === 'admin' && (
+
+              {/* Admin girişi yapılmışsa Panel linki */}
+              {userInfo && userInfo.role === "admin" && (
                 <LinkContainer to="/admin">
                   <Nav.Link>Panel</Nav.Link>
                 </LinkContainer>
               )}
 
+              {/* Kullanıcı giriş yaptıysa kullanıcı adını göster, değilse Login/Register */}
               {userInfo ? (
                 <NavDropdown title={userInfo.username} id="username">
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={logout}>
-                    Logout
-                  </NavDropdown.Item>
+                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/auth">

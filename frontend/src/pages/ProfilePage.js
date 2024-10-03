@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import axios from '../axios';
 import './ProfilePage.css';
-import { useAuth } from '../context/AuthContext'; // useAuth ekliyoruz
-import placeholderImage from '../assets/defaultProfileImage.png'; // Placeholder resmi ekleyin
+import { useAuth } from '../context/AuthContext';
+import placeholderImage from '../assets/defaultProfileImage.png';
 
 const ProfilePage = () => {
-    const { userInfo } = useAuth(); // AuthContext'ten userInfo'yu alıyoruz
+    const { userInfo } = useAuth(); 
     const [profileData, setProfileData] = useState({
-        username: '',
-        email: '',
+        username: userInfo?.username || '',
+        email: userInfo?.email || '',
         address: '',
         password: '',
         profileImage: placeholderImage,
@@ -27,7 +27,7 @@ const ProfilePage = () => {
             }
 
             try {
-                const response = await axios.get(`/api/users/profile`, {
+                const response = await axios.get(`/users/profile`, {
                     headers: {
                         Authorization: `Bearer ${userInfo.token}`,
                     },

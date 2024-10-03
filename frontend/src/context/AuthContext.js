@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axios';  // axiosInstance burada kullanılıyor
+import axiosInstance from '../axios';
 
 const AuthContext = createContext();
 
@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
             },
           });
           // Token doğrulandı, kullanıcı bilgilerini güncelle.
+          console.log(response.data.user); // Kullanıcı bilgilerini burada logluyoruz
           setUserInfo(response.data.user);
           localStorage.setItem('userInfo', JSON.stringify(response.data.user));
         } catch (error) {
@@ -37,37 +38,36 @@ export const AuthProvider = ({ children }) => {
       }
       setLoading(false); // Yüklenme durumu bitti
     };
-
+  
     verifyToken();
   }, [token]);
+  
 
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post(`/users/login`, { email, password });
-      // Başarılı login durumunda token ve kullanıcı bilgilerini güncelle.
+      const response = await axiosInstance.post('/users/login', { email, password });
       setToken(response.data.token);
       localStorage.setItem('token', response.data.token);
-      setUserInfo(response.data.user);
-      localStorage.setItem('userInfo', JSON.stringify(response.data.user));
-      // Kullanıcı profil sayfasına yönlendir.
+      setUserInfo(response.data);
+      localStorage.setItem('userInfo', JSON.stringify(response.data));
       navigate('/profile');
     } catch (error) {
       console.error('Login failed:', error);
-      throw error; // Hata fırlatarak frontend'te doğru hata mesajını gösterebilirsiniz.
+      throw error;
     }
   };
 
-  const handleLogout = (shouldNavigate = true) => {
+  const handleLogout = () => {
     setToken(null);
     setUserInfo(null);
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
-    if (shouldNavigate) navigate('/auth'); // Token doğrulama sırasında yönlendirme olmaması için parametre ekledik.
+    navigate('/auth');
   };
 
   return (
     <AuthContext.Provider value={{ token, userInfo, login, logout: handleLogout }}>
-      {!loading && children} {/* loading tamamlandığında render */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

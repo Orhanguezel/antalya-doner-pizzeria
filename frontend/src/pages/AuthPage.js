@@ -1,42 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../axios'; // Axios instance'ını kullanıyoruz
 import { useAuth } from '../context/AuthContext';  // AuthContext'ten login fonksiyonunu kullanıyoruz
 import './AuthPage.css';
 
 const AuthPage = () => {
-    const [isLogin, setIsLogin] = useState(true);
+    const [isLogin, setIsLogin] = useState(true); // Giriş mi yoksa kayıt mı olduğunu kontrol eder
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { login, setUserInfo } = useAuth();  // login fonksiyonunu AuthContext'ten çekiyoruz
+    
+    const { login, setUserInfo } = useAuth();  // useAuth ile login ve setUserInfo fonksiyonlarını alıyoruz
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             let data;
             if (isLogin) {
-                // Giriş yapma işlemi
-                await login(email, password);  // AuthContext'ten login fonksiyonunu çağırıyoruz
+                // Giriş yapma işlemi (AuthContext'teki login fonksiyonunu kullanıyoruz)
+                await login(email, password);
             } else {
                 // Kayıt olma işlemi
-                const response = await axios.post('/users/register', { username, email, password }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await axios.post('/users/register', { username, email, password });
                 data = response.data;
 
-                // Kayıt başarılı olduğunda login fonksiyonunu çağırarak oturum açıyoruz
-                setUserInfo(data);  // Kullanıcı bilgilerini AuthContext'e kaydediyoruz
+                // Yeni kullanıcı kaydı yapıldığında oturum açmak için login fonksiyonunu kullanıyoruz
+                setUserInfo(data);
                 localStorage.setItem('userInfo', JSON.stringify(data));
                 navigate('/profile');
             }
-
         } catch (error) {
-            setError(error.response?.data?.message || 'Es gab ein Problem beim Anmelden. Bitte versuchen Sie es erneut.');
+            setError(error.response ? error.response.data.message : error.message);
         }
     };
 
