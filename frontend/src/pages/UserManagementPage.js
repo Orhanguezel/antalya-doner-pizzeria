@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../axios'; // axios'u doğru bir şekilde bağladığınızdan emin olun
 import { Button, Container, Form } from 'react-bootstrap';
-import defaultProfileImage from '../assets/defaultProfileImage.png';
+import defaultProfileImage from '../assets/uploads/defaultProfileImage.png'; // Default profil resmi
 import './UserManagementPage.css';
 
 const UserManagementPage = () => {

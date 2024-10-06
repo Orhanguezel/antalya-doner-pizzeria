@@ -9,6 +9,8 @@ const AuthPage = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [address, setAddress] = useState('');  // Adres alanı
+    const [phoneNumber, setPhoneNumber] = useState('');  // Telefon numarası alanı
     const [error, setError] = useState('');
     const navigate = useNavigate();
     
@@ -24,7 +26,7 @@ const AuthPage = () => {
                 navigate('/profile'); // Başarılı giriş sonrası profile yönlendir
             } else {
                 // Kayıt olma işlemi
-                const response = await axios.post('/users/register', { username, email, password });
+                const response = await axios.post('/users/register', { username, email, password, address, phoneNumber });
                 data = response.data;
 
                 // Yeni kullanıcı kaydı yapıldığında oturum açmak için login fonksiyonunu kullanıyoruz
@@ -63,6 +65,7 @@ const AuthPage = () => {
             <form onSubmit={handleSubmit}>
                 {/* Kayıt sayfası için kullanıcı adı alanı */}
                 {!isLogin && (
+                    <>
                     <div className="form-group">
                         <label htmlFor="username">Benutzername</label>
                         <input
@@ -74,6 +77,29 @@ const AuthPage = () => {
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="address">Adresse</label>
+                        <input
+                            type="text"
+                            id="address"
+                            className="form-control"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="phoneNumber">Telefonnummer</label>
+                        <input
+                            type="text"
+                            id="phoneNumber"
+                            className="form-control"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                        />
+                    </div>
+                    </>
                 )}
                 <div className="form-group">
                     <label htmlFor="email">Email</label>

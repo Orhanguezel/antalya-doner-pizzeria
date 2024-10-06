@@ -1,6 +1,8 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
+// Dosya yükleme yolunu ve adını ayarlayan storage yapılandırması
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         let uploadPath;
@@ -17,7 +19,13 @@ const storage = multer.diskStorage({
                 break;
         }
 
-        cb(null, uploadPath);
+        // Klasör var mı kontrol et, yoksa oluştur
+        fs.mkdir(uploadPath, { recursive: true }, (err) => {
+            if (err) {
+                return cb(new Error('Upload directory creation failed!'));
+            }
+            cb(null, uploadPath);
+        });
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -25,24 +33,28 @@ const storage = multer.diskStorage({
     }
 });
 
+// Dosya tipini kontrol eden fonksiyon
 function checkFileType(file, cb) {
-    const filetypes = /jpeg|jpg|png|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
+    const filetypes = /jpeg|jpg|png|gif|bmp/; // Yeni kabul edilen dosya türlerini buraya ekleyin
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase()); // Dosya uzantısı kontrolü
+    const mimetype = filetypes.test(file.mimetype); // Dosya MIME türü kontrolü
 
     if (mimetype && extname) {
-        return cb(null, true);
+        return cb(null, true); // Dosya türü doğruysa devam eder
     } else {
-        cb(new Error('Error: Only image files (jpeg, jpg, png, gif) are allowed!'), false);
+        cb(new Error('Error: Only image files (jpeg, jpg, png, gif) are allowed!'), false); // Hata döner
     }
 }
 
+
+// Dosya yükleme ayarları (dosya boyutu sınırı ve dosya tipi kontrolü dahil)
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 1000000 },
+    limits: { fileSize: 1000000 }, // 1MB dosya boyutu sınırı
     fileFilter: (req, file, cb) => {
         checkFileType(file, cb);
     }
 });
 
+// Modülü dışa aktar
 module.exports = upload;

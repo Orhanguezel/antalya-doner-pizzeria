@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import io from "socket.io-client"; // Socket.IO-client import edildi
 import LieferungOrders from "./LieferungOrders";
 import AbholungOrders from "./AbholungOrders";
 import RestaurantOrders from "./RestaurantOrders";
@@ -11,10 +12,12 @@ import Breadcrumb from "../components/Breadcrumb";
 import { useAuth } from "../context/AuthContext"; // AuthContext'ten userInfo'yu alıyoruz
 import "./AdminProfilePage.css";
 
+const socket = io(process.env.REACT_APP_API_BASE_URL || "https://www.antalya-doner-pizzeria.de");
+
 const AdminProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userInfo, token } = useAuth(); // userInfo'yu AuthContext'ten düzgün bir şekilde alıyoruz
+  const { userInfo, token } = useAuth();
   const [orderCounts, setOrderCounts] = useState({
     lieferung: 0,
     abholung: 0,
@@ -23,25 +26,45 @@ const AdminProfilePage = () => {
 
   const getActiveClass = (path) => (location.pathname === path ? "active" : "");
 
-  const [prevOrderCount, setPrevOrderCount] = useState(0);
-
   // İlk yüklemede yönlendirme ve izin isteği
   useEffect(() => {
-    if (!userInfo || userInfo.role !== 'admin') {
-      navigate('/auth'); // Eğer admin değilse giriş sayfasına yönlendir
-    } else if (location.pathname === '/admin') {
-      navigate('/admin/lieferung-orders'); // Eğer adminse ve admin ana sayfasına geldiyse, siparişlere yönlendir
+    if (!userInfo || userInfo.role !== "admin") {
+      navigate("/auth");
+    } else if (location.pathname === "/admin") {
+      navigate("/admin/lieferung-orders");
     }
 
-    if (Notification.permission !== 'granted') {
+    if (Notification.permission !== "granted") {
       Notification.requestPermission();
     }
   }, [location.pathname, navigate, userInfo]);
 
+  // Socket.IO bağlantısı ve bildirimlerin dinlenmesi
+  useEffect(() => {
+    socket.on("orderNotification", (order) => {
+      if (Notification.permission === "granted") {
+        new Notification("Neue Bestellung!", {
+          body: "Eine neue Bestellung ist eingegangen.",
+        });
+        playNotificationSound();
+      }
+      // Burada orderCounts'ı güncellemek için fetchOrderCounts çağırabilirsiniz
+      fetchOrderCounts();
+    });
+
+    return () => {
+      socket.off("orderNotification");
+    };
+  }, []);
+
   // Bildirim sesi çalma fonksiyonu
   const playNotificationSound = () => {
-    const audio = new Audio("/assets/sounds/notification.mp3");
-    audio.play().catch((error) => console.error("Ses çalma başarısız oldu:", error));
+    const audioElement = document.getElementById("notification-sound");
+    if (audioElement) {
+      audioElement.play().catch((error) => {
+        console.error("Ses çalma başarısız oldu:", error);
+      });
+    }
   };
 
   // Sipariş sayısını çekmek için fonksiyon
@@ -56,21 +79,6 @@ const AdminProfilePage = () => {
       });
 
       const orders = response.data;
-      const newOrderCount = orders.length;
-
-      // Yeni sipariş varsa bildirim gönder
-      if (newOrderCount > prevOrderCount) {
-        if (Notification.permission === "granted") {
-          new Notification("Neue Bestellung!", {
-            body: "Eine neue Bestellung ist eingegangen.",
-          });
-          playNotificationSound();
-        }
-      }
-
-      setPrevOrderCount(newOrderCount);
-
-      // Sipariş sayısını güncelleme (archived olmayanları say)
       const lieferungCount = orders.filter(
         (order) => order.orderType === "delivery" && !order.archived
       ).length;
@@ -91,13 +99,9 @@ const AdminProfilePage = () => {
     }
   };
 
-  // Her 30 saniyede bir siparişleri kontrol et
   useEffect(() => {
     fetchOrderCounts();
-
-    const intervalId = setInterval(fetchOrderCounts, 30000);
-    return () => clearInterval(intervalId);
-  }, [token, prevOrderCount]);
+  }, [token]);
 
   return (
     <div className="admin-panel">
@@ -151,6 +155,8 @@ const AdminProfilePage = () => {
           <Route path="/user-management" element={<UserManagementPage />} />
         </Routes>
       </div>
+
+      <audio id="notification-sound" src="/assets/sounds/notification.mp3" preload="auto" style={{ display: 'none' }}></audio>
     </div>
   );
 };

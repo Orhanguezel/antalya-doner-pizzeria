@@ -200,6 +200,32 @@
   z-index: 10000;
 }
 
+.price-options-container {
+  margin-top: 15px;
+}
+
+.price-options {
+  display: flex;
+  gap: 5px;
+}
+
+.price-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 1.6rem;
+}
+
+.price-option input {
+  margin: 0;
+  transform: scale(1.3); /* Radyo butonunu biraz büyütüyoruz */
+}
+
+.price-option label {
+  font-size: 1.4rem;
+  color: var(--text-color);
+}
+
 .extras-container {
   margin-top: 5px;
   z-index: 3;
@@ -208,22 +234,50 @@
 .extras-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  font-size: 1.4rem;
+  gap: 3px;
+  justify-content: flex-start;
+  font-size: 1.8rem;
   color: var(--text-color);
   z-index: 3;
 }
 
 .extra-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  margin-right: 5px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
   z-index: 3;
 }
 
 .extra-item input {
   margin-right: 5px;
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
   z-index: 3;
+}
+
+.extra-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.extra-name {
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+.extra-price {
+  color: #666;
+}
+
+.extra-item:hover {
+  background-color: #e0f7fa;
 }
 
 .quantity-controls {
