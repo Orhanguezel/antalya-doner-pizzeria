@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../axios'; // axios instance olarak import ediyoruz
+import api from '../axios';  // axios'u api instance olarak import ediyoruz
 import './LieferungOrders.css';
 import { useAuth } from '../context/AuthContext'; // useAuth hook'unu kullanmak için import edin
 
@@ -20,26 +20,40 @@ const LieferungOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        // api instance'ı üzerinden GET isteği yapıyoruz
         const response = await api.get('/orders', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}` // Token ekleniyor
           }
         });
         const fetchedOrders = response.data;
-        
-        console.log(fetchedOrders); // API'den dönen tüm siparişleri kontrol et
-        
-        setOrders(fetchedOrders);
-        
-        // Diğer kodlar
+
+        // Sadece 'Lieferung' siparişlerini filtrele
+        const deliveryOrders = fetchedOrders.filter(order => order.orderType === 'delivery');
+
+        // Siparişleri state'e kaydediyoruz
+        setOrders(deliveryOrders);
+
+        // Durumlara göre sipariş sayısını hesaplıyoruz
+        const eingehendeCount = deliveryOrders.filter(order => order.status === 'Eingehende Bestellungen').length;
+        const vorbereiteteCount = deliveryOrders.filter(order => order.status === 'Bestellungen in Vorbereitung').length;
+        const lieferndeCount = deliveryOrders.filter(order => order.status === 'Bestellungen werden geliefert').length;
+        const gelieferteCount = deliveryOrders.filter(order => order.status === 'Gelieferte Bestellungen').length;
+
+        // Durum sayıları state'ini güncelliyoruz
+        setStatusCounts({
+          eingehende: eingehendeCount,
+          vorbereitete: vorbereiteteCount,
+          liefernde: lieferndeCount,
+          gelieferte: gelieferteCount,
+        });
       } catch (error) {
         console.error('Fehler beim Abrufen der Bestellungen:', error);
       }
     };
-  
+
     fetchOrders();
   }, [token]);
-  
 
   const updateOrderStatus = async (orderId, status) => {
     try {
@@ -48,6 +62,7 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişin durumunu güncelle
       setOrders(orders.map(order => (order._id === orderId ? { ...order, status: response.data.status } : order)));
     } catch (error) {
       console.error('Fehler beim Aktualisieren des Bestellstatus:', error);
@@ -61,6 +76,7 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişi listeden kaldır
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
       console.error('Fehler beim Löschen der Bestellung:', error);
@@ -74,6 +90,7 @@ const LieferungOrders = () => {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
       });
+      // Siparişi arşivle
       setOrders(orders.map(order => order._id === orderId ? response.data : order));
     } catch (error) {
       console.error('Fehler beim Archivieren der Bestellung:', error);
@@ -96,7 +113,6 @@ const LieferungOrders = () => {
   };
 
   const filteredOrders = orders
-    .filter(order => order.orderType === 'delivery')
     .filter(order => {
       if (filter === 'Eingehende Bestellungen') return order.status === 'Eingehende Bestellungen';
       if (filter === 'Bestellungen in Vorbereitung') return order.status === 'Bestellungen in Vorbereitung';
@@ -116,28 +132,16 @@ const LieferungOrders = () => {
     <div className="lieferung-orders">
       <h3>Lieferung Bestellungen</h3>
       <div className="order-status-buttons">
-        <button 
-          onClick={() => filterOrders('Eingehende Bestellungen')} 
-          className={filter === 'Eingehende Bestellungen' ? 'active' : ''}
-        >
+        <button onClick={() => filterOrders('Eingehende Bestellungen')} className={filter === 'Eingehende Bestellungen' ? 'active' : ''}>
           Eingehende ({statusCounts.eingehende})
         </button>
-        <button 
-          onClick={() => filterOrders('Bestellungen in Vorbereitung')} 
-          className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}
-        >
+        <button onClick={() => filterOrders('Bestellungen in Vorbereitung')} className={filter === 'Bestellungen in Vorbereitung' ? 'active' : ''}>
           Vorbereitete ({statusCounts.vorbereitete})
         </button>
-        <button 
-          onClick={() => filterOrders('Bestellungen werden geliefert')} 
-          className={filter === 'Bestellungen werden geliefert' ? 'active' : ''}
-        >
+        <button onClick={() => filterOrders('Bestellungen werden geliefert')} className={filter === 'Bestellungen werden geliefert' ? 'active' : ''}>
           Liefernde ({statusCounts.liefernde})
         </button>
-        <button 
-          onClick={() => filterOrders('Gelieferte Bestellungen')} 
-          className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}
-        >
+        <button onClick={() => filterOrders('Gelieferte Bestellungen')} className={filter === 'Gelieferte Bestellungen' ? 'active' : ''}>
           Gelieferte ({statusCounts.gelieferte})
         </button>
       </div>
@@ -173,7 +177,6 @@ const LieferungOrders = () => {
                 </li>
               ))}
             </ul>
-            <p><strong>Liefergebühr:</strong> 2.00 €</p>
             <p><strong>Gesamt:</strong> {(order.total).toFixed(2)} €</p>
             <p><strong>Status:</strong> {order.status}</p>
             <div className="order-actions">

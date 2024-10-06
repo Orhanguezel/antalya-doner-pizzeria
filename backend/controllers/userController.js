@@ -4,6 +4,7 @@ const generateToken = require('../utils/generateToken');
 
 // Benutzerregistrierung
 const register = asyncHandler(async (req, res) => {
+    console.log('Kayıt verileri:', req.body); // Bu satırı ekleyin
     const { username, email, password, role, phoneNumber, address } = req.body;
 
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
@@ -12,15 +13,17 @@ const register = asyncHandler(async (req, res) => {
         throw new Error('Benutzer existiert bereits');
     }
 
+    // Kullanıcı oluşturulurken adres ve telefon numarası da kaydedilmeli
     const user = await User.create({ username, email, password, role, phoneNumber, address });
+
     if (user) {
         res.status(201).json({
             _id: user._id,
             username: user.username,
             email: user.email,
             role: user.role,
-            phoneNumber: user.phoneNumber,
-            address: user.address,
+            phoneNumber: user.phoneNumber,  // Telefon numarası
+            address: user.address,  // Adres
             token: generateToken(user._id),
         });
     } else {
@@ -50,22 +53,33 @@ const login = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        phoneNumber: user.phoneNumber,
-        address: user.address,
+        phoneNumber: user.phoneNumber || '',  // Telefon numarasını boş string olarak döndürün
+        address: user.address || '',  // Adresi boş string olarak döndürün
         token: generateToken(user._id),
     });
 });
 
+
 // Profil abrufen
 const getProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await User.findById(req.user._id);
+
     if (user) {
-        res.json(user);
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            address: user.address || '',  // Adres bilgisini boş string olarak gönderin
+            phoneNumber: user.phoneNumber || '',  // Telefon numarasını boş string olarak gönderin
+            profileImage: user.profileImage,
+        });
     } else {
         res.status(404);
-        throw new Error('Benutzer nicht gefunden');
+        throw new Error('Kullanıcı bulunamadı');
     }
 });
+
+
 
 // Token-Verifizierung
 const verifyToken = asyncHandler(async (req, res) => {
@@ -77,6 +91,7 @@ const verifyToken = asyncHandler(async (req, res) => {
         throw new Error('Benutzer konnte nicht verifiziert werden');
     }
 });
+
 
 // Alle Benutzer abrufen (Admin-Berechtigung erforderlich)
 const getAllUsers = asyncHandler(async (req, res) => {
@@ -99,39 +114,45 @@ const blockUser = asyncHandler(async (req, res) => {
 
 // Profil aktualisieren
 const updateProfile = asyncHandler(async (req, res) => {
+    console.log('Gelen veriler:', req.body); // Bu satırı ekleyin
     const user = await User.findById(req.user._id);
 
     if (user) {
+        // Kullanıcı bilgilerini güncelle
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
         user.address = req.body.address || user.address;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
-        if (req.file) {
-            user.profileImage = `/uploads/profiles/${req.file.filename}`;
-        }
-
+        // Şifre güncellenmek isteniyorsa
         if (req.body.password) {
             user.password = req.body.password;
         }
 
-        const updatedUser = await user.save();
+        // Profil resmi güncelleniyorsa
+        if (req.file) {
+            user.profileImage = req.file.filename;
+        }
 
-        res.json({
-            _id: updatedUser._id,
-            username: updatedUser.username,
-            email: updatedUser.email,
-            role: updatedUser.role,
-            profileImage: updatedUser.profileImage,
-            phoneNumber: updatedUser.phoneNumber,
-            address: updatedUser.address,
-            token: generateToken(updatedUser._id),
-        });
+        try {
+            const updatedUser = await user.save();
+            res.json({
+                _id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                address: updatedUser.address || '', // Adres eksikse boş döndür
+                phoneNumber: updatedUser.phoneNumber || '', // Telefon numarası eksikse boş döndür
+                profileImage: updatedUser.profileImage,
+            });
+        } catch (error) {
+            res.status(500).json({ message: 'Profil güncellenemedi, lütfen tekrar deneyin.' });
+        }
     } else {
         res.status(404);
-        throw new Error('Benutzer nicht gefunden');
+        throw new Error('Kullanıcı bulunamadı');
     }
 });
+
 
 // Benutzerrolle aktualisieren (Admin-Berechtigung erforderlich)
 const updateUserRole = asyncHandler(async (req, res) => {
@@ -244,6 +265,18 @@ const deleteAllUsers = asyncHandler(async (req, res) => {
     }
 });
 
+const createOrder = async (req, res) => {
+    // Sipariş oluşturma işlemleri...
+    const newOrder = await Order.create(orderData);
+
+    // Yeni sipariş olduğunda Socket.io'ya bildirim gönderiyoruz
+    const io = req.app.get('socketio');
+    io.emit('new-order', newOrder);
+
+    res.status(201).json(newOrder);
+};
+
+
 module.exports = {
     register,
     login,
@@ -259,4 +292,5 @@ module.exports = {
     updateUserByAdmin,
     forgotPassword,
     logout,
+    createOrder,
 };

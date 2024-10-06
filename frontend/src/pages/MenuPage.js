@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { zusatztoffeMap, allergeneMap } from "../constants";
 import Modal from "react-modal";
 import "./MenuPage.css";
-import api from "../axios";  // Axios instance'ı import ettik
+import api from "../axios"; // Axios instance'ı import ettik
 
 Modal.setAppElement("#root");
 
@@ -215,27 +215,30 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
           </h2>
           <p>{selectedItem.description}</p>
           {Object.keys(selectedItem.prices).length > 1 ? (
-            <div>
+            <div className="price-options-container">
               <p>Preisoptionen:</p>
-              {Object.entries(selectedItem.prices).map(([key, value]) => (
-                <div key={key}>
-                  <input
-                    type="radio"
-                    id={`price-${key}`}
-                    name="price"
-                    value={value}
-                    checked={selectedPrice.key === key}
-                    onChange={() => handlePriceChange(key, value)}
-                  />
-                  <label htmlFor={`price-${key}`}>
-                    {key}: {value} €
-                  </label>
-                </div>
-              ))}
+              <div className="price-options">
+                {Object.entries(selectedItem.prices).map(([key, value]) => (
+                  <div key={key} className="price-option">
+                    <input
+                      type="radio"
+                      id={`price-${key}`}
+                      name="price"
+                      value={value}
+                      checked={selectedPrice.key === key}
+                      onChange={() => handlePriceChange(key, value)}
+                    />
+                    <label htmlFor={`price-${key}`}>
+                      {key}: {value} €
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             <p>Preis: {selectedPrice.value} €</p>
           )}
+
           {selectedItem.extras &&
             Object.keys(selectedItem.extras).length > 0 && (
               <div className="extras-container">
@@ -243,7 +246,7 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
                 <div className="extras-list">
                   {Object.entries(selectedItem.extras).map(
                     ([extraName, extraPrice], index) => (
-                      <div key={index}>
+                      <div key={index} className="extra-item">
                         <input
                           type="checkbox"
                           id={`extra-${extraName}`}
@@ -265,6 +268,7 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
                 </div>
               </div>
             )}
+
           <div className="quantity-controls">
             <button onClick={decreaseQuantity} disabled={quantity <= 1}>
               -

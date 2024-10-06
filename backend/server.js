@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const http = require('http'); // HTTP sunucusu ekleniyor
+const { Server } = require('socket.io'); // Socket.io ekleniyor
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -67,7 +69,33 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
-app.listen(port, () => {
+// HTTP sunucusunu oluşturma
+const server = http.createServer(app);
+
+// Socket.io sunucusunu başlatma
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL || 'https://www.antalya-doner-pizzeria.de',  // Production URL here
+        methods: ['GET', 'POST']
+    }
+});
+
+// Socket.io bağlantı dinleyicisi
+io.on('connection', (socket) => {
+    console.log('Yeni bir kullanıcı bağlandı:', socket.id);
+
+    // Sipariş geldiğinde tüm adminlere bildirim gönderme
+    socket.on('newOrder', (order) => {
+        console.log('Yeni sipariş:', order);
+        io.emit('orderNotification', order); // Tüm bağlı kullanıcılara bildirimi gönder
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Kullanıcı bağlantısı kesildi:', socket.id);
+    });
+});
+
+// Sunucuyu başlatma
+server.listen(port, () => {
     console.log(`Server is running on port: ${port} in ${process.env.NODE_ENV} mode`);
 });
