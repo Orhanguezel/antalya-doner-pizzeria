@@ -2,10 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-const http = require('http'); // HTTP sunucusu ekleniyor
-const { Server } = require('socket.io'); // Socket.io ekleniyor
-
-// Load environment variables from .env file
+const http = require('http');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 // Import routes
@@ -17,10 +15,11 @@ const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 const port = process.env.PORT || 5001;
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/antalya-doner-pizzeria';
 
 // CORS configuration
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'https://www.antalya-doner-pizzeria.de',  // Production URL here
+    origin: process.env.FRONTEND_URL,  // Production URL from environment
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     optionsSuccessStatus: 200
@@ -30,16 +29,19 @@ app.use(cors(corsOptions));
 app.use(express.json());  // To parse JSON payloads
 
 // MongoDB connection with retry logic
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/antalya_doner_pizzeria';
 const connectWithRetry = () => {
-    mongoose.connect(mongoUri)
-        .then(() => {
-            console.log('MongoDB database connection established successfully');
-        })
-        .catch((error) => {
-            console.error('MongoDB connection error:', error.message);
-            setTimeout(connectWithRetry, 5001); // Retry after 5 seconds
-        });
+    mongoose.connect(mongoUri, {
+        authSource: process.env.MONGO_AUTH_SOURCE || 'admin',
+        user: process.env.MONGO_USER,
+        pass: process.env.MONGO_PASSWORD,
+    })
+    .then(() => {
+        console.log('MongoDB database connection established successfully');
+    })
+    .catch((error) => {
+        console.error('MongoDB connection error:', error.message);
+        setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+    });
 };
 
 connectWithRetry();
@@ -69,33 +71,33 @@ app.use((err, req, res, next) => {
     });
 });
 
-// HTTP sunucusunu oluşturma
+// HTTP server setup
 const server = http.createServer(app);
 
-// Socket.io sunucusunu başlatma
+// Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || 'https://www.antalya-doner-pizzeria.de',  // Production URL here
+        origin: process.env.FRONTEND_URL,  // Production URL from environment
         methods: ['GET', 'POST']
     }
 });
 
-// Socket.io bağlantı dinleyicisi
+// Socket.io connection listener
 io.on('connection', (socket) => {
-    console.log('Yeni bir kullanıcı bağlandı:', socket.id);
+    console.log('A new user connected:', socket.id);
 
-    // Sipariş geldiğinde tüm adminlere bildirim gönderme
+    // Notify all admins when a new order is placed
     socket.on('newOrder', (order) => {
-        console.log('Yeni sipariş:', order);
-        io.emit('orderNotification', order); // Tüm bağlı kullanıcılara bildirimi gönder
+        console.log('New order received:', order);
+        io.emit('orderNotification', order); // Broadcast to all connected clients
     });
 
     socket.on('disconnect', () => {
-        console.log('Kullanıcı bağlantısı kesildi:', socket.id);
+        console.log('User disconnected:', socket.id);
     });
 });
 
-// Sunucuyu başlatma
+// Start server
 server.listen(port, () => {
-    console.log(`Server is running on port: ${port} in ${process.env.NODE_ENV} mode`);
+    console.log(`Server is running on port: ${port} in ${process.env.NODE_ENV || 'development'} mode`);
 });
