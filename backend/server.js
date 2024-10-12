@@ -16,7 +16,7 @@ const itemRoutes = require('./routes/itemRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 // CORS configuration
 const corsOptions = {
@@ -38,7 +38,7 @@ const connectWithRetry = () => {
         })
         .catch((error) => {
             console.error('MongoDB connection error:', error.message);
-            setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+            setTimeout(connectWithRetry, 5001); // Retry after 5 seconds
         });
 };
 

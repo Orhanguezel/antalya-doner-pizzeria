@@ -12,7 +12,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import { useAuth } from "../context/AuthContext"; // AuthContext'ten userInfo'yu alıyoruz
 import "./AdminProfilePage.css";
 
-const socket = io(process.env.REACT_APP_API_BASE_URL || "https://www.antalya-doner-pizzeria.de");
+const socket = io(process.env.REACT_APP_API_BASE_URL || 'https://www.antalya-doner-pizzeria.de');
 
 const AdminProfilePage = () => {
   const location = useLocation();
@@ -70,7 +70,7 @@ const AdminProfilePage = () => {
   // Sipariş sayısını çekmek için fonksiyon
   const fetchOrderCounts = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_BASE_URL || "https://www.antalya-doner-pizzeria.de/api";
+      const apiUrl = process.env.REACT_APP_API_URL || "https://www.antalya-doner-pizzeria.de/api";
 
       const response = await axios.get(`${apiUrl}/orders`, {
         headers: {
@@ -157,6 +157,7 @@ const AdminProfilePage = () => {
       </div>
 
       <audio id="notification-sound" src="/assets/sounds/notification.mp3" preload="auto" style={{ display: 'none' }}></audio>
+
     </div>
   );
 };
