@@ -4,15 +4,16 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Çevre değişkenlerini yükle (örn. .env dosyasından)
-const env = dotenv.config().parsed;
+// Çevre değişkenlerini yükle (.env dosyasından)
+const env = dotenv.config().parsed || {};
 
-// Tüm .env değişkenlerini alıp webpack'e uygun hale getirelim
-const envKeys = Object.keys(env || {}).reduce((prev, next) => {
+// Çevre değişkenlerini webpack için kullanılabilir hale getiriyoruz
+const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
 }, {});
 
+// Ortam türünü belirlemek için değişken
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
@@ -20,23 +21,24 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: isDevelopment ? 'bundle.[name].js' : 'bundle.[name].[contenthash].js',
+    filename: isDevelopment ? '[name].bundle.js' : '[name].[contenthash].bundle.js',
     publicPath: '/',
     clean: true,
   },
-  stats: {
-    all: false,
-    errors: true,
-    warnings: true,
-    assets: true,
-    timings: true,
-  },
+  devtool: isDevelopment ? 'eval-source-map' : 'source-map',
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              isDevelopment && require.resolve('react-refresh/babel'),
+            ].filter(Boolean),
+          },
+        },
       },
       {
         test: /\.css$/,
@@ -54,9 +56,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      minify: isDevelopment
-        ? false
-        : {
+      minify: !isDevelopment
+        ? {
             removeComments: true,
             collapseWhitespace: true,
             removeRedundantAttributes: true,
@@ -67,31 +68,12 @@ module.exports = {
             minifyJS: true,
             minifyCSS: true,
             minifyURLs: true,
-          },
+          }
+        : false,
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
-    new webpack.DefinePlugin({
-      ...envKeys,
-      'process.env.REACT_APP_API_BASE_URL': JSON.stringify(
-        process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api'
-      ),
-    }),
+    new webpack.DefinePlugin(envKeys),
   ].filter(Boolean),
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    hot: true,
-    historyApiFallback: true,
-    port: 3001,
-    client: {
-      logging: 'error',
-      overlay: {
-        errors: true,
-        warnings: false,
-      },
-    },
-  },
   resolve: {
     extensions: ['.js', '.jsx'],
     fallback: {
@@ -104,14 +86,29 @@ module.exports = {
       util: require.resolve('util/'),
     },
   },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    compress: true,
+    port: 3001,
+    historyApiFallback: true,
+    hot: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+    },
+  },
   optimization: {
-    minimize: !isDevelopment,
     splitChunks: {
       chunks: 'all',
     },
     runtimeChunk: {
       name: 'runtime',
     },
+    minimize: !isDevelopment,
   },
   performance: {
     hints: false,
