@@ -8,6 +8,8 @@ npm start
 cd ~/Desktop/antalya-doner-pizzeria/backend
 node testData.js
 
+sudo cp -r dist/* /var/www/antalya-doner-pizzeria/
+sudo systemctl restart nginx
 
 
 cd ~/Desktop/antalya-doner-pizzeria/backend
@@ -59,6 +61,7 @@ Alle Dosen Getränke + 0,25€ Pfand  sepette, eve sipariste bu ilave edilecek.
 
 
 
+sudo cp -r dist/* /var/www/antalya-doner-pizzeria/
 
 
 
@@ -70,6 +73,12 @@ pm2 start npm --name frontend -- run start
 
 
 pm2 start npm --name frontend -- run start
+
+
+pm2 list
+
+pm2 stop all
+
 
 
 sudo nano /etc/nginx/sites-available/default
