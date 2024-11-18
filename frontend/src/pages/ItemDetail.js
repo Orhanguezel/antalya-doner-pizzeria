@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import './ItemDetail.css'; // Stil dosyasını import ediyoruz
 
 const ItemDetail = ({ itemId, onAddToCart, onClose }) => {

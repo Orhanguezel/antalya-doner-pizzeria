@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axios';  // Axios yapılandırmanızı doğru şekilde import edin
+import apiInstance from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 
 const AuthContext = createContext();
 
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        const response = await axiosInstance.get(`/users/verify-token`, {
+        const response = await authInstance.get(`/users/verify-token`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post('/users/login', { email, password });
+      const response = await authInstance.post('/users/login', { email, password });
       setToken(response.data.token);
       setUserInfo(response.data.user);
       saveToLocalStorage(response.data.token, response.data.user);
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      const response = await axiosInstance.post('/users/register', { username, email, password });
+      const response = await authInstance.post('/users/register', { username, email, password });
       setToken(response.data.token);
       setUserInfo(response.data.user);
       saveToLocalStorage(response.data.token, response.data.user);

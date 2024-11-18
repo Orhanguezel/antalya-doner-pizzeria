@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { zusatztoffeMap, allergeneMap } from "../constants";
 import Modal from "react-modal";
 import "./MenuPage.css";
-import api from "../axios"; // Axios instance'ı import ettik
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
 
 Modal.setAppElement("#root");
 
@@ -100,7 +99,7 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
     setQuantity(newQuantity);
     setTotalPrice(
       selectedPrice.value * newQuantity +
-        extras.reduce((acc, curr) => acc + curr.price * newQuantity, 0)
+        extras.reduce((acc, curr) => acc + curr.price, 0)
     );
   };
 
@@ -110,7 +109,7 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
       setQuantity(newQuantity);
       setTotalPrice(
         selectedPrice.value * newQuantity +
-          extras.reduce((acc, curr) => acc + curr.price * newQuantity, 0)
+          extras.reduce((acc, curr) => acc + curr.price, 0)
       );
     }
   };
@@ -324,3 +323,4 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
 };
 
 export default MenuPage;
+

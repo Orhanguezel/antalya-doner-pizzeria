@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../axios'; // axios'u doğru bir şekilde bağladığınızdan emin olun
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import { Button, Container, Form } from 'react-bootstrap';
 import defaultProfileImage from '../assets/uploads/defaultProfileImage.png'; // Default profil resmi
 import './UserManagementPage.css';

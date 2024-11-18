@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../axios'; // axios instance kullanılıyor
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
 import './Warenkorb.css';
 

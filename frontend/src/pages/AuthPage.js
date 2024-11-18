@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../axios'; // Axios'u doğru şekilde import ediyoruz
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import { useAuth } from '../context/AuthContext'; // AuthContext'ten login fonksiyonunu kullanıyoruz
 import './AuthPage.css';
 

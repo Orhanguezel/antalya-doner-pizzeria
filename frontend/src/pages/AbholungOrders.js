@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../axios';  // axios'u api instance olarak import ediyoruz
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import './AbholungOrders.css';
 import { useAuth } from '../context/AuthContext'; // useAuth hook'unu kullanmak için import edin
 

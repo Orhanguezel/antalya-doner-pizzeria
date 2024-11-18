@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import axios from '../axios';
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import './ProfilePage.css';
 import { useAuth } from '../context/AuthContext';
 import placeholderImage from '../assets/uploads/defaultProfileImage.png'; // Default profil resmi

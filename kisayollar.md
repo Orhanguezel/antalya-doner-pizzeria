@@ -39,7 +39,7 @@ cp -r /root/antalya-doner-pizzeria/frontend/dist/* /var/www/antalya-doner-pizzer
 pm2 restart frontend --update-env
 pm2 restart api-server --update-env
 pm2 logs api-server
-
+ pm2 logs frontend
 
 show dbs
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
+import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import io from "socket.io-client"; // Socket.IO-client import edildi
 import LieferungOrders from "./LieferungOrders";
 import AbholungOrders from "./AbholungOrders";

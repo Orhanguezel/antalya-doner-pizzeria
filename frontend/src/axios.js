@@ -1,31 +1,16 @@
 import axios from 'axios';
 
-// Axios instance creation
-const instance = axios.create({
+const apiInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || 'https://www.antalya-doner-pizzeria.de/api',
 });
 
-// Interceptor to add Authorization header if the token exists in localStorage
-instance.interceptors.request.use(
-  (config) => {
-    const userInfo = localStorage.getItem('userInfo');
-
-    if (userInfo) {
-      try {
-        const { token } = JSON.parse(userInfo);
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-      } catch (error) {
-        console.error('Error parsing userInfo from localStorage:', error);
-      }
-    }
-
-    return config;
-  },
+authInstance.interceptors.response.use(
+  (response) => response,
   (error) => {
+    console.error('API Error:', error.response ? error.response.data : error.message);
     return Promise.reject(error);
   }
 );
 
-export default instance;
+
+export default apiInstance;
