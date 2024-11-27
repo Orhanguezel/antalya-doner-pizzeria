@@ -3,8 +3,8 @@ node_modules/
 
 # Çevresel değişkenler
 .env
-/home/dci-admin/Documents/antalya-doner-pizzeria/backend/.env
-/home/dci-admin/Documents/antalya-doner-pizzeria/frontend/.env
+/backend/.env
+/frontend/.env
 
 # Derleme dosyaları ve çıkış dizinleri
 /dist
@@ -27,23 +27,32 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Test ve yapılandırma dosyaları
-/babelrc
-*.babelrc
-jest.config.js
+# Test ve analiz dosyaları
+userUpdateTest.py
+updateProfile.py
+updateAdminPassword.py
+testsip.py
+testsip_analysis.py
+test_total_price.py
+test_register.py
+test_menu.py
+test_login.py
+test_getuser.py
+subcategory_api_test.py
+resetPassword.py
+order_api_test.py
+logout.py
+item_api_test.py
+forgotPassword.py
+delete_users.py
+category_api_test.py
+blockUser.py
+admin_register.py
 
-# Geçici dosyalar
-*.tmp
-*.temp
+# GitLab CI dosyası
+.gitlab-ci.yml
 
-# Derlenmiş dosyalar
-*.cache
-*.out
-
-# Hassas bilgileri içeren dosyalar
-mongotest.js
-
-# Package lock dosyaları (isteğe bağlı)
-/package-lock.json
-/home/dci-admin/Documents/antalya-doner-pizzeria/backend/package-lock.json
-/home/dci-admin/Documents/antalya-doner-pizzeria/frontend/package-lock.json
+# Diğer gereksiz veya hassas dosyalar
+kisayollar.md
+kisayollarrr.md
+README.md
