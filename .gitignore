@@ -3,8 +3,12 @@ node_modules/
 
 # Çevresel değişkenler
 .env
+.env.local
+.env.production
 /backend/.env
 /frontend/.env
+/backend/.env.local
+/frontend/.env.production
 
 # Derleme dosyaları ve çıkış dizinleri
 /dist
@@ -48,6 +52,12 @@ delete_users.py
 category_api_test.py
 blockUser.py
 admin_register.py
+insertData1.js
+insertData2.js
+insertData3.js
+insertData4.js
+insertData5.js
+insertData6.js
 
 # GitLab CI dosyası
 .gitlab-ci.yml
