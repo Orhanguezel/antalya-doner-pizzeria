@@ -4,16 +4,13 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Çevre değişkenlerini yükle (.env dosyasından)
+// .env dosyasını yükleyip çevre değişkenlerini düzenliyoruz
 const env = dotenv.config().parsed || {};
-
-// Çevre değişkenlerini webpack için kullanılabilir hale getiriyoruz
 const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
 }, {});
 
-// Ortam türünü belirlemek için değişken
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
@@ -72,7 +69,14 @@ module.exports = {
         : false,
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
-    new webpack.DefinePlugin(envKeys),
+    new webpack.DefinePlugin({
+      ...envKeys,
+      process: JSON.stringify({
+        env: {
+          ...env,
+        },
+      }),
+    }),
   ].filter(Boolean),
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -100,6 +104,14 @@ module.exports = {
         warnings: false,
       },
     },
+    proxy: [
+      {
+        context: ['/api'],
+        target: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+      },
+    ],
   },
   optimization: {
     splitChunks: {

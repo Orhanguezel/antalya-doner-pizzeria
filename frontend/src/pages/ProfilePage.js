@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import './ProfilePage.css';
 import { useAuth } from '../context/AuthContext';
 import placeholderImage from '../assets/uploads/defaultProfileImage.png'; // Default profil resmi
@@ -27,15 +26,14 @@ const ProfilePage = () => {
                 setUpdateMessage('Auf die Benutzerinformationen kann nicht zugegriffen werden.');
                 return;
             }
-    
+
             try {
-                const response = await axios.get(`/users/profile`, {
+                const response = await api.get(`/users/profile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-    
-                console.log("API'den Gelen Profil Verisi:", response.data); // Gelen veriyi kontrol edin
+
                 const data = response.data;
                 setProfileData({
                     username: data.username,
@@ -53,10 +51,9 @@ const ProfilePage = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchProfile();
     }, [token]);
-    
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -79,7 +76,7 @@ const ProfilePage = () => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-    
+
         const formData = new FormData();
         formData.append('username', profileData.username);
         formData.append('email', profileData.email);
@@ -89,17 +86,15 @@ const ProfilePage = () => {
         if (profileData.profileImageFile) {
             formData.append('profileImage', profileData.profileImageFile);
         }
-    
+
         try {
-            const response = await axios.put(`/users/profile`, formData, {
+            const response = await api.put(`/users/profile`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
-            console.log("Güncellenen Kullanıcı Bilgisi:", response.data); // Güncellenen veriyi kontrol edin.
-    
+
             setUpdateMessage('Profil erfolgreich aktualisiert.');
             setProfileData({
                 ...profileData,
@@ -111,8 +106,6 @@ const ProfilePage = () => {
             setUpdateMessage('Fehler beim Aktualisieren des Profils.');
         }
     };
-    
-    
 
     const handleCancel = () => {
         setProfileData((prevState) => ({
@@ -190,10 +183,10 @@ const ProfilePage = () => {
                         <Form.Group controlId="formProfileImage">
                             <Form.Label>Profil Foto</Form.Label>
                             <div className="text-center">
-                                <img 
-                                    src={profileData.profileImage} 
-                                    alt="Profilbild" 
-                                    className="profile-image" 
+                                <img
+                                    src={profileData.profileImage}
+                                    alt="Profilbild"
+                                    className="profile-image"
                                 />
                             </div>
                             <Form.Control

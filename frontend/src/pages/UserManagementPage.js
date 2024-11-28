@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import { Button, Container, Form } from 'react-bootstrap';
 import defaultProfileImage from '../assets/uploads/defaultProfileImage.png'; // Default profil resmi
 import './UserManagementPage.css';
@@ -21,11 +20,7 @@ const UserManagementPage = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const { data } = await axios.get('/users', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
+                const { data } = await api.get('/users');
                 setUsers(data); // Kullanıcıları local state'e kaydet
             } catch (error) {
                 setErrorMessage('Benutzer konnten nicht abgerufen werden.');
@@ -59,9 +54,8 @@ const UserManagementPage = () => {
     
         try {
             // Sunucuya PUT isteği yaparak kullanıcıyı güncelle
-            const response = await axios.put(`/users/${editUserId}`, formData, {
+            const response = await api.put(`/users/${editUserId}`, formData, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
@@ -79,7 +73,6 @@ const UserManagementPage = () => {
             console.error('Fehler beim Aktualisieren des Benutzers:', error.message);
         }
     };
-    
 
     // Düzenlemeyi iptal et
     const handleCancelEdit = () => {
@@ -91,11 +84,7 @@ const UserManagementPage = () => {
     // Kullanıcıyı sil
     const handleDelete = async (userId) => {
         try {
-            await axios.delete(`/users/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            await api.delete(`/users/${userId}`);
             // Silinen kullanıcıyı state'ten kaldır
             setUsers(users.filter(user => user._id !== userId));
             setSuccessMessage('Benutzer erfolgreich gelöscht.');

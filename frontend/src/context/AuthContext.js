@@ -2,8 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiInstance from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
+import apiInstance from "../axios"; // Tek axios instance
 
 const AuthContext = createContext();
 
@@ -39,26 +38,25 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        const response = await authInstance.get(`/users/verify-token`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // Kimlik doğrulama gerektiren bir istek
+        const response = await apiInstance.get(`/users/verify-token`);
         setUserInfo(response.data.user);
         saveToLocalStorage(token, response.data.user);
       } catch (error) {
-        console.error('Token verification failed:', error);
+        console.error('Token verification failed:', error.response ? error.response.data : error.message);
         handleLogout(false);
       } finally {
         setLoading(false);
       }
     };
+    
     verifyToken();
   }, [token]);
 
   const login = async (email, password) => {
     try {
-      const response = await authInstance.post('/users/login', { email, password });
+      // Login işlemi
+      const response = await apiInstance.post('/users/login', { email, password });
       setToken(response.data.token);
       setUserInfo(response.data.user);
       saveToLocalStorage(response.data.token, response.data.user);
@@ -71,7 +69,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      const response = await authInstance.post('/users/register', { username, email, password });
+      // Register işlemi
+      const response = await apiInstance.post('/users/register', { username, email, password });
       setToken(response.data.token);
       setUserInfo(response.data.user);
       saveToLocalStorage(response.data.token, response.data.user);

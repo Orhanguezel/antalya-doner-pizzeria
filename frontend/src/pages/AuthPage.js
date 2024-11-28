@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
+import axios from "../axios"; // Tüm API çağrıları için axios kullanılıyor
 import { useAuth } from '../context/AuthContext'; // AuthContext'ten login fonksiyonunu kullanıyoruz
 import './AuthPage.css';
 
@@ -22,21 +21,27 @@ const AuthPage = () => {
         try {
             let data;
             if (isLogin) {
-                // Giriş yapma işlemi (AuthContext'teki login fonksiyonunu kullanıyoruz)
-                await login(email, password);
+                // Giriş yapma işlemi
+                await login(email, password); // AuthContext'in login fonksiyonu
                 navigate('/profile'); // Başarılı giriş sonrası profile yönlendir
             } else {
                 // Kayıt olma işlemi
-                const response = await axios.post('/users/register', { username, email, password, address, phoneNumber });
+                const response = await axios.post('/users/register', { 
+                    username, 
+                    email, 
+                    password, 
+                    address, 
+                    phoneNumber 
+                });
                 data = response.data;
 
                 // Yeni kullanıcı kaydı yapıldığında oturum açmak için login fonksiyonunu kullanıyoruz
-                setUserInfo(data); // Eğer `setUserInfo` burada hata veriyorsa, AuthContext'te bu fonksiyonu tanımlamamız gerekiyor
-                localStorage.setItem('userInfo', JSON.stringify(data));
+                setUserInfo(data); // AuthContext'teki kullanıcı bilgisini güncelle
+                localStorage.setItem('userInfo', JSON.stringify(data)); // Kullanıcı bilgilerini localStorage'da sakla
                 navigate('/profile'); // Kayıt başarılıysa profile yönlendir
             }
         } catch (error) {
-            setError(error.response ? error.response.data.message : error.message);
+            setError(error.response?.data?.message || 'Ein Fehler ist aufgetreten.');
         }
     };
 
@@ -64,42 +69,42 @@ const AuthPage = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit}>
-                {/* Kayıt sayfası için kullanıcı adı alanı */}
+                {/* Kayıt sayfası için kullanıcı adı, adres ve telefon numarası alanları */}
                 {!isLogin && (
                     <>
-                    <div className="form-group">
-                        <label htmlFor="username">Benutzername</label>
-                        <input
-                            type="text"
-                            id="username"
-                            className="form-control"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="address">Adresse</label>
-                        <input
-                            type="text"
-                            id="address"
-                            className="form-control"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="phoneNumber">Telefonnummer</label>
-                        <input
-                            type="text"
-                            id="phoneNumber"
-                            className="form-control"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="username">Benutzername</label>
+                            <input
+                                type="text"
+                                id="username"
+                                className="form-control"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="address">Adresse</label>
+                            <input
+                                type="text"
+                                id="address"
+                                className="form-control"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="phoneNumber">Telefonnummer</label>
+                            <input
+                                type="text"
+                                id="phoneNumber"
+                                className="form-control"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                required
+                            />
+                        </div>
                     </>
                 )}
                 <div className="form-group">

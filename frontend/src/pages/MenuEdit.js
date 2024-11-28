@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
+import axios from "../axios"; // API çağrıları için axios kullanılıyor
 import './MenuEdit.css';
 
 Modal.setAppElement('#root');

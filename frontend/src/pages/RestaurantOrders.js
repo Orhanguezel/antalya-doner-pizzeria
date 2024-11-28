@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
 import './RestaurantOrders.css';
 import { useAuth } from '../context/AuthContext';
 

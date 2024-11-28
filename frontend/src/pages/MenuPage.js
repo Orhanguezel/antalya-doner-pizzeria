@@ -16,7 +16,7 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
   const [quantity, setQuantity] = useState(1);
   const [infoItem, setInfoItem] = useState(null);
 
-  // Kategorileri axios üzerinden çekiyoruz
+  // Kategorileri API üzerinden çekiyoruz
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -323,4 +323,3 @@ const MenuPage = ({ onAddToCart, cart = [] }) => {
 };
 
 export default MenuPage;
-

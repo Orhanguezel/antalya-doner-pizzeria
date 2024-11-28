@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
+import axios from "../axios"; // Tüm API çağrıları için axios kullanılıyor
 import { Bar as BarChart, Doughnut as DoughnutChart } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -104,7 +103,7 @@ const Analysis = () => {
     const last12Months = Array.from({ length: 12 }, (_, i) => {
       const date = new Date();
       date.setMonth(date.getMonth() - i);
-      return `${date.getFullYear()}-${date.getMonth() + 1}`; // Letzte 12 Monate korrekt berechnen
+      return `${date.getFullYear()}-${date.getMonth() + 1}`;
     }).reverse();
 
     orders.forEach((order) => {

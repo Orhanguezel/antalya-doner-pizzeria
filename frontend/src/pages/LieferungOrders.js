@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from "../axios"; // Kimlik doğrulaması gerekmeyen API çağrıları için axios instance
-import authInstance from "../authAxios"; // Kimlik doğrulaması gerektiren API çağrıları için authAxios
+import axios from "../axios"; // API çağrıları için axios kullanılıyor
 import './LieferungOrders.css';
 import { useAuth } from '../context/AuthContext'; // useAuth hook'unu kullanmak için import edin
 
@@ -21,8 +20,8 @@ const LieferungOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // api instance'ı üzerinden GET isteği yapıyoruz
-        const response = await api.get('/orders', {
+        // axios instance üzerinden GET isteği yapıyoruz
+        const response = await axios.get('/orders', {
           headers: {
             Authorization: `Bearer ${token}` // Token ekleniyor
           }
@@ -58,7 +57,7 @@ const LieferungOrders = () => {
 
   const updateOrderStatus = async (orderId, status) => {
     try {
-      const response = await api.put(`/orders/${orderId}/status`, { status }, {
+      const response = await axios.put(`/orders/${orderId}/status`, { status }, {
         headers: {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
@@ -72,7 +71,7 @@ const LieferungOrders = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      await api.delete(`/orders/${orderId}`, {
+      await axios.delete(`/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }
@@ -86,7 +85,7 @@ const LieferungOrders = () => {
 
   const archiveOrder = async (orderId) => {
     try {
-      const response = await api.put(`/orders/${orderId}/archive`, null, {
+      const response = await axios.put(`/orders/${orderId}/archive`, null, {
         headers: {
           Authorization: `Bearer ${token}` // Token ekleniyor
         }

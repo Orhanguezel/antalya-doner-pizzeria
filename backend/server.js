@@ -11,42 +11,50 @@ const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
-const orderRoutes = require('./routes/orderRoutes')
+const orderRoutes = require('./routes/orderRoutes');
+
 const app = express();
 const port = process.env.PORT || 5001;
+
+// Global MongoDB URI configuration
 if (!global.mongoUri) {
     global.mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/antalya-doner-pizzeria';
-  }
+}
 
 // CORS configuration
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'https://www.antalya-doner-pizzeria.de',
+    origin: [
+        'http://localhost:3001', // Geliştirme ortamı
+        'https://www.antalya-doner-pizzeria.de', // Canlı ortam
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    optionsSuccessStatus: 200
+    credentials: true,
+    optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
 
-app.use(express.json());  // To parse JSON payloads
+app.use(cors(corsOptions));
+app.use(express.json()); // To parse JSON payloads
 
 // MongoDB connection with retry logic
 const connectWithRetry = () => {
-    mongoose.connect(global.mongoUri, {
-        user: process.env.MONGO_USER,
-        pass: process.env.MONGO_PASSWORD,
-        authSource: process.env.MONGO_AUTH_SOURCE || 'admin',
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    
-    .then(() => {
-        console.log('MongoDB connection established successfully');
-    })
-    .catch((error) => {
-        console.error('MongoDB connection error:', error.message);
-        setTimeout(connectWithRetry, 5001); // Retry connection after 5 seconds
-    });
+    mongoose
+        .connect(global.mongoUri, {
+            user: process.env.MONGO_USER || 'admin',
+            pass: process.env.MONGO_PASSWORD || 'adminpassword',
+            authSource: process.env.MONGO_AUTH_SOURCE || 'admin',
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => {
+            console.log('MongoDB connection established successfully');
+        })
+        .catch((error) => {
+            console.error('MongoDB connection error:', error.message);
+            setTimeout(connectWithRetry, 5001); // Retry connection after 5 seconds
+        });
 };
 
 connectWithRetry();
@@ -72,7 +80,7 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
         message: 'Something broke!',
-        error: process.env.NODE_ENV !== 'production' ? err.message : undefined
+        error: process.env.NODE_ENV !== 'production' ? err.message : undefined,
     });
 });
 
@@ -82,10 +90,14 @@ const server = http.createServer(app);
 // Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,  // Production URL from environment
-        methods: ['GET', 'POST']
-    }
+        origin: [
+            'http://localhost:3001',
+            'https://www.antalya-doner-pizzeria.de',
+        ],
+        methods: ['GET', 'POST'],
+    },
 });
+
 
 // Socket.io connection listener
 io.on('connection', (socket) => {
