@@ -38,8 +38,10 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        // Kimlik doğrulama gerektiren bir istek
-        const response = await apiInstance.get(`/users/verify-token`);
+        // Token doğrulama isteği
+        const response = await apiInstance.get(`/users/verify-token`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUserInfo(response.data.user);
         saveToLocalStorage(token, response.data.user);
       } catch (error) {
@@ -49,35 +51,46 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    
     verifyToken();
   }, [token]);
 
   const login = async (email, password) => {
     try {
-      // Login işlemi
       const response = await apiInstance.post('/users/login', { email, password });
       setToken(response.data.token);
-      setUserInfo(response.data.user);
-      saveToLocalStorage(response.data.token, response.data.user);
-      navigate('/profile');
+      setUserInfo(response.data);
+      saveToLocalStorage(response.data.token, response.data);
+      
+      // Admin ise admin sayfasına yönlendirme
+      if (response.data.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/profile');
+      }
     } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+      console.error('Login failed:', error.response ? error.response.data : error.message);
+      throw error.response?.data?.message || 'Login failed.';
     }
   };
 
-  const register = async (username, email, password) => {
+  const register = async (username, email, password, address, phoneNumber) => {
     try {
-      // Register işlemi
-      const response = await apiInstance.post('/users/register', { username, email, password });
+      const response = await apiInstance.post('/users/register', {
+        username, email, password, address, phoneNumber
+      });
       setToken(response.data.token);
-      setUserInfo(response.data.user);
-      saveToLocalStorage(response.data.token, response.data.user);
-      navigate('/profile');
+      setUserInfo(response.data);
+      saveToLocalStorage(response.data.token, response.data);
+      
+      // Admin ise admin sayfasına yönlendirme
+      if (response.data.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/profile');
+      }
     } catch (error) {
-      console.error('Register failed:', error);
-      throw error;
+      console.error('Register failed:', error.response ? error.response.data : error.message);
+      throw error.response?.data?.message || 'Registration failed.';
     }
   };
 
@@ -92,7 +105,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, userInfo, setUserInfo, login, register, logout: handleLogout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        userInfo,
+        setUserInfo,
+        login,
+        register,
+        logout: handleLogout,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -1,60 +1,57 @@
 const multer = require('multer');
+const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
-// Dosya yükleme yolunu ve adını ayarlayan storage yapılandırması
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        let uploadPath;
+// Dosya yükleme için multer storage yapılandırması
+const storage = multer.memoryStorage(); // Resmi bellekte geçici olarak tutar
 
-        switch (file.fieldname) {
-            case 'profileImage':
-                uploadPath = path.join(__dirname, '../uploads/profiles/');
-                break;
-            case 'blogImage':
-                uploadPath = path.join(__dirname, '../uploads/blogs/');
-                break;
-            default:
-                uploadPath = path.join(__dirname, '../uploads/others/');
-                break;
-        }
-
-        // Klasör var mı kontrol et, yoksa oluştur
-        fs.mkdir(uploadPath, { recursive: true }, (err) => {
-            if (err) {
-                return cb(new Error('Upload directory creation failed!'));
-            }
-            cb(null, uploadPath);
-        });
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
-    }
-});
-
-// Dosya tipini kontrol eden fonksiyon
+// Dosya tipi kontrolü
 function checkFileType(file, cb) {
-    const filetypes = /jpeg|jpg|png|gif|bmp/; // Yeni kabul edilen dosya türlerini buraya ekleyin
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase()); // Dosya uzantısı kontrolü
-    const mimetype = filetypes.test(file.mimetype); // Dosya MIME türü kontrolü
+    const filetypes = /jpeg|jpg|png|gif|bmp/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
 
     if (mimetype && extname) {
-        return cb(null, true); // Dosya türü doğruysa devam eder
+        return cb(null, true);
     } else {
-        cb(new Error('Error: Only image files (jpeg, jpg, png, gif) are allowed!'), false); // Hata döner
+        cb(new Error('Error: Only image files (jpeg, jpg, png, gif) are allowed!'), false);
     }
 }
 
-
-// Dosya yükleme ayarları (dosya boyutu sınırı ve dosya tipi kontrolü dahil)
+// Multer ayarları
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 1000000 }, // 1MB dosya boyutu sınırı
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB dosya boyutu sınırı
     fileFilter: (req, file, cb) => {
         checkFileType(file, cb);
     }
 });
 
-// Modülü dışa aktar
-module.exports = upload;
+// Profil resmi yükleme middleware
+const processProfileImage = async (req, res, next) => {
+    if (!req.file) return next();
+
+    const uploadPath = path.join(__dirname, '../uploads/profiles');
+
+    // Klasör yoksa oluştur
+    fs.mkdirSync(uploadPath, { recursive: true });
+
+    try {
+        const filename = `profileImage-${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
+
+        await sharp(req.file.buffer)
+            .resize({ width: 200, height: 200, fit: 'cover' }) // Resmi 200x200 boyutunda küçült
+            .toFormat('jpeg') // Formatı JPEG yap
+            .jpeg({ quality: 80 }) // Kaliteyi %80'e düşür
+            .toFile(path.join(uploadPath, filename)); // Dosyayı kaydet
+
+        req.file.filename = filename; // Yeni dosya adını req.file'a ekle
+        next();
+    } catch (error) {
+        console.error('Resim işleme hatası:', error.message);
+        res.status(500).json({ message: 'Resim yüklenirken bir hata oluştu.' });
+    }
+};
+
+module.exports = { upload, processProfileImage };

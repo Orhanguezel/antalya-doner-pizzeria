@@ -114,7 +114,7 @@ const blockUser = asyncHandler(async (req, res) => {
 
 // Profil aktualisieren
 const updateProfile = asyncHandler(async (req, res) => {
-    console.log('Gelen veriler:', req.body); // Bu satırı ekleyin
+    console.log('Gelen veriler:', req.body); // Gelen verileri logla
     const user = await User.findById(req.user._id);
 
     if (user) {
@@ -131,7 +131,8 @@ const updateProfile = asyncHandler(async (req, res) => {
 
         // Profil resmi güncelleniyorsa
         if (req.file) {
-            user.profileImage = req.file.filename;
+            const filePath = `/uploads/profiles/${req.file.filename}`;
+            user.profileImage = filePath;
         }
 
         try {
@@ -142,7 +143,7 @@ const updateProfile = asyncHandler(async (req, res) => {
                 email: updatedUser.email,
                 address: updatedUser.address || '', // Adres eksikse boş döndür
                 phoneNumber: updatedUser.phoneNumber || '', // Telefon numarası eksikse boş döndür
-                profileImage: updatedUser.profileImage,
+                profileImage: updatedUser.profileImage, // Güncellenmiş profil resmi yolu
             });
         } catch (error) {
             res.status(500).json({ message: 'Profil güncellenemedi, lütfen tekrar deneyin.' });
@@ -152,6 +153,7 @@ const updateProfile = asyncHandler(async (req, res) => {
         throw new Error('Kullanıcı bulunamadı');
     }
 });
+
 
 
 // Benutzerrolle aktualisieren (Admin-Berechtigung erforderlich)
