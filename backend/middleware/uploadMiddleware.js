@@ -1,12 +1,42 @@
 const multer = require('multer');
-const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp'); // Resimleri küçültmek için
 
-// Dosya yükleme için multer storage yapılandırması
-const storage = multer.memoryStorage(); // Resmi bellekte geçici olarak tutar
+// Yükleme klasörlerini tanımlayın
+const UPLOAD_DIR = path.join(__dirname, '../uploads'); // Ana yükleme klasörü
 
-// Dosya tipi kontrolü
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        let uploadPath;
+
+        switch (file.fieldname) {
+            case 'profileImage':
+                uploadPath = path.join(UPLOAD_DIR, 'profiles');
+                break;
+            case 'blogImage':
+                uploadPath = path.join(UPLOAD_DIR, 'blogs');
+                break;
+            default:
+                uploadPath = path.join(UPLOAD_DIR, 'others');
+                break;
+        }
+
+        // Klasör oluştur (recursive)
+        fs.mkdir(uploadPath, { recursive: true }, (err) => {
+            if (err) {
+                return cb(new Error('Upload directory creation failed!'));
+            }
+            cb(null, uploadPath);
+        });
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
+    },
+});
+
+// Dosya tipini kontrol eden fonksiyon
 function checkFileType(file, cb) {
     const filetypes = /jpeg|jpg|png|gif|bmp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -15,42 +45,43 @@ function checkFileType(file, cb) {
     if (mimetype && extname) {
         return cb(null, true);
     } else {
-        cb(new Error('Error: Only image files (jpeg, jpg, png, gif) are allowed!'), false);
+        cb(new Error('Error: Only image files are allowed!'), false);
     }
 }
 
-// Multer ayarları
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB dosya boyutu sınırı
-    fileFilter: (req, file, cb) => {
-        checkFileType(file, cb);
-    }
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB sınırı
+    fileFilter: (req, file, cb) => checkFileType(file, cb),
 });
 
-// Profil resmi yükleme middleware
+// **Profil resmi küçültme middleware'i**
 const processProfileImage = async (req, res, next) => {
     if (!req.file) return next();
 
-    const uploadPath = path.join(__dirname, '../uploads/profiles');
-
-    // Klasör yoksa oluştur
-    fs.mkdirSync(uploadPath, { recursive: true });
+    const filePath = req.file.path; // Orijinal dosya yolu
+    const resizedFileName = `resized-${req.file.filename}`;
+    const resizedFilePath = path.join(path.dirname(filePath), resizedFileName);
 
     try {
-        const filename = `profileImage-${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
+        await sharp(filePath)
+            .resize(300, 300, { fit: 'cover' })
+            .toFormat('jpeg')
+            .jpeg({ quality: 80 })
+            .toFile(resizedFilePath);
 
-        await sharp(req.file.buffer)
-            .resize({ width: 200, height: 200, fit: 'cover' }) // Resmi 200x200 boyutunda küçült
-            .toFormat('jpeg') // Formatı JPEG yap
-            .jpeg({ quality: 80 }) // Kaliteyi %80'e düşür
-            .toFile(path.join(uploadPath, filename)); // Dosyayı kaydet
+        // Orijinal dosyayı sil
+        fs.unlink(filePath, (err) => {
+            if (err) console.error('Original file deletion error:', err);
+        });
 
-        req.file.filename = filename; // Yeni dosya adını req.file'a ekle
+        // Güncellenmiş dosya yolu
+        req.file.filename = resizedFileName;
+        req.file.path = resizedFilePath;
         next();
     } catch (error) {
-        console.error('Resim işleme hatası:', error.message);
-        res.status(500).json({ message: 'Resim yüklenirken bir hata oluştu.' });
+        console.error('Image processing failed:', error);
+        return res.status(500).json({ message: 'Resim işlenirken hata oluştu' });
     }
 };
 

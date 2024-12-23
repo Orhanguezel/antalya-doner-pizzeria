@@ -114,45 +114,41 @@ const blockUser = asyncHandler(async (req, res) => {
 
 // Profil aktualisieren
 const updateProfile = asyncHandler(async (req, res) => {
-    console.log('Gelen veriler:', req.body); // Gelen verileri logla
     const user = await User.findById(req.user._id);
 
     if (user) {
-        // Kullanıcı bilgilerini güncelle
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
         user.address = req.body.address || user.address;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
-        // Şifre güncellenmek isteniyorsa
+        if (req.file) {
+            // Sadece dosya ismini kullan
+            user.profileImage = req.file.filename;
+        }
+
         if (req.body.password) {
             user.password = req.body.password;
         }
 
-        // Profil resmi güncelleniyorsa
-        if (req.file) {
-            const filePath = `/uploads/profiles/${req.file.filename}`;
-            user.profileImage = filePath;
-        }
-
-        try {
-            const updatedUser = await user.save();
-            res.json({
-                _id: updatedUser._id,
-                username: updatedUser.username,
-                email: updatedUser.email,
-                address: updatedUser.address || '', // Adres eksikse boş döndür
-                phoneNumber: updatedUser.phoneNumber || '', // Telefon numarası eksikse boş döndür
-                profileImage: updatedUser.profileImage, // Güncellenmiş profil resmi yolu
-            });
-        } catch (error) {
-            res.status(500).json({ message: 'Profil güncellenemedi, lütfen tekrar deneyin.' });
-        }
+        const updatedUser = await user.save();
+        res.json({
+            username: updatedUser.username,
+            email: updatedUser.email,
+            address: updatedUser.address,
+            phoneNumber: updatedUser.phoneNumber,
+            profileImage: updatedUser.profileImage
+                ? `/${updatedUser.profileImage}`
+                : null,
+        });
     } else {
         res.status(404);
         throw new Error('Kullanıcı bulunamadı');
     }
 });
+
+
+
 
 
 
