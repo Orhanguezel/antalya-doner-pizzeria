@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001/api',
-  timeout: 10000, // 10 saniye timeout
+  timeout: 10*1000, // 10 saniye timeout
 });
 
 // Interceptor: İstek ve Yanıtları yönetmek için

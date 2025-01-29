@@ -9,6 +9,7 @@ const ItemDetail = ({ itemId, onAddToCart, onClose }) => {
   const [selectedPrice, setSelectedPrice] = useState('');
   const [selectedExtras, setSelectedExtras] = useState([]);
 
+
   useEffect(() => {
     const fetchItem = async () => {
       try {

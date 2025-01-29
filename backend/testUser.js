@@ -1,32 +1,32 @@
-const mongoose = require('mongoose');
+const connectDB = require('./dbConnection');
 const User = require('./models/User');
 
-mongoose.connect('mongodb://admin:adminpassword@localhost:27017/antalya-doner-pizzeria', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  authSource: 'admin',
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch((err) => console.error('MongoDB connection error:', err));
+const createTestUser = async () => {
+    try {
+        await connectDB();
 
-const testUser = async () => {
-  try {
-    const newUser = new User({
-      username: 'testuser',
-      email: 'testuser@example.com',
-      password: 'password123',
-      role: 'user',
-      address: '123 Test Street',
-      phoneNumber: '1234567890',
-    });
+        const existingUser = await User.findOne({ email: process.env.TEST_USER_EMAIL });
+        if (existingUser) {
+            console.log('✅ Test user already exists:', existingUser);
+            return;
+        }
 
-    await newUser.save();
-    console.log('User created successfully:', newUser);
-  } catch (error) {
-    console.error('Error creating user:', error);
-  } finally {
-    mongoose.connection.close();
-  }
+        const testUser = new User({
+            name: 'Test User',
+            email: process.env.TEST_USER_EMAIL,
+            password: process.env.TEST_USER_PASSWORD,
+            role: 'user',
+            address: '123 Test Street',
+            phoneNumber: '1234567890',
+        });
+
+        await testUser.save();
+        console.log('✅ Test user created successfully:', testUser);
+    } catch (error) {
+        console.error('❌ Error creating test user:', error);
+    } finally {
+        mongoose.connection.close();
+    }
 };
 
-testUser();
+createTestUser();

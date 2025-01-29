@@ -4,7 +4,6 @@ const generateToken = require('../utils/generateToken');
 
 // Benutzerregistrierung
 const register = asyncHandler(async (req, res) => {
-    console.log('Kayıt verileri:', req.body); // Bu satırı ekleyin
     const { username, email, password, role, phoneNumber, address } = req.body;
 
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
